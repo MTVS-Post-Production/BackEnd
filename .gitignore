@@ -16,6 +16,11 @@ build/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
+**/main/resources/application.yml
+**/main/resources/database/database.yml
+**/main/resources/oauth2/oauth2.yml
+**/main/resources/swagger/springdoc.yml
+
 
 ### IntelliJ IDEA ###
 .idea

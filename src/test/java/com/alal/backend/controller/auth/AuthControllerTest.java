@@ -8,6 +8,7 @@ import com.alal.backend.payload.request.auth.SignUpRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +44,17 @@ public class AuthControllerTest {
     private WebApplicationContext context;
 
     @BeforeEach
-    public void init(){
+    public void init() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
                                     .addFilter(new CharacterEncodingFilter("UTF-8", true))
                                     .build();
+
+        signup("string@aa.bb");
+    }
+
+    @AfterEach
+    public void cleanup() throws Exception {
+        remove("string@aa.bb");
     }
 
     private void signup(String email) throws Exception{

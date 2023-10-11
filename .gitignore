@@ -4,6 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+.github/workflows/main.yml
 
 ### STS ###
 .apt_generated
@@ -20,6 +21,7 @@ bin/
 **/main/resources/database/database.yml
 **/main/resources/oauth2/oauth2.yml
 **/main/resources/swagger/springdoc.yml
+
 
 
 ### IntelliJ IDEA ###

@@ -20,7 +20,7 @@ bin/
 **/main/resources/database/database.yml
 **/main/resources/oauth2/oauth2.yml
 **/main/resources/swagger/springdoc.yml
-**/main/resources/application.yml
+
 
 
 ### IntelliJ IDEA ###

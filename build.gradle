@@ -46,7 +46,6 @@ dependencies {
     //mysql
     implementation 'mysql:mysql-connector-java:8.0.25'
     runtimeOnly 'com.mysql:mysql-connector-j'
-    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.1'
 }
 
 tasks.named('test') {

@@ -27,7 +27,7 @@ spring:
           google:
             redirect-uri: ${{ secrets.GOOGLE_REDIRECT }}
             client-id: ${{ secrets.GOOGLE_ID }}
-            client-secret: ${{ secrets.GOOGLE_ID }}
+            client-secret: ${{ secrets.GOOGLE_SECRET }}
             scope: profile,email
           facebook:
             client-id: ${{ secrets.FACEBOOK_ID }}

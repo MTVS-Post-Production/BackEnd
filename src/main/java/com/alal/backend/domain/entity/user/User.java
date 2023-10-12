@@ -19,7 +19,7 @@ public class User extends DefaultTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column
     private String name;
 
     @Email
@@ -42,6 +42,9 @@ public class User extends DefaultTime {
     private Role role;
 
     private String providerId;
+
+    @Column
+    private String group;
     
     public User(){}
 

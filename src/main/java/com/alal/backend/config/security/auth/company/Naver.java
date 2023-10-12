@@ -24,6 +24,11 @@ public class Naver extends OAuth2UserInfo {
     }
 
     @Override
+    public String getLogin() {
+        return null;
+    }
+
+    @Override
     public String getName() {
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
 

@@ -55,10 +55,16 @@ public class CustomDefaultOAuth2UserService extends DefaultOAuth2UserService{
     }
 
     private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
+        String name = oAuth2UserInfo.getName();
+
+        if (oAuth2UserInfo.getName() == null){
+            name = oAuth2UserInfo.getLogin();
+        }
+
         User user = User.builder()
                     .provider(Provider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))
                     .providerId(oAuth2UserInfo.getId())
-                    .name(oAuth2UserInfo.getName())
+                    .name(name)
                     .email(oAuth2UserInfo.getEmail())
                     .imageUrl(oAuth2UserInfo.getImageUrl())
                     .role(Role.USER)

@@ -16,6 +16,7 @@ public class SignInRequest {
     @Email
     private String email;
 
+
     @Schema( type = "string", example = "string", description="계정 비밀번호 입니다.")
     @NotBlank
     @NotNull

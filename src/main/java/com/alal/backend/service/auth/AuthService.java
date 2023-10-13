@@ -8,12 +8,14 @@ import com.alal.backend.domain.entity.user.Role;
 import com.alal.backend.domain.entity.user.Token;
 import com.alal.backend.domain.entity.user.User;
 import com.alal.backend.domain.mapping.TokenMapping;
-import com.alal.backend.payload.request.auth.ChangePasswordRequest;
+import com.alal.backend.dto.response.ResponseTestToken;
+import com.alal.backend.payload.request.auth.GroupChangeRequest;
 import com.alal.backend.payload.request.auth.RefreshTokenRequest;
 import com.alal.backend.payload.request.auth.SignInRequest;
 import com.alal.backend.payload.request.auth.SignUpRequest;
 import com.alal.backend.payload.response.ApiResponse;
 import com.alal.backend.payload.response.AuthResponse;
+import com.alal.backend.payload.response.GroupChangeResponse;
 import com.alal.backend.payload.response.Message;
 import com.alal.backend.repository.auth.TokenRepository;
 import com.alal.backend.repository.user.UserRepository;
@@ -25,8 +27,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
 
@@ -65,18 +69,28 @@ public class AuthService {
         return ResponseEntity.ok(apiResponse);
     }
 
-    public ResponseEntity<?> modify(UserPrincipal userPrincipal, ChangePasswordRequest passwordChangeRequest){
+//    public ResponseEntity<?> modify(UserPrincipal userPrincipal, ChangePasswordRequest passwordChangeRequest){
+//        Optional<User> user = userRepository.findById(userPrincipal.getId());
+//        boolean passwordCheck = passwordEncoder.matches(passwordChangeRequest.getOldPassword(),user.get().getPassword());
+//        DefaultAssert.isTrue(passwordCheck, "잘못된 비밀번호 입니다.");
+//
+//        boolean newPasswordCheck = passwordChangeRequest.getNewPassword().equals(passwordChangeRequest.getReNewPassword());
+//        DefaultAssert.isTrue(newPasswordCheck, "신규 등록 비밀번호 값이 일치하지 않습니다.");
+//
+//
+//        passwordEncoder.encode(passwordChangeRequest.getNewPassword());
+//
+//        return ResponseEntity.ok(true);
+//    }
+
+    @Transactional
+    public ResponseEntity<?> modify(UserPrincipal userPrincipal, @Valid GroupChangeRequest groupChangeRequest){
         Optional<User> user = userRepository.findById(userPrincipal.getId());
-        boolean passwordCheck = passwordEncoder.matches(passwordChangeRequest.getOldPassword(),user.get().getPassword());
-        DefaultAssert.isTrue(passwordCheck, "잘못된 비밀번호 입니다.");
+        user.get().updateGroup(groupChangeRequest.getUserGroup());
 
-        boolean newPasswordCheck = passwordChangeRequest.getNewPassword().equals(passwordChangeRequest.getReNewPassword());
-        DefaultAssert.isTrue(newPasswordCheck, "신규 등록 비밀번호 값이 일치하지 않습니다.");
+        GroupChangeResponse groupChangeResponse = GroupChangeResponse.toEntity(user.get());
 
-
-        passwordEncoder.encode(passwordChangeRequest.getNewPassword());
-
-        return ResponseEntity.ok(true);
+        return ResponseEntity.ok(groupChangeResponse);
     }
 
     public ResponseEntity<?> signin(SignInRequest signInRequest){
@@ -92,6 +106,7 @@ public class AuthService {
         TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
         Token token = Token.builder()
                             .refreshToken(tokenMapping.getRefreshToken())
+                            .accessToken(tokenMapping.getAccessToken())
                             .userEmail(tokenMapping.getUserEmail())
                             .build();
         tokenRepository.save(token);
@@ -161,7 +176,6 @@ public class AuthService {
     }
 
     private boolean valid(String refreshToken){
-
         //1. 토큰 형식 물리적 검증
         boolean validateCheck = customTokenProviderService.validateToken(refreshToken);
         DefaultAssert.isTrue(validateCheck, "Token 검증에 실패하였습니다.");
@@ -178,4 +192,10 @@ public class AuthService {
     }
 
 
+    public ResponseTestToken getToken(String userEmail) {
+        Optional<Token> token = tokenRepository.findByUserEmail(userEmail);
+        ResponseTestToken responseTestToken = ResponseTestToken.toEntity(token.get());
+
+        return responseTestToken;
+    }
 }

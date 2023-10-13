@@ -44,7 +44,7 @@ public class User extends DefaultTime {
     private String providerId;
 
     @Column
-    private String group;
+    private String userGroup;
     
     public User(){}
 
@@ -63,5 +63,9 @@ public class User extends DefaultTime {
 
     public void updateImageUrl(String imageUrl){
         this.imageUrl = imageUrl;
+    }
+
+    public void updateGroup(String userGroup) {
+        this.userGroup = userGroup;
     }
 }

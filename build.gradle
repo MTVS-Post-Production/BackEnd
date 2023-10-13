@@ -47,7 +47,9 @@ dependencies {
 
     //mysql
     implementation 'mysql:mysql-connector-java:8.0.25'
-    runtimeOnly 'com.mysql:mysql-connector-j'
+    // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
+    implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.33'
+
 
     // https://mvnrepository.com/artifact/org.springframework/spring-webflux
     implementation group: 'org.springframework', name: 'spring-webflux', version: '5.3.22'

@@ -60,6 +60,7 @@ public class CustomSimpleUrlAuthenticationSuccessHandler extends SimpleUrlAuthen
         Token token = Token.builder()
                 .userEmail(tokenMapping.getUserEmail())
                 .refreshToken(tokenMapping.getRefreshToken())
+                .accessToken(tokenMapping.getAccessToken())
                 .build();
         tokenRepository.save(token);
 

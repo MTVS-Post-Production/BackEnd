@@ -6,10 +6,8 @@ import com.alal.backend.advice.payload.ErrorResponse;
 import com.alal.backend.config.security.token.CurrentUser;
 import com.alal.backend.config.security.token.UserPrincipal;
 import com.alal.backend.domain.entity.user.User;
-import com.alal.backend.payload.request.auth.ChangePasswordRequest;
-import com.alal.backend.payload.request.auth.RefreshTokenRequest;
-import com.alal.backend.payload.request.auth.SignInRequest;
-import com.alal.backend.payload.request.auth.SignUpRequest;
+import com.alal.backend.dto.response.ResponseTestToken;
+import com.alal.backend.payload.request.auth.*;
 import com.alal.backend.payload.response.AuthResponse;
 import com.alal.backend.payload.response.Message;
 import com.alal.backend.service.auth.AuthService;
@@ -58,17 +56,30 @@ public class AuthController {
         return authService.delete(userPrincipal);
     }
 
+//    @Operation(summary = "유저 정보 갱신", description = "현제 접속된 유저의 비밀번호를 새로 지정합니다.")
+//    @ApiResponses(value = {
+//        @ApiResponse(responseCode = "200", description = "유저 정보 갱신 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = Message.class) ) } ),
+//        @ApiResponse(responseCode = "400", description = "유저 정보 갱신 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
+//    })
+//    @PutMapping(value = "/")
+//    public ResponseEntity<?> modify(
+//        @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+//        @Parameter(description = "Schemas의 ChangePasswordRequest를 참고해주세요.", required = true) @Valid @RequestBody ChangePasswordRequest passwordChangeRequest
+//    ){
+//        return authService.modify(userPrincipal, passwordChangeRequest);
+//    }
+
     @Operation(summary = "유저 정보 갱신", description = "현제 접속된 유저의 비밀번호를 새로 지정합니다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "유저 정보 갱신 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = Message.class) ) } ),
-        @ApiResponse(responseCode = "400", description = "유저 정보 갱신 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
+            @ApiResponse(responseCode = "200", description = "유저 정보 갱신 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = Message.class) ) } ),
+            @ApiResponse(responseCode = "400", description = "유저 정보 갱신 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
     })
     @PutMapping(value = "/")
     public ResponseEntity<?> modify(
-        @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal, 
-        @Parameter(description = "Schemas의 ChangePasswordRequest를 참고해주세요.", required = true) @Valid @RequestBody ChangePasswordRequest passwordChangeRequest
+            @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @Parameter(description = "Schemas의 ChangePasswordRequest를 참고해주세요.", required = true) @Valid @RequestBody GroupChangeRequest groupChangeRequest
     ){
-        return authService.modify(userPrincipal, passwordChangeRequest);
+        return authService.modify(userPrincipal, groupChangeRequest);
     }
 
     @Operation(summary = "유저 로그인", description = "유저 로그인을 수행합니다.")
@@ -119,6 +130,19 @@ public class AuthController {
         @Parameter(description = "Schemas의 RefreshTokenRequest를 참고해주세요.", required = true) @Valid @RequestBody RefreshTokenRequest tokenRefreshRequest
     ) {
         return authService.signout(tokenRefreshRequest);
+    }
+
+    @Operation(summary = "이메일을 통한 토큰 응답", description = "이메일을 받아 엑세스 토큰과 리프레시 토큰을 응답합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "토큰 응답 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Message.class))}),
+            @ApiResponse(responseCode = "400", description = "토큰 응답 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @GetMapping("/token/{userEmail}")
+    @ResponseBody
+    public ResponseEntity<ResponseTestToken> testGet(@PathVariable String userEmail){
+        ResponseTestToken responseTestToken = authService.getToken(userEmail);
+
+        return ResponseEntity.ok(responseTestToken);
     }
 
 }

@@ -49,11 +49,6 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.springframework/spring-webflux
     implementation group: 'org.springframework', name: 'spring-webflux', version: '5.3.22'
-
-    // https://mvnrepository.com/artifact/com.google.cloud/google-cloud-storage
-    implementation group: 'com.google.cloud', name: 'google-cloud-storage', version: '2.22.2'
-
-
 }
 
 tasks.named('test') {

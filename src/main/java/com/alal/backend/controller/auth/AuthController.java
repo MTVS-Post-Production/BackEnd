@@ -6,7 +6,7 @@ import com.alal.backend.advice.payload.ErrorResponse;
 import com.alal.backend.config.security.token.CurrentUser;
 import com.alal.backend.config.security.token.UserPrincipal;
 import com.alal.backend.domain.entity.user.User;
-import com.alal.backend.dto.response.ResponseTestToken;
+import com.alal.backend.payload.response.TestTokenResponse;
 import com.alal.backend.payload.request.auth.*;
 import com.alal.backend.payload.response.AuthResponse;
 import com.alal.backend.payload.response.Message;
@@ -139,9 +139,9 @@ public class AuthController {
     })
     @GetMapping("/token/{userEmail}")
     @ResponseBody
-    public ResponseEntity<ResponseTestToken> testGet(@PathVariable String userEmail){
-        ResponseTestToken responseTestToken = authService.getToken(userEmail);
+    public ResponseEntity<TestTokenResponse> testGet(@PathVariable String userEmail){
+        TestTokenResponse testTokenResponse = authService.getToken(userEmail);
 
-        return ResponseEntity.ok(responseTestToken);
+        return ResponseEntity.ok(testTokenResponse);
     }
 }

@@ -1,4 +1,4 @@
-package com.alal.backend.dto.response;
+package com.alal.backend.payload.response;
 
 import com.alal.backend.domain.entity.user.Token;
 import lombok.Builder;
@@ -8,13 +8,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ResponseTestToken {
+public class TestTokenResponse {
     private String accessToken;
 
     private String refreshToken;
 
-    public static ResponseTestToken toEntity(Token token) {
-        return ResponseTestToken.builder()
+    public static TestTokenResponse toEntity(Token token) {
+        return TestTokenResponse.builder()
                 .accessToken(token.getAccessToken())
                 .refreshToken(token.getRefreshToken())
                 .build();

@@ -49,6 +49,9 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.springframework/spring-webflux
     implementation group: 'org.springframework', name: 'spring-webflux', version: '5.3.22'
+
+    //live Server
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
 
 tasks.named('test') {

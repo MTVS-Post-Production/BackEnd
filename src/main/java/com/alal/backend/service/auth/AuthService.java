@@ -8,7 +8,7 @@ import com.alal.backend.domain.entity.user.Role;
 import com.alal.backend.domain.entity.user.Token;
 import com.alal.backend.domain.entity.user.User;
 import com.alal.backend.domain.mapping.TokenMapping;
-import com.alal.backend.dto.response.ResponseTestToken;
+import com.alal.backend.payload.response.TestTokenResponse;
 import com.alal.backend.payload.request.auth.GroupChangeRequest;
 import com.alal.backend.payload.request.auth.RefreshTokenRequest;
 import com.alal.backend.payload.request.auth.SignInRequest;
@@ -191,11 +191,10 @@ public class AuthService {
         return true;
     }
 
-
-    public ResponseTestToken getToken(String userEmail) {
+    public TestTokenResponse getToken(String userEmail) {
         Optional<Token> token = tokenRepository.findByUserEmail(userEmail);
-        ResponseTestToken responseTestToken = ResponseTestToken.toEntity(token.get());
+        TestTokenResponse testTokenResponse = TestTokenResponse.toEntity(token.get());
 
-        return responseTestToken;
+        return testTokenResponse;
     }
 }

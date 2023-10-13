@@ -46,7 +46,8 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 
     //mysql
-    implementation 'mysql:mysql-connector-java:8.0.25'
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.28'
     // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
     implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.33'
 

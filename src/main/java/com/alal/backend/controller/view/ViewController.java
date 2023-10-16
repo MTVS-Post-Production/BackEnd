@@ -33,8 +33,8 @@ public class ViewController {
         return "main/imagePage";
     }
 
-    // 클라이언트에서 동영상 파일을 받아 Flask 서버와 통신하여 문자열 리스트를 받음
-    @PostMapping("/video")
+    // 클라이언트에서 파일(mp3, mp4, wav)을 받아 Flask 서버와 통신하여 문자열 리스트를 받음
+    @PostMapping("/file")
     public String voicePost(@RequestParam("file") MultipartFile file,
                             @PageableDefault(size = 30) Pageable pageable,
                             Model model

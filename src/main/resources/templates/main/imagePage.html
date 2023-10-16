@@ -3,23 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script> <!-- Axios 추가 -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .send-btn {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+
+
+            background-color:#4CAF50; /* 초록 */
+            border:none;
+            color:white;
+            padding:15px 32px;
+            text-align:center;
+            text-decoration:none;
+            display:inline-block;
+            font-size:16px;
+            visibility: hidden;
+        }
+
+        .motion-image {
+            transition: filter 0.3s;
+            max-width :100%;
+            height:auto; // 이미지 크기 조절
+        }
+
+        .motion-image.blurred {
+            filter: blur(5px);
+        }
+    </style>
 </head>
 <body>
 <div th:each="motionUrl : ${motionUrls}">
     <div th:each="gifUrl : ${motionUrl.gifUrls}">
-        <img th:src="${gifUrl}" alt="Motion Image">
+        <!-- 이미지에 클릭 이벤트 추가 -->
+        <div style="position:relative; display:inline-block;">
+            <img th:src="${gifUrl}" alt="Motion Image" class="motion-image">
+            <button type='button' class='send-btn' th:data-url="${motionUrl.fbxUrls[0]}">Send</button>
+        </div>
     </div>
-
-    <!-- 여기에 fbxUrls와 버튼 추가 -->
-    <div th:each="fbxUrl : ${motionUrl.fbxUrls}">
-        <button type='button' class='send-btn' th:data-url="${fbxUrl}">Send</button>
-    </div>
-
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        var images = document.querySelectorAll('.motion-image');
+        images.forEach(function(image) {
+            image.addEventListener('click', function() {
+                var sendBtn = this.parentElement.querySelector('.send-btn');
+                this.classList.toggle('blurred');
+
+                sendBtn.style.visibility = sendBtn.style.visibility === 'visible' ? 'hidden' : 'visible';
+            });
+        });
+
         var buttons = document.querySelectorAll('.send-btn');
         buttons.forEach(function(button) {
             button.addEventListener('click', function(e) {

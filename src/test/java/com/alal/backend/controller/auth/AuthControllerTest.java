@@ -29,7 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//@Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles(profiles = "local")

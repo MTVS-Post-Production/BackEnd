@@ -47,11 +47,12 @@ dependencies {
     //mysql
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.33'
 
-    // https://mvnrepository.com/artifact/org.springframework/spring-webflux
-    implementation group: 'org.springframework', name: 'spring-webflux', version: '5.3.22'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
 
     //live Server
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
 }
 
 tasks.named('test') {

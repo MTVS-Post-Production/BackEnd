@@ -33,8 +33,6 @@ public class MotionService {
             viewResponses.add(viewResponse);
         }
 
-        System.out.println("가져온거 = " + viewResponses);
-
         // List<ViewResponse>를 Page<ViewResponse>로 변환
         return new PageImpl<>(viewResponses, pageable, viewResponses.size());
     }

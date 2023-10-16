@@ -1,10 +1,7 @@
 package com.alal.backend.payload.response;
 
 import com.alal.backend.domain.entity.user.Motion;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

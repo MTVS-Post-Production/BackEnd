@@ -1,39 +1,25 @@
 package com.alal.backend.controller.view;
 
 import com.alal.backend.payload.request.auth.FbxRequest;
-import com.alal.backend.payload.request.auth.FileUploadRequest;
 import com.alal.backend.payload.response.FbxResponse;
-import com.alal.backend.payload.response.MessageResponse;
 import com.alal.backend.payload.response.ViewResponse;
-import com.alal.backend.repository.user.MotionRepository;
 import com.alal.backend.service.user.MotionService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/view")
 @RequiredArgsConstructor
 public class ViewController {
-
-    @Value("${ai.model.serving.url}")
-    private String flaskUrl;
 
     private final MotionService motionService;
 
@@ -65,28 +51,7 @@ public class ViewController {
     @PostMapping("/message")
     public String messagePost(@RequestBody List<String> messages, Model model,
                               @PageableDefault(size = 30) Pageable pageable){
-        Map<String, String> toJson = new HashMap<>();
-        for (String message : messages){
-            toJson.put("pose", message);
-        }
-
-        // Flask 서버 통신
-        // 분석한 결과를 문자열 리스트로 반환받음
-        List<MessageResponse> messageResponses = WebClient.create()
-                .post()
-                .uri(flaskUrl)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(toJson)
-                .retrieve()
-                .bodyToFlux(MessageResponse.class)
-                .collectList()
-                .block();
-
-        List<String> fileNames = messageResponses.stream()
-                .map(MessageResponse::getMessage)
-                .collect(Collectors.toList());
-
-        Page<ViewResponse> viewResponse = motionService.findGifByMessages(fileNames, pageable);
+        Page<ViewResponse> viewResponse = motionService.findGifByMessages(messages, pageable);
         lastViewResponses = viewResponse;
 
         model.addAttribute("motionUrls", viewResponse);

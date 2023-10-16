@@ -1,7 +1,6 @@
 package com.alal.backend.service.user;
 
 import com.alal.backend.payload.response.FlaskResponse;
-import com.alal.backend.payload.response.MessageResponse;
 import com.alal.backend.payload.response.ViewResponse;
 import com.alal.backend.repository.user.MotionRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +40,7 @@ public class MotionService {
         // Flask 서버 통신
         List<FlaskResponse> flaskResponses = communicateWithFlaskServer(base64EncodedVoice);
         List<String> responseMessages = flaskResponses.stream()
-                .map(FlaskResponse::getResponseMessageByVideo)
+                .map(FlaskResponse::getResponseMessage)
                 .collect(Collectors.toList());
         List<ViewResponse> viewResponses = createViewResponse(responseMessages, pageable);
 
@@ -76,12 +75,29 @@ public class MotionService {
     // 메세지를 통한 gif, fbx 찾기
     @Transactional(readOnly = true)
     public Page<ViewResponse> findGifByMessages(List<String> messages, Pageable pageable) {
+        // Flask 서버 통신
+        // 분석한 결과를 문자열 리스트로 반환받음
+        List<FlaskResponse> flaskResponses = WebClient.create()
+                .post()
+                .uri(flaskUrl + "/message")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(Collections.singletonMap("pose", messages))
+                .retrieve()
+                .bodyToFlux(FlaskResponse.class)
+                .collectList()
+                .block();
+
+        List<String> responseMessages = flaskResponses.stream()
+                .map(FlaskResponse::getResponseMessage)
+                .collect(Collectors.toList());
+
         // 공통 로직을 활용하여 gif, fbx 찾기
-        List<ViewResponse> viewResponses = createViewResponse(messages, pageable);
+        List<ViewResponse> viewResponses = createViewResponse(responseMessages, pageable);
 
         return new PageImpl<>(viewResponses, pageable, viewResponses.size());
     }
 
+    // Gif, Fbx Url을 찾는 공통 로직
     private List<ViewResponse> createViewResponse(List<String> messages, Pageable pageable) {
         List<ViewResponse> viewResponses = new ArrayList<>();
 
@@ -93,8 +109,6 @@ public class MotionService {
             ViewResponse viewResponse = ViewResponse.fromPage(gifPage, fbxPage);
             viewResponses.add(viewResponse);
         }
-
-        System.out.println("가져온거 = " + viewResponses);
 
         // List<ViewResponse>를 Page<ViewResponse>로 변환
         return viewResponses;

@@ -11,5 +11,5 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FlaskResponse {
-    private String responseMessageByVideo;
+    private String responseMessage;
 }

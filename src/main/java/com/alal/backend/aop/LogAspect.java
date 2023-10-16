@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogAspect {
 
-    @Around("execution(* com.sample.controller.*.*(..))")
+    @Around("execution(* com.alal.backend.controller.*.*(..))")
     public Object ControllerLogger(ProceedingJoinPoint proceedingJoinPoint) throws Throwable, Exception {
         //log.info("start = {} / {}", proceedingJoinPoint.getSignature().getDeclaringTypeName(), proceedingJoinPoint.getSignature().getName());
         Object result = proceedingJoinPoint.proceed();

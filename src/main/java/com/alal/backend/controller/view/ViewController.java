@@ -1,11 +1,13 @@
 package com.alal.backend.controller.view;
 
 import com.alal.backend.payload.request.auth.FbxRequest;
+import com.alal.backend.payload.request.auth.FileUploadRequest;
 import com.alal.backend.payload.response.FbxResponse;
 import com.alal.backend.payload.response.MessageResponse;
 import com.alal.backend.payload.response.ViewResponse;
 import com.alal.backend.repository.user.MotionRepository;
 import com.alal.backend.service.user.MotionService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -17,9 +19,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -42,17 +47,36 @@ public class ViewController {
         return "main/imagePage";
     }
 
+    // 클라이언트에서 동영상 파일을 받아 Flask 서버와 통신하여 문자열 리스트를 받음
+    @PostMapping("/video")
+    public String voicePost(@RequestParam("file") MultipartFile file,
+                            @PageableDefault(size = 30) Pageable pageable,
+                            Model model
+                            ) {
+        Page<ViewResponse> viewResponse = motionService.findUrlByUploadMp4(file, pageable);
+        lastViewResponses = viewResponse;
+
+        model.addAttribute("motionUrls", viewResponse);
+
+        return "main/imagePage";
+    }
+
     // 클라이언트에서 문자열을 받아 Flask 서버와 통신하여 문자열 리스트 반환받음
     @PostMapping("/message")
     public String messagePost(@RequestBody List<String> messages, Model model,
                               @PageableDefault(size = 30) Pageable pageable){
+        Map<String, String> toJson = new HashMap<>();
+        for (String message : messages){
+            toJson.put("pose", message);
+        }
+
         // Flask 서버 통신
         // 분석한 결과를 문자열 리스트로 반환받음
         List<MessageResponse> messageResponses = WebClient.create()
                 .post()
                 .uri(flaskUrl)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(messages)
+                .bodyValue(toJson)
                 .retrieve()
                 .bodyToFlux(MessageResponse.class)
                 .collectList()

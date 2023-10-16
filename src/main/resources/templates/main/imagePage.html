@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script> <!-- Axios 추가 -->
+</head>
+<body>
+<div th:each="motionUrl : ${motionUrls}">
+    <div th:each="gifUrl : ${motionUrl.gifUrls}">
+        <img th:src="${gifUrl}" alt="Motion Image">
+    </div>
+
+    <!-- 여기에 fbxUrls와 버튼 추가 -->
+    <div th:each="fbxUrl : ${motionUrl.fbxUrls}">
+        <button type='button' class='send-btn' th:data-url="${fbxUrl}">Send</button>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var buttons = document.querySelectorAll('.send-btn');
+        buttons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                var fbxUrl = this.getAttribute('data-url');
+
+                axios.post('/view/send/fbx', { 'fbxUrl': fbxUrl })
+                    .then(function(response){
+                        console.log(fbxUrl);
+                        alert("다운로드 성공!");
+                    })
+                    .catch(function(error){
+                        alert("다운로드에 실패하였습니다.");
+                    });
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

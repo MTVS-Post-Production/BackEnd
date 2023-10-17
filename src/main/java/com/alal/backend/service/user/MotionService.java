@@ -76,14 +76,14 @@ public class MotionService {
 
     // 메세지를 통한 gif, fbx 찾기
     @Transactional(readOnly = true)
-    public Page<ViewResponse> findGifByMessages(List<String> messages, Pageable pageable) {
+    public Page<ViewResponse> findGifByMessages(String message, Pageable pageable) {
         // Flask 서버 통신
         // 분석한 결과를 문자열 리스트로 반환받음
         List<FlaskResponse> flaskResponses = WebClient.create()
                 .post()
                 .uri(flaskUrl + "/message")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(Collections.singletonMap("pose", messages))
+                .bodyValue(Collections.singletonMap("pose", message))
                 .retrieve()
                 .bodyToFlux(FlaskResponse.class)
                 .collectList()

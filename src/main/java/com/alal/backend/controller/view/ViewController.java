@@ -49,9 +49,9 @@ public class ViewController {
 
     // 클라이언트에서 문자열을 받아 Flask 서버와 통신하여 문자열 리스트 반환받음
     @PostMapping("/message")
-    public String messagePost(@RequestBody List<String> messages, Model model,
+    public String messagePost(@RequestBody String message, Model model,
                               @PageableDefault(size = 30) Pageable pageable){
-        Page<ViewResponse> viewResponse = motionService.findGifByMessages(messages, pageable);
+        Page<ViewResponse> viewResponse = motionService.findGifByMessages(message, pageable);
         lastViewResponses = viewResponse;
 
         model.addAttribute("motionUrls", viewResponse);

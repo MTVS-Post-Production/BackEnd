@@ -37,7 +37,7 @@ class MotionServiceTest {
     @Test
     void findGifByMessagesTest(){
         // given
-        List<String> messages = Arrays.asList("chunsic", "dance");
+        String message = "chunsic";
         Pageable pageable = PageRequest.of(0, 30);
 
         List<ViewResponse> expectedResponses = new ArrayList<>();
@@ -49,9 +49,9 @@ class MotionServiceTest {
 
         Page<ViewResponse> expectedPages = new PageImpl<>(expectedResponses, pageable, expectedResponses.size());
 
-        Mockito.when(motionServiceMock.findGifByMessages(messages, pageable)).thenReturn(expectedPages);
+        Mockito.when(motionServiceMock.findGifByMessages(message, pageable)).thenReturn(expectedPages);
         // when
-        Page<ViewResponse> resultPages = motionServiceMock.findGifByMessages(messages, pageable);
+        Page<ViewResponse> resultPages = motionServiceMock.findGifByMessages(message, pageable);
 
         // then
         assertEquals(expectedPages.getContent(), resultPages.getContent());

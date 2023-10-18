@@ -8,12 +8,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @Controller
@@ -59,11 +63,33 @@ public class ViewController {
         return "main/imagePage";
     }
 
-    // 웹에서 다운로드 버튼 클릭 시, 언리얼 엔진으로 전송
     @PostMapping("/send/fbx")
     @ResponseBody
     public ResponseEntity<FbxResponse> send(@RequestBody FbxRequest fbxRequest){
-        return ResponseEntity.ok(FbxResponse.fromFbxUrl(fbxRequest));
+        FbxResponse response = FbxResponse.fromFbxUrl(fbxRequest);
+        URI redirectUri = UriComponentsBuilder.fromPath("/view/result")
+                .queryParam("fbxUrl", response.getFbxUrl())
+                .build()
+                .toUri();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(redirectUri);
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
+
+
+    @GetMapping("/result")
+    public String result(@RequestParam("fbxUrl") String fbxUrl, Model model) {
+        model.addAttribute("fbxUrl", fbxUrl);
+        return "main/result";
+    }
+
+
+
+    // 웹에서 다운로드 버튼 클릭 시, 언리얼 엔진으로 전송
+//    @PostMapping("/send/fbx")
+//    @ResponseBody
+//    public ResponseEntity<FbxResponse> send(@RequestBody FbxRequest fbxRequest){
+//        return ResponseEntity.ok(FbxResponse.fromFbxUrl(fbxRequest));
+//    }
 
 }

@@ -72,12 +72,16 @@
 
                 axios.post('/view/send/fbx', { 'fbxUrl': fbxUrl })
                     .then(function(response){
-                        console.log(fbxUrl);
+                        const redirectUrl = '/view/result?fbxUrl=' + encodeURIComponent(fbxUrl);
+                        console.log(response.headers.location);
+                        // window.location.replace(response.data.fbxUrl);
                         alert("다운로드 성공!");
+                        window.location.href = redirectUrl;
                     })
                     .catch(function(error){
                         alert("다운로드에 실패하였습니다.");
                     });
+
             });
         });
     });

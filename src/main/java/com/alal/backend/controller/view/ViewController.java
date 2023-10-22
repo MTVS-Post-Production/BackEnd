@@ -2,6 +2,7 @@ package com.alal.backend.controller.view;
 
 import com.alal.backend.payload.request.auth.FbxRequest;
 import com.alal.backend.payload.response.FbxResponse;
+import com.alal.backend.payload.response.FlaskResponse;
 import com.alal.backend.payload.response.ViewResponse;
 import com.alal.backend.service.user.MotionService;
 import lombok.RequiredArgsConstructor;
@@ -37,9 +38,9 @@ public class ViewController {
         return "main/imagePage";
     }
 
-    // 클라이언트에서 파일(mp3, mp4, wav)을 받아 Flask 서버와 통신하여 문자열 리스트를 받음
-    @PostMapping("/file")
-    public String voicePost(@RequestParam("file") MultipartFile file,
+    // 클라이언트에서 동영상 파일(mp4)을 받아 Flask 서버와 통신하여 문자열 리스트를 받음
+    @PostMapping("/video")
+    public String videoPost(@RequestParam("file") MultipartFile file,
                             @PageableDefault(size = 30) Pageable pageable,
                             Model model
                             ) {
@@ -49,6 +50,15 @@ public class ViewController {
         model.addAttribute("motionUrls", viewResponse);
 
         return "main/imagePage";
+    }
+
+    // 클라이언트에서 음성 파일을 받아 Flask 서버와 통신 후 변조된 음성 파일 응답
+    @PostMapping("/voice")
+    @ResponseBody
+    public ResponseEntity<FlaskResponse> voicePost(@RequestParam("file") MultipartFile file
+    ) {
+        FlaskResponse flaskResponse = motionService.uploadAndRespondWithAudioFileSuccess(file);
+        return ResponseEntity.ok(flaskResponse);
     }
 
     // 클라이언트에서 문자열을 받아 Flask 서버와 통신하여 문자열 리스트 반환받음
@@ -63,6 +73,7 @@ public class ViewController {
         return "main/imagePage";
     }
 
+    // 웹에서 다운로드 버튼 클릭 시 /view/result?fbxUrl=... 로 리다이렉트
     @PostMapping("/send/fbx")
     @ResponseBody
     public ResponseEntity<FbxResponse> send(@RequestBody FbxRequest fbxRequest){
@@ -76,7 +87,7 @@ public class ViewController {
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
-
+    // 다운로드 버튼을 통해 리다이렉트한 주소에 대한 GET 요청
     @GetMapping("/result")
     public String result(@RequestParam("fbxUrl") String fbxUrl, Model model) {
         model.addAttribute("fbxUrl", fbxUrl);

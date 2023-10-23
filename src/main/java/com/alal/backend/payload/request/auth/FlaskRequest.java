@@ -1,20 +1,12 @@
 package com.alal.backend.payload.request.auth;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class FlaskRequest {
-    private String base64EncodedFile;
-
-    private String fileFormat;
-
-    public static FlaskRequest fromFile(String base64EncodedFile, String fileFormat) {
-        return FlaskRequest.builder()
-                .base64EncodedFile(base64EncodedFile)
-                .fileFormat(fileFormat)
-                .build();
-    }
+    private String fileName;
 }

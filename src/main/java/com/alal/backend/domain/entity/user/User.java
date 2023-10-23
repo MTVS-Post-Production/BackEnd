@@ -1,6 +1,7 @@
 package com.alal.backend.domain.entity.user;
 
 import com.alal.backend.domain.entity.time.DefaultTime;
+import com.alal.backend.payload.request.auth.ProfileUpdateRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,6 +46,9 @@ public class User extends DefaultTime {
 
     @Column
     private String userGroup;
+
+    @Column
+    private String userHistory;
     
     public User(){}
 
@@ -65,7 +69,13 @@ public class User extends DefaultTime {
         this.imageUrl = imageUrl;
     }
 
-    public void updateGroup(String userGroup) {
-        this.userGroup = userGroup;
+    public void updateProfile(ProfileUpdateRequest profileUpdateRequest) {
+        this.userGroup = profileUpdateRequest.getUserGroup();
+        this.name = profileUpdateRequest.getUserName();
+        this.imageUrl = profileUpdateRequest.getBase64ProfileImage();
+    }
+
+    public void historyUpdate(String responseToString) {
+        this.userHistory = responseToString;
     }
 }

@@ -9,17 +9,18 @@ import com.alal.backend.domain.entity.user.Token;
 import com.alal.backend.domain.entity.user.User;
 import com.alal.backend.domain.mapping.TokenMapping;
 import com.alal.backend.payload.response.TestTokenResponse;
-import com.alal.backend.payload.request.auth.GroupChangeRequest;
+import com.alal.backend.payload.request.auth.ProfileUpdateRequest;
 import com.alal.backend.payload.request.auth.RefreshTokenRequest;
 import com.alal.backend.payload.request.auth.SignInRequest;
 import com.alal.backend.payload.request.auth.SignUpRequest;
 import com.alal.backend.payload.response.ApiResponse;
 import com.alal.backend.payload.response.AuthResponse;
-import com.alal.backend.payload.response.GroupChangeResponse;
+import com.alal.backend.payload.response.ProfileUpdateResponse;
 import com.alal.backend.payload.response.Message;
 import com.alal.backend.repository.auth.TokenRepository;
 import com.alal.backend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -69,28 +70,15 @@ public class AuthService {
         return ResponseEntity.ok(apiResponse);
     }
 
-//    public ResponseEntity<?> modify(UserPrincipal userPrincipal, ChangePasswordRequest passwordChangeRequest){
-//        Optional<User> user = userRepository.findById(userPrincipal.getId());
-//        boolean passwordCheck = passwordEncoder.matches(passwordChangeRequest.getOldPassword(),user.get().getPassword());
-//        DefaultAssert.isTrue(passwordCheck, "잘못된 비밀번호 입니다.");
-//
-//        boolean newPasswordCheck = passwordChangeRequest.getNewPassword().equals(passwordChangeRequest.getReNewPassword());
-//        DefaultAssert.isTrue(newPasswordCheck, "신규 등록 비밀번호 값이 일치하지 않습니다.");
-//
-//
-//        passwordEncoder.encode(passwordChangeRequest.getNewPassword());
-//
-//        return ResponseEntity.ok(true);
-//    }
-
     @Transactional
-    public ResponseEntity<?> modify(UserPrincipal userPrincipal, @Valid GroupChangeRequest groupChangeRequest){
+    public ResponseEntity<?> modify(UserPrincipal userPrincipal, @Valid ProfileUpdateRequest profileUpdateRequest) {
         Optional<User> user = userRepository.findById(userPrincipal.getId());
-        user.get().updateGroup(groupChangeRequest.getUserGroup());
 
-        GroupChangeResponse groupChangeResponse = GroupChangeResponse.toEntity(user.get());
+        user.get().updateProfile(profileUpdateRequest);
 
-        return ResponseEntity.ok(groupChangeResponse);
+        ProfileUpdateResponse profileUpdateResponse = ProfileUpdateResponse.toEntity(user.get());
+
+        return ResponseEntity.ok(profileUpdateResponse);
     }
 
     public ResponseEntity<?> signin(SignInRequest signInRequest){

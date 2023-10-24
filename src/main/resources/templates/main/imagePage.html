@@ -39,18 +39,87 @@
         .motion-image.blurred {
             filter: blur(5px);
         }
+
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .image-item {
+            position:relative;
+            display:inline-block;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            justify-content: center; /* Center-align pagination */
+        }
+
+        .pagination .page-item {
+            margin-right: 5px;
+        }
+
+        .pagination .page-link {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: #007bff;
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .pagination .page-link:hover {
+            z-index: 2;
+            color: #0056b3;
+            text-decoration: none;
+            background-color: #e9ecef;
+            border-color: #dee2e6;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            color: #6c757d;
+            pointer-events: none;
+            cursor: not-allowed;
+            background-color: #fff;
+            border-color: #dee2e6;
+        }
     </style>
 </head>
 <body>
-<div th:each="motionUrl : ${motionUrls}">
-    <div th:each="gifUrl : ${motionUrl.gifUrls}">
-        <!-- 이미지에 클릭 이벤트 추가 -->
+<th:block th:insert="~{common/header}"/>
+<div class="image-container" th:each="motionUrl : ${motionUrls}">
+    <div class="image-item" th:each="gifUrl : ${motionUrl.gifUrls}">
         <div style="position:relative; display:inline-block;">
             <img th:src="${gifUrl}" alt="Motion Image" class="motion-image">
-            <button type='button' class='send-btn' th:data-url="${motionUrl.fbxUrls[0]}">Send</button>
         </div>
     </div>
+
+    <div th:each="fbxUrl : ${motionUrl.fbxUrls}">
+        <button type='button' class='send-btn' th:data-url="${fbxUrl}">Send</button>
+    </div>
 </div>
+
+<!-- 페이징 부분 추가 -->
+<div class="pagination">
+    <ul class="pagination">
+        <li th:class="${motionUrls.first} ? 'page-item disabled' : 'page-item'">
+            <a th:href="@{'?page=' + ${motionUrls.number - 1}}" class="page-link">&laquo;&laquo;</a>
+        </li>
+        <li th:each="page, iterStat : ${motionUrls}">
+            <a th:href="@{'?page=' + ${iterStat.index}}" class="page-link" th:text="${iterStat.index + 1}"></a>
+        </li>
+        <li th:class="${motionUrls.last} ? 'page-item disabled' : 'page-item'">
+            <a th:href="@{'?page=' + ${motionUrls.number + 1}}" class="page-link">&raquo;&raquo;</a>
+        </li>
+    </ul>
+</div>
+
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -72,7 +141,7 @@
 
                 axios.post('/view/send/fbx', { 'fbxUrl': fbxUrl })
                     .then(function(response){
-                        const redirectUrl = '/view/result?fbxUrl=' + encodeURIComponent(fbxUrl);
+                        const redirectUrl = '/view/result?fbxUrl=' + fbxUrl;
                         console.log(response.headers.location);
                         // window.location.replace(response.data.fbxUrl);
                         alert("다운로드 성공!");
@@ -87,5 +156,6 @@
     });
 </script>
 
+<th:block th:insert="~{common/footer}"/>
 </body>
 </html>

@@ -1,10 +1,9 @@
 package com.alal.backend.payload.response;
 
-import com.alal.backend.domain.entity.user.Motion;
 import lombok.*;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 @Getter
 @Setter
@@ -23,6 +22,13 @@ public class ViewResponse {
         return ViewResponse.builder()
                 .gifUrls(gifUrls)
                 .fbxUrls(fbxUrls)
+                .build();
+    }
+
+    public static ViewResponse fromList(List<String> allGifs, List<String> allFbxs) {
+        return ViewResponse.builder()
+                .fbxUrls(allFbxs)
+                .gifUrls(allGifs)
                 .build();
     }
 }

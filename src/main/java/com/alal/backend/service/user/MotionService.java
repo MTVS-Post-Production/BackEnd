@@ -1,9 +1,18 @@
 package com.alal.backend.service.user;
 
+import com.alal.backend.domain.entity.user.User;
 import com.alal.backend.payload.request.auth.FlaskRequest;
 import com.alal.backend.payload.response.FlaskResponse;
+import com.alal.backend.payload.response.UpdateUserHistoryResponse;
 import com.alal.backend.payload.response.ViewResponse;
 import com.alal.backend.repository.user.MotionRepository;
+import com.alal.backend.repository.user.UserRepository;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -12,13 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,50 +29,50 @@ public class MotionService {
 
     private final MotionRepository motionRepository;
 
+    private final UserRepository userRepository;
+
     private final WebClient webClient;
 
     @Value("${ai.model.serving.url}")
     private String flaskUrl;
 
     // 동영상 파일 Flask 서버와 통신 후 url 응답
-    @Transactional(readOnly = true)
-    public Page<ViewResponse> findUrlByUploadMp4(MultipartFile file, Pageable pageable) {
-        // MultipartFile을 base64 인코딩, 파일 형식 추출
-        FlaskRequest flaskRequest = convertMultipartFileToBase64(file);
-
+    @Transactional
+    public UpdateUserHistoryResponse findUrlByUploadMp4(FlaskRequest flaskRequest, Long userId) {
         // Flask 서버 통신
         List<FlaskResponse> flaskResponses = communicateWithFlaskServer(flaskRequest);
-        List<String> responseMessages = flaskResponses.stream()
-                .map(FlaskResponse::getResponseMessage)
-                .collect(Collectors.toList());
-        List<ViewResponse> viewResponses = createViewResponse(responseMessages, pageable);
 
-        return new PageImpl<>(viewResponses, pageable, viewResponses.size());
+        // 가져온 문자열 리스트를 문자열로 변환
+        String responseMessageToString = flaskResponses.stream()
+                .map(FlaskResponse::getResponseMessage)
+                .collect(Collectors.joining(", "));
+
+        Optional<User> userRepositoryById = userRepository.findById(userId);
+        User user = userRepositoryById.get();
+
+        UpdateUserHistoryResponse updateUserHistoryResponse = updateUserHistoryByResponseMessage(user, responseMessageToString);
+
+        return updateUserHistoryResponse;
+    }
+
+    @Transactional
+    public UpdateUserHistoryResponse updateUserHistoryByResponseMessage(User user, String responseMessageToString) {
+        if (user.getUserHistory() == null) {
+            user.historyUpdate(responseMessageToString);
+        }
+        else {
+            user.historyUpdate(responseMessageToString);
+        }
+
+        UpdateUserHistoryResponse updateUserHistoryResponse = UpdateUserHistoryResponse.fromEntity(user);
+        return updateUserHistoryResponse;
     }
 
     // 음성 파일 Flask 서버와 통신 후 base64 문자열 응답
-    public FlaskResponse uploadAndRespondWithAudioFileSuccess(MultipartFile voiceFile) {
-        // MultipartFile을 base64 인코딩, 파일 형식 추출
-        FlaskRequest flaskRequest = convertMultipartFileToBase64(voiceFile);
-
+    public FlaskResponse uploadAndRespondWithAudioFileSuccess(FlaskRequest flaskRequest) {
         // Flask 서버 통신
         FlaskResponse flaskResponse = communicateWithFlaskServerByVoice(flaskRequest);
-
         return flaskResponse;
-    }
-
-
-    // MultipartFile을 base64로 변환하는 메서드
-    private FlaskRequest convertMultipartFileToBase64(MultipartFile file) {
-        try {
-            byte[] fileBytes = file.getBytes();
-            String fileFormat = file.getContentType() != null ? file.getContentType().split("/")[1] : "";
-
-            FlaskRequest flaskRequest = FlaskRequest.fromFile(Base64.getEncoder().encodeToString(fileBytes), fileFormat);
-            return flaskRequest;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 
@@ -79,8 +82,7 @@ public class MotionService {
         List<FlaskResponse> flaskResponses =  webClient.post()
                 .uri(flaskUrl + "/checkpose/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(Map.of("pose", flaskRequest.getBase64EncodedFile(),
-                        "format", flaskRequest.getFileFormat()))
+                .bodyValue(Map.of("pose", flaskRequest.getFileName()))
                 .retrieve()
                 .bodyToFlux(FlaskResponse.class)
                 .collectList()
@@ -94,8 +96,7 @@ public class MotionService {
         FlaskResponse flaskResponse =  webClient.post()
                 .uri(flaskUrl + "/voice")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(Map.of("voice", flaskRequest.getBase64EncodedFile(),
-                        "format", flaskRequest.getFileFormat()))
+                .bodyValue(Map.of("voice", flaskRequest.getFileName()))
                 .retrieve()
                 .bodyToMono(FlaskResponse.class)
                 .block();
@@ -125,46 +126,37 @@ public class MotionService {
 //        return flaskResponse;
 //    }
 
+    // Gif, Fbx Url을 찾는 공통 로직
+    public Page<ViewResponse> createViewResponse(Long userId, Pageable pageable) {
+        List<ViewResponse> viewResponses = new ArrayList<>();
+        List<String> allGifs = new ArrayList<>();
+        List<String> allFbxs = new ArrayList<>();
 
-    // 메세지를 통한 gif, fbx 찾기
-    @Transactional(readOnly = true)
-    public Page<ViewResponse> findGifByMessages(String message, Pageable pageable) {
-        // Flask 서버 통신
-        // 분석한 결과를 문자열 리스트로 반환받음
-        List<FlaskResponse> flaskResponses = WebClient.create()
-                .post()
-                .uri(flaskUrl + "/message")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(Collections.singletonMap("pose", message))
-                .retrieve()
-                .bodyToFlux(FlaskResponse.class)
-                .collectList()
-                .block();
+        Optional<User> userRepositoryById = userRepository.findById(userId);
 
-        List<String> responseMessages = flaskResponses.stream()
-                .map(FlaskResponse::getResponseMessage)
+        User user = userRepositoryById.get();
+
+        List<String> userHistories = Arrays.stream(user.getUserHistory().split(", "))
+                .map(String::valueOf)
                 .collect(Collectors.toList());
 
-        // 공통 로직을 활용하여 gif, fbx 찾기
-        List<ViewResponse> viewResponses = createViewResponse(responseMessages, pageable);
+        for (String userHistory : userHistories) {
+            Page<String> gifPage = motionRepository.findGifByMotionContaining(userHistory, pageable);
+            Page<String> fbxPage = motionRepository.findFbxByMotionContaining(userHistory, pageable);
 
-        return new PageImpl<>(viewResponses, pageable, viewResponses.size());
-    }
-
-    // Gif, Fbx Url을 찾는 공통 로직
-    private List<ViewResponse> createViewResponse(List<String> messages, Pageable pageable) {
-        List<ViewResponse> viewResponses = new ArrayList<>();
-
-        for (String message : messages) {
-            Page<String> gifPage = motionRepository.findGifByMotionContaining(message, pageable);
-            Page<String> fbxPage = motionRepository.findFbxByMotionContaining(message, pageable);
-
-            // 각 페이지의 URL을 가져와 ViewResponse 생성
-            ViewResponse viewResponse = ViewResponse.fromPage(gifPage, fbxPage);
-            viewResponses.add(viewResponse);
+            // 각 페이지의 URL을 가져와 리스트에 추가
+            allGifs.addAll(gifPage.getContent());
+            allFbxs.addAll(fbxPage.getContent());
         }
 
-        // List<ViewResponse>를 Page<ViewResponse>로 변환
-        return viewResponses;
+        // 전체 아이템 수 계산
+        int totalItems = allGifs.size() + allFbxs.size();
+
+        // 전체 아이템을 하나의 ViewResponse로 만들어서 리스트에 추가
+        ViewResponse viewResponse = ViewResponse.fromList(allGifs, allFbxs);
+        viewResponses.add(viewResponse);
+
+        return new PageImpl<>(viewResponses, pageable, totalItems);
     }
+
 }

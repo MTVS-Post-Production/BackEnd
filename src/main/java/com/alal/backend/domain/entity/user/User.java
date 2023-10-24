@@ -55,7 +55,7 @@ public class User extends DefaultTime {
     public User(){}
 
     @Builder
-    public User(String name, String email, String password, Role role, Provider provider, String providerId, String imageUrl, Long id){
+    public User(String name, String email, String password, Role role, Provider provider, String providerId, String imageUrl, Long id, String userHistory){
         this.id = id;
         this.email = email;
         this.password = password;

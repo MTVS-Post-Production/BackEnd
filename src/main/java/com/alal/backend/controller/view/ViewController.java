@@ -7,6 +7,7 @@ import com.alal.backend.payload.request.auth.FbxRequest;
 import com.alal.backend.payload.request.auth.FlaskRequest;
 import com.alal.backend.payload.response.FbxResponse;
 import com.alal.backend.payload.response.FlaskResponse;
+import com.alal.backend.payload.response.UpdateUserHistoryResponse;
 import com.alal.backend.payload.response.ViewResponse;
 import com.alal.backend.service.user.MotionService;
 import java.net.HttpCookie;
@@ -37,9 +38,11 @@ public class ViewController {
     private final MotionService motionService;
 
     @GetMapping
-    public String main(Model model, @CurrentUser UserPrincipal userPrincipal,
+    public String main(Model model,
+//                       @CurrentUser UserPrincipal userPrincipal,
                        @PageableDefault(size = 30) Pageable pageable) {
-        Long userId = userPrincipal.getId();
+//        Long userId = userPrincipal.getId();
+        Long userId = 4L;
         Page<ViewResponse> viewResponses = motionService.createViewResponse(userId, pageable);
 
         model.addAttribute("motionUrls", viewResponses);
@@ -50,17 +53,21 @@ public class ViewController {
     // 클라이언트에서 동영상 파일(mp4)을 받아 Flask 서버와 통신하여 문자열 리스트를 받음
     @PostMapping("/video")
     @ResponseBody
-    public String videoPost(@RequestBody FlaskRequest flaskRequest, @CurrentUser UserPrincipal userPrincipal) {
-        Long userId = userPrincipal.getId();
-        motionService.findUrlByUploadMp4(flaskRequest, userId);
+    public ResponseEntity<UpdateUserHistoryResponse> videoPost(@RequestBody FlaskRequest flaskRequest
+//                            @CurrentUser UserPrincipal userPrincipal
+    ) {
+//        Long userId = userPrincipal.getId();
+        Long userId = 4L;
+        UpdateUserHistoryResponse updateUserHistoryResponse = motionService.findUrlByUploadMp4(flaskRequest, userId);
 
-        return "success";
+        return ResponseEntity.ok(updateUserHistoryResponse);
     }
 
     // 클라이언트에서 음성 파일을 받아 Flask 서버와 통신 후 변조된 음성 파일 응답
     @PostMapping("/voice")
     @ResponseBody
     public ResponseEntity<FlaskResponse> voicePost(@RequestBody FlaskRequest flaskRequest
+//                                                   @CurrentUser UserPrincipal userPrincipal
                                                    ) {
         FlaskResponse flaskResponse = motionService.uploadAndRespondWithAudioFileSuccess(flaskRequest);
         return ResponseEntity.ok(flaskResponse);

@@ -3,6 +3,7 @@ package com.alal.backend.service.user;
 import com.alal.backend.domain.entity.user.User;
 import com.alal.backend.payload.request.auth.FlaskRequest;
 import com.alal.backend.payload.response.FlaskResponse;
+import com.alal.backend.payload.response.UpdateUserHistoryResponse;
 import com.alal.backend.payload.response.ViewResponse;
 import com.alal.backend.repository.user.MotionRepository;
 import com.alal.backend.repository.user.UserRepository;
@@ -37,7 +38,7 @@ public class MotionService {
 
     // 동영상 파일 Flask 서버와 통신 후 url 응답
     @Transactional
-    public void findUrlByUploadMp4(FlaskRequest flaskRequest, Long userId) {
+    public UpdateUserHistoryResponse findUrlByUploadMp4(FlaskRequest flaskRequest, Long userId) {
         // Flask 서버 통신
         List<FlaskResponse> flaskResponses = communicateWithFlaskServer(flaskRequest);
 
@@ -46,14 +47,25 @@ public class MotionService {
                 .map(FlaskResponse::getResponseMessage)
                 .collect(Collectors.joining(", "));
 
-        Optional<User> user = userRepository.findById(userId);
+        Optional<User> userRepositoryById = userRepository.findById(userId);
+        User user = userRepositoryById.get();
 
-        if (user.get().getUserHistory() == null) {
-            user.get().historyUpdate(responseMessageToString);
+        UpdateUserHistoryResponse updateUserHistoryResponse = updateUserHistoryByResponseMessage(user, responseMessageToString);
+
+        return updateUserHistoryResponse;
+    }
+
+    @Transactional
+    public UpdateUserHistoryResponse updateUserHistoryByResponseMessage(User user, String responseMessageToString) {
+        if (user.getUserHistory() == null) {
+            user.historyUpdate(responseMessageToString);
         }
         else {
-            user.get().historyUpdate(responseMessageToString);
+            user.historyUpdate(responseMessageToString);
         }
+
+        UpdateUserHistoryResponse updateUserHistoryResponse = UpdateUserHistoryResponse.fromEntity(user);
+        return updateUserHistoryResponse;
     }
 
     // 음성 파일 Flask 서버와 통신 후 base64 문자열 응답

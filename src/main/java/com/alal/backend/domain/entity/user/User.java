@@ -3,8 +3,10 @@ package com.alal.backend.domain.entity.user;
 import com.alal.backend.domain.entity.time.DefaultTime;
 import com.alal.backend.payload.request.auth.ProfileUpdateRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -14,6 +16,8 @@ import javax.validation.constraints.NotNull;
 @DynamicUpdate
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @Table(name = "user")
 public class User extends DefaultTime {
     @Id
@@ -52,14 +56,14 @@ public class User extends DefaultTime {
     
     public User(){}
 
-    @Builder
-    public User(String name, String email, String password, Role role, Provider provider, String providerId, String imageUrl){
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.provider = provider;
-        this.role = role;
-    }
+//    @Builder
+//    public User(String name, String email, String password, Role role, Provider provider, String providerId, String imageUrl){
+//        this.email = email;
+//        this.password = password;
+//        this.name = name;
+//        this.provider = provider;
+//        this.role = role;
+//    }
 
     public void updateName(String name){
         this.name = name;

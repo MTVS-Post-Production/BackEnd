@@ -36,7 +36,7 @@ public class MotionService {
     @Value("${ai.model.serving.url}")
     private String flaskUrl;
 
-    // 동영상 파일 Flask 서버와 통신 후 url 응답
+    // 동영상 파일 Flask 서버와 통신 후 응답 메세지 유저 테이블에 저장
     @Transactional
     public UpdateUserHistoryResponse findUrlByUploadMp4(FlaskRequest flaskRequest, Long userId) {
         // Flask 서버 통신

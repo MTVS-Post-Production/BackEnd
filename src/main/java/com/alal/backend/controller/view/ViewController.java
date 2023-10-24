@@ -97,4 +97,9 @@ public class ViewController {
         headers.setLocation(redirectUri);
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
+
+    @GetMapping("/result")
+    public String resultPage() {
+        return "main/result";
+    }
 }

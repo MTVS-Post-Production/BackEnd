@@ -93,14 +93,11 @@
 <body>
 <th:block th:insert="~{common/header}"/>
 <div class="image-container" th:each="motionUrl : ${motionUrls}">
-    <div class="image-item" th:each="gifUrl : ${motionUrl.gifUrls}">
+    <div class="image-item" th:each="gifUrl, gifIndex : ${motionUrl.gifUrls}">
         <div style="position:relative; display:inline-block;">
             <img th:src="${gifUrl}" alt="Motion Image" class="motion-image">
+            <button type='button' class='send-btn' th:data-url="${motionUrl.fbxUrls[gifIndex.index]}">Send</button>
         </div>
-    </div>
-
-    <div th:each="fbxUrl : ${motionUrl.fbxUrls}">
-        <button type='button' class='send-btn' th:data-url="${fbxUrl}">Send</button>
     </div>
 </div>
 
@@ -142,8 +139,7 @@
                 axios.post('/view/send/fbx', { 'fbxUrl': fbxUrl })
                     .then(function(response){
                         const redirectUrl = '/view/result?fbxUrl=' + fbxUrl;
-                        console.log(response.headers.location);
-                        // window.location.replace(response.data.fbxUrl);
+                        console.log(redirectUrl);
                         alert("다운로드 성공!");
                         window.location.href = redirectUrl;
                     })

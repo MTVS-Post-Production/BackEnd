@@ -73,33 +73,34 @@ class MotionServiceTest {
                 user.getId().equals(updateUserHistoryResponse.getUserId()));
     }
 
-//    @DisplayName("mp4 파일을 정상적으로 업로드하여 gif, fbx 주소를 가져오는지")
-//    @Test
-//    void findUrlByUploadMp4() {
-//        // given
-//        FlaskRequest flaskRequest = FlaskRequest.builder()
-//                .fileName("SGVsbG8sIFdvcmxkIQ==")
-//                .build();
-//
-//        Pageable pageable = PageRequest.of(0, 30);
-//
-//        List<ViewResponse> expectedResponses = new ArrayList<>();
-//        ViewResponse viewResponse = ViewResponse.builder().build();
-//        viewResponse.setGifUrls(Arrays.asList("sampleGif1", "sampleGif2"));
-//        viewResponse.setFbxUrls(Arrays.asList("sampleFbx1", "sampleFbx2"));
-//        expectedResponses.add(viewResponse);
-//
-//        Page<ViewResponse> expectedPages = new PageImpl<>(expectedResponses, pageable, expectedResponses.size());
-//
-//        Mockito.when(motionServiceMock.findUrlByUploadMp4(flaskRequest)).thenReturn(expectedPages);
-//
-//        // when
-//        Page<ViewResponse> resultPages = motionServiceMock.findUrlByUploadMp4(flaskRequest);
-//
-//        // then
-//        assertEquals(expectedPages.getContent(), resultPages.getContent());
-//    }
-//
+    @DisplayName("유저 아이디를 토대로 gif, fbx 주소를 가져오는지")
+    @Test
+    void findUrlByUploadMp4() {
+        // given
+        User user = User.builder()
+                .id(1L)
+                .userHistory("sample")
+                .build();
+
+        Pageable pageable = PageRequest.of(0, 30);
+
+        List<ViewResponse> expectedResponses = new ArrayList<>();
+        ViewResponse viewResponse = ViewResponse.builder().build();
+        viewResponse.setGifUrls(Arrays.asList("sampleGif1", "sampleGif2"));
+        viewResponse.setFbxUrls(Arrays.asList("sampleFbx1", "sampleFbx2"));
+        expectedResponses.add(viewResponse);
+
+        Page<ViewResponse> expectedPages = new PageImpl<>(expectedResponses, pageable, expectedResponses.size());
+
+        Mockito.when(motionServiceMock.createViewResponse(user.getId(), pageable)).thenReturn(expectedPages);
+
+        // when
+        Page<ViewResponse> resultPages = motionServiceMock.createViewResponse(user.getId(), pageable);
+
+        // then
+        assertEquals(expectedPages.getContent(), resultPages.getContent());
+    }
+
 //    @DisplayName("음성 파일을 정상적으로 업로드하여 클라이언트에 응답하는지")
 //    @Test
 //    void uploadAudioFileAndReceiveResponseTest() throws IOException {

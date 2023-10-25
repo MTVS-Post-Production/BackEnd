@@ -115,43 +115,44 @@ public class MotionService {
     }
 
     // Flask 서버 통신 (음성)
-//    private FlaskResponse communicateWithFlaskServerByVoice(FlaskVoiceRequest flaskRequest) {
-//        FlaskResponse flaskResponse =  webClient.post()
-//                .uri(flaskUrl + "/voice/convert")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .bodyValue(Map.of("voice", flaskRequest.getFileName(),
-//                        "model_name", flaskRequest.getModelName()
-//                        ))
-//                .retrieve()
-//                .bodyToMono(FlaskResponse.class)
-//                .block();
-//
-//        return flaskResponse;
-//    }
-
-    // 메모리 억지로 늘리기
     private FlaskResponse communicateWithFlaskServerByVoice(FlaskVoiceRequest flaskRequest, Long userId) {
-        ExchangeStrategies strategies = ExchangeStrategies.builder()
-                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1024 * 10))
-                .build();
-
-        WebClient localWebClient = WebClient.builder()
-                .exchangeStrategies(strategies)
-                .build();
-
-        FlaskResponse flaskResponse = localWebClient.post()
+        FlaskResponse flaskResponse =  webClient.post()
                 .uri(flaskUrl + "/voice/convert")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(Map.of(
-                        "voice", flaskRequest.getFileName(),
+                .bodyValue(Map.of("voice", flaskRequest.getFileName(),
                         "model_name", flaskRequest.getModelName(),
-                        "user_id", userId))
+                        "user_id", userId)
+                        )
                 .retrieve()
                 .bodyToMono(FlaskResponse.class)
                 .block();
 
         return flaskResponse;
     }
+
+    // 메모리 억지로 늘리기
+//    private FlaskResponse communicateWithFlaskServerByVoice(FlaskVoiceRequest flaskRequest, Long userId) {
+//        ExchangeStrategies strategies = ExchangeStrategies.builder()
+//                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1024 * 10))
+//                .build();
+//
+//        WebClient localWebClient = WebClient.builder()
+//                .exchangeStrategies(strategies)
+//                .build();
+//
+//        FlaskResponse flaskResponse = localWebClient.post()
+//                .uri(flaskUrl + "/voice/convert")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .bodyValue(Map.of(
+//                        "voice", flaskRequest.getFileName(),
+//                        "model_name", flaskRequest.getModelName(),
+//                        "user_id", userId))
+//                .retrieve()
+//                .bodyToMono(FlaskResponse.class)
+//                .block();
+//
+//        return flaskResponse;
+//    }
 
     // Gif, Fbx Url을 찾는 공통 로직
     public Page<ViewResponse> createViewResponse(Long userId, Pageable pageable) {

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<!--    <link rel="stylesheet" href="/css/imagePageStyle.css" />-->
+
     <style>
         body {
             background-color: #f0f0f0;
@@ -96,22 +98,22 @@
     <div class="image-item" th:each="gifUrl, gifIndex : ${motionUrl.gifUrls}">
         <div style="position:relative; display:inline-block;">
             <img th:src="${gifUrl}" alt="Motion Image" class="motion-image">
-            <button type='button' class='send-btn' th:data-url="${motionUrl.fbxUrls[gifIndex.index]}">Send</button>
+            <button type='button' class='send-btn' th:data-url="${motionUrl.fbxUrls[gifIndex.index]}">DownLoad</button>
         </div>
     </div>
 </div>
 
-<!-- 페이징 부분 추가 -->
+<!-- 페이징  -->
 <div class="pagination">
     <ul class="pagination">
         <li th:class="${motionUrls.first} ? 'page-item disabled' : 'page-item'">
-            <a th:href="@{'?page=' + ${motionUrls.number - 1}}" class="page-link">&laquo;&laquo;</a>
+            <a th:href="@{'?page=' + ${motionUrls.number - 1}}" class="page-link">Previous</a>
         </li>
-        <li th:each="page, iterStat : ${motionUrls}">
-            <a th:href="@{'?page=' + ${iterStat.index}}" class="page-link" th:text="${iterStat.index + 1}"></a>
+        <li th:each="i : ${#numbers.sequence(0, motionUrls.totalPages - 1)}" th:class="${i == motionUrls.number} ? 'page-item active' : 'page-item'">
+            <a th:href="@{'?page=' + ${i}}" class="page-link" th:text="${i + 1}"></a>
         </li>
         <li th:class="${motionUrls.last} ? 'page-item disabled' : 'page-item'">
-            <a th:href="@{'?page=' + ${motionUrls.number + 1}}" class="page-link">&raquo;&raquo;</a>
+            <a th:href="@{'?page=' + ${motionUrls.number + 1}}" class="page-link">Next</a>
         </li>
     </ul>
 </div>

@@ -2,23 +2,14 @@ package com.alal.backend.service.user;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.alal.backend.domain.entity.user.User;
-import com.alal.backend.lib.JsonUtils;
-import com.alal.backend.payload.request.auth.FlaskRequest;
-import com.alal.backend.payload.request.auth.SignUpRequest;
 import com.alal.backend.payload.response.UpdateUserHistoryResponse;
 import com.alal.backend.payload.response.ViewResponse;
 import com.alal.backend.repository.user.UserRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.json.simple.JSONObject;
-import org.junit.Assert;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -31,12 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 
 @SpringBootTest
@@ -100,31 +86,4 @@ class MotionServiceTest {
         // then
         assertEquals(expectedPages.getContent(), resultPages.getContent());
     }
-
-//    @DisplayName("음성 파일을 정상적으로 업로드하여 클라이언트에 응답하는지")
-//    @Test
-//    void uploadAudioFileAndReceiveResponseTest() throws IOException {
-//        // given
-//        MockMultipartFile voiceFile = new MockMultipartFile(
-//                "sample",
-//                "sample.mp3",
-//                "audio/mpeg",
-//                "myFile".getBytes()
-//        );
-//
-//        FlaskResponse expectedResponse = new FlaskResponse("Expected response message");
-//
-//        // Assume that the service is a mock or spy.
-//        // You should replace 'motionService' with the actual name of your service instance.
-//        Mockito.when(motionService.uploadAndRespondWithAudioFileSuccess(voiceFile)).thenReturn(expectedResponse);
-//
-//        // when
-//        FlaskResponse actualResponse = motionService.uploadAndRespondWithAudioFileSuccess(voiceFile);
-//
-//        // then
-//        Assertions.assertNotNull(actualResponse, "The response should not be null");
-//        Assertions.assertNotEquals(expectedResponse.getResponseMessage(), actualResponse.getResponseMessage(),
-//                "The response message should match the expected message");
-//    }
-
 }

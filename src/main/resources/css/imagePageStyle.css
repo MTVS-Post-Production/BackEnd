@@ -1,0 +1,83 @@
+body {
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+.send-btn {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+
+
+    background-color:#4CAF50; /* 초록 */
+    border:none;
+    color:white;
+    padding:15px 32px;
+    text-align:center;
+    text-decoration:none;
+    display:inline-block;
+    font-size:16px;
+    visibility: hidden;
+}
+
+.motion-image {
+    transition: filter 0.3s;
+    max-width :100%;
+    height:auto; // 이미지 크기 조절
+}
+
+.motion-image.blurred {
+    filter: blur(5px);
+}
+
+.image-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.image-item {
+    position:relative;
+    display:inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    justify-content: center; /* Center-align pagination */
+}
+
+.pagination .page-item {
+    margin-right: 5px;
+}
+
+.pagination .page-link {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #007bff;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s ease;
+}
+
+.pagination .page-link:hover {
+    z-index: 2;
+    color: #0056b3;
+    text-decoration: none;
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    cursor: not-allowed;
+    background-color: #fff;
+    border-color: #dee2e6;
+}

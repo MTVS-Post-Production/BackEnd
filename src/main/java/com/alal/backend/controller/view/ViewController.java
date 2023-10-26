@@ -1,18 +1,14 @@
 package com.alal.backend.controller.view;
 
-import com.alal.backend.config.security.token.CurrentUser;
-import com.alal.backend.config.security.token.UserPrincipal;
-import com.alal.backend.payload.request.auth.FlaskVoiceRequest;
 import com.alal.backend.payload.request.auth.FbxRequest;
 import com.alal.backend.payload.request.auth.FlaskRequest;
+import com.alal.backend.payload.request.auth.FlaskVoiceRequest;
 import com.alal.backend.payload.response.FbxResponse;
-import com.alal.backend.payload.response.FlaskResponse;
 import com.alal.backend.payload.response.UpdateUserHistoryResponse;
 import com.alal.backend.payload.response.ViewResponse;
 import com.alal.backend.payload.response.VoiceResponse;
 import com.alal.backend.service.user.MotionService;
-import java.io.IOException;
-import java.util.Base64;
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,11 +18,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
 
 @Controller
 @RequestMapping("/view")

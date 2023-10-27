@@ -22,7 +22,6 @@ public class DefaultAssert extends Assert{
         }
     }
 
-
     public static void isTrue(boolean value, String message){
         if(!value){
             throw new DefaultException(ErrorCode.INVALID_CHECK, message);

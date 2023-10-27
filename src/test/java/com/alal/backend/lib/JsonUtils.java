@@ -6,7 +6,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class JsonUtils {
-    
+
     //dto를 object mapper로 통해 json 으로 저장
     public static String asJsonToString(Object object) {
         try {
@@ -23,5 +23,5 @@ public class JsonUtils {
         JSONObject jsonObject = (JSONObject) object;
         return jsonObject;
     }
-    
+
 }

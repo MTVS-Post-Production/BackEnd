@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AdviceAspect {
     
-    @Around("execution(* com.sample.advice.*.*(..))")
+    @Around("execution(* com.alal.backend.*.*(..))")
     public Object adviceController(ProceedingJoinPoint proceedingJoinPoint) throws Throwable, Exception {
         log.error("Adivce Error = {}.{}", proceedingJoinPoint.getSignature().getDeclaringTypeName(), proceedingJoinPoint.getSignature().getName());
         Object result = proceedingJoinPoint.proceed();

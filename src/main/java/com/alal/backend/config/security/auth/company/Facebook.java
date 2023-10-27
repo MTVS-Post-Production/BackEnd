@@ -19,6 +19,11 @@ public class Facebook extends OAuth2UserInfo {
     }
 
     @Override
+    public String getLogin() {
+        return null;
+    }
+
+    @Override
     public String getName() {
         return (String) attributes.get("name");
     }

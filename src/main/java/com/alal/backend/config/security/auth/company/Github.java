@@ -20,6 +20,11 @@ public class Github extends OAuth2UserInfo {
     }
 
     @Override
+    public String getLogin() {
+        return (String) attributes.get("login");
+    }
+
+    @Override
     public String getName() {
         
         return (String) attributes.get("name");

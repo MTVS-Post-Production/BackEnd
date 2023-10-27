@@ -8,16 +8,19 @@ import com.alal.backend.domain.entity.user.Role;
 import com.alal.backend.domain.entity.user.Token;
 import com.alal.backend.domain.entity.user.User;
 import com.alal.backend.domain.mapping.TokenMapping;
-import com.alal.backend.payload.request.auth.ChangePasswordRequest;
+import com.alal.backend.payload.response.TestTokenResponse;
+import com.alal.backend.payload.request.auth.ProfileUpdateRequest;
 import com.alal.backend.payload.request.auth.RefreshTokenRequest;
 import com.alal.backend.payload.request.auth.SignInRequest;
 import com.alal.backend.payload.request.auth.SignUpRequest;
 import com.alal.backend.payload.response.ApiResponse;
 import com.alal.backend.payload.response.AuthResponse;
+import com.alal.backend.payload.response.ProfileUpdateResponse;
 import com.alal.backend.payload.response.Message;
 import com.alal.backend.repository.auth.TokenRepository;
 import com.alal.backend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,8 +28,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
 
@@ -65,18 +70,15 @@ public class AuthService {
         return ResponseEntity.ok(apiResponse);
     }
 
-    public ResponseEntity<?> modify(UserPrincipal userPrincipal, ChangePasswordRequest passwordChangeRequest){
+    @Transactional
+    public ResponseEntity<?> modify(UserPrincipal userPrincipal, @Valid ProfileUpdateRequest profileUpdateRequest) {
         Optional<User> user = userRepository.findById(userPrincipal.getId());
-        boolean passwordCheck = passwordEncoder.matches(passwordChangeRequest.getOldPassword(),user.get().getPassword());
-        DefaultAssert.isTrue(passwordCheck, "잘못된 비밀번호 입니다.");
 
-        boolean newPasswordCheck = passwordChangeRequest.getNewPassword().equals(passwordChangeRequest.getReNewPassword());
-        DefaultAssert.isTrue(newPasswordCheck, "신규 등록 비밀번호 값이 일치하지 않습니다.");
+        user.get().updateProfile(profileUpdateRequest);
 
+        ProfileUpdateResponse profileUpdateResponse = ProfileUpdateResponse.toEntity(user.get());
 
-        passwordEncoder.encode(passwordChangeRequest.getNewPassword());
-
-        return ResponseEntity.ok(true);
+        return ResponseEntity.ok(profileUpdateResponse);
     }
 
     public ResponseEntity<?> signin(SignInRequest signInRequest){
@@ -92,6 +94,7 @@ public class AuthService {
         TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
         Token token = Token.builder()
                             .refreshToken(tokenMapping.getRefreshToken())
+                            .accessToken(tokenMapping.getAccessToken())
                             .userEmail(tokenMapping.getUserEmail())
                             .build();
         tokenRepository.save(token);
@@ -161,7 +164,6 @@ public class AuthService {
     }
 
     private boolean valid(String refreshToken){
-
         //1. 토큰 형식 물리적 검증
         boolean validateCheck = customTokenProviderService.validateToken(refreshToken);
         DefaultAssert.isTrue(validateCheck, "Token 검증에 실패하였습니다.");
@@ -177,5 +179,10 @@ public class AuthService {
         return true;
     }
 
+    public TestTokenResponse getToken(String userEmail) {
+        Optional<Token> token = tokenRepository.findByUserEmail(userEmail);
+        TestTokenResponse testTokenResponse = TestTokenResponse.toEntity(token.get());
 
+        return testTokenResponse;
+    }
 }

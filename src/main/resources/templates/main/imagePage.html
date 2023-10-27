@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<!--    <link rel="stylesheet" href="/css/imagePageStyle.css" />-->
+
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .send-btn {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+
+
+            background-color:#4CAF50; /* 초록 */
+            border:none;
+            color:white;
+            padding:15px 32px;
+            text-align:center;
+            text-decoration:none;
+            display:inline-block;
+            font-size:16px;
+            visibility: hidden;
+        }
+
+        .motion-image {
+            transition: filter 0.3s;
+            max-width :100%;
+            height:auto; // 이미지 크기 조절
+        }
+
+        .motion-image.blurred {
+            filter: blur(5px);
+        }
+
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .image-item {
+            position:relative;
+            display:inline-block;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            justify-content: center; /* Center-align pagination */
+        }
+
+        .pagination .page-item {
+            margin-right: 5px;
+        }
+
+        .pagination .page-link {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: #007bff;
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .pagination .page-link:hover {
+            z-index: 2;
+            color: #0056b3;
+            text-decoration: none;
+            background-color: #e9ecef;
+            border-color: #dee2e6;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            color: #6c757d;
+            pointer-events: none;
+            cursor: not-allowed;
+            background-color: #fff;
+            border-color: #dee2e6;
+        }
+    </style>
+</head>
+<body>
+<th:block th:insert="~{common/header}"/>
+<div class="image-container" th:each="motionUrl : ${motionUrls}">
+    <div class="image-item" th:each="gifUrl, gifIndex : ${motionUrl.gifUrls}">
+        <div style="position:relative; display:inline-block;">
+            <img th:src="${gifUrl}" alt="Motion Image" class="motion-image">
+            <button type='button' class='send-btn' th:data-url="${motionUrl.fbxUrls[gifIndex.index]}">DownLoad</button>
+        </div>
+    </div>
+</div>
+
+<!-- 페이징  -->
+<div class="pagination">
+    <ul class="pagination">
+        <li th:class="${motionUrls.first} ? 'page-item disabled' : 'page-item'">
+            <a th:href="@{'?page=' + ${motionUrls.number - 1}}" class="page-link">Previous</a>
+        </li>
+        <li th:each="i : ${#numbers.sequence(0, motionUrls.totalPages - 1)}" th:class="${i == motionUrls.number} ? 'page-item active' : 'page-item'">
+            <a th:href="@{'?page=' + ${i}}" class="page-link" th:text="${i + 1}"></a>
+        </li>
+        <li th:class="${motionUrls.last} ? 'page-item disabled' : 'page-item'">
+            <a th:href="@{'?page=' + ${motionUrls.number + 1}}" class="page-link">Next</a>
+        </li>
+    </ul>
+</div>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var images = document.querySelectorAll('.motion-image');
+        images.forEach(function(image) {
+            image.addEventListener('click', function() {
+                var sendBtn = this.parentElement.querySelector('.send-btn');
+                this.classList.toggle('blurred');
+
+                sendBtn.style.visibility = sendBtn.style.visibility === 'visible' ? 'hidden' : 'visible';
+            });
+        });
+
+        var buttons = document.querySelectorAll('.send-btn');
+        buttons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                var fbxUrl = this.getAttribute('data-url');
+
+                axios.post('/view/send/fbx', { 'fbxUrl': fbxUrl })
+                    .then(function(response){
+                        const redirectUrl = '/view/result?fbxUrl=' + fbxUrl;
+                        console.log(redirectUrl);
+                        alert("다운로드 성공!");
+                        window.location.href = redirectUrl;
+                    })
+                    .catch(function(error){
+                        alert("다운로드에 실패하였습니다.");
+                    });
+
+            });
+        });
+    });
+</script>
+
+<th:block th:insert="~{common/footer}"/>
+</body>
+</html>

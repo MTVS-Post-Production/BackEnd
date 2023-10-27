@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TimeAspect {
 
-    @Around("execution(* com.sample.controller.*.*(..))")
+    @Around("execution(* com.alal.backend.controller.*.*(..))")
     public Object timerController(ProceedingJoinPoint proceedingJoinPoint) throws Throwable, Exception {
         
         long startTime = System.currentTimeMillis();

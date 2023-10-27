@@ -20,6 +20,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     implementation 'org.apache.poi:poi:5.2.0'
@@ -29,6 +30,7 @@ dependencies {
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.4'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-security', version: '1.6.4'
     testImplementation group: 'org.springdoc', name: 'springdoc-openapi-webmvc-core', version: '1.6.4'
+    testImplementation 'com.github.tomakehurst:wiremock-jre8:2.33.0'
 
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
     testImplementation 'org.projectlombok:lombok:1.18.26'
@@ -37,15 +39,20 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     annotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 
     //mysql
-    implementation 'mysql:mysql-connector-java:8.0.25'
-    runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.33'
+
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+
+    //live Server
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
 }
 
 tasks.named('test') {

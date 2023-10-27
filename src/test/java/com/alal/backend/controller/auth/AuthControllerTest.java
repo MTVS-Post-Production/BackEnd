@@ -8,6 +8,7 @@ import com.alal.backend.payload.request.auth.SignUpRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//@Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles(profiles = "local")
@@ -43,10 +43,17 @@ public class AuthControllerTest {
     private WebApplicationContext context;
 
     @BeforeEach
-    public void init(){
+    public void init() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
                                     .addFilter(new CharacterEncodingFilter("UTF-8", true))
                                     .build();
+
+        signup("string@aa.bb");
+    }
+
+    @AfterEach
+    public void cleanup() throws Exception {
+        remove("string@aa.bb");
     }
 
     private void signup(String email) throws Exception{
@@ -74,7 +81,7 @@ public class AuthControllerTest {
     }
 
     private JSONObject signin(String email) throws Exception{
-        
+
         SignInRequest signInRequest = new SignInRequest();
         signInRequest.setEmail(email);
         signInRequest.setPassword("string");
@@ -95,7 +102,7 @@ public class AuthControllerTest {
     }
 
     private void remove(String email) throws Exception{
-        
+
         JSONObject token = signin(email);
         String accessToken = (String) token.get("accessToken");
 
@@ -116,7 +123,7 @@ public class AuthControllerTest {
         String newPassword = "string";
 
         JSONObject token = signin("string@aa.bb");
-        
+
         String accessToken = (String) token.get("accessToken");
 
         ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
@@ -147,7 +154,7 @@ public class AuthControllerTest {
     void testRefresh() throws Exception {
         //give
         JSONObject token = signin("string@aa.bb");
-        
+
         String accessToken = (String) token.get("accessToken");
         String refreshToken = (String) token.get("refreshToken");
 
@@ -170,7 +177,7 @@ public class AuthControllerTest {
 
     }
 
-    
+
     @Test
     void testDelete() throws Exception {
         //give
@@ -178,7 +185,7 @@ public class AuthControllerTest {
         signup(email);
 
         JSONObject token = signin(email);
-        
+
         String accessToken = (String) token.get("accessToken");
 
         //when
@@ -226,10 +233,10 @@ public class AuthControllerTest {
     void testSignout() throws Exception {
         //give
         JSONObject token = signin("string@aa.bb");
-        
+
         String accessToken = (String) token.get("accessToken");
         String refreshToken = (String) token.get("refreshToken");
-        
+
         //when
         ResultActions actions = this.mockMvc.perform(
                     post("/auth/signout")
@@ -289,7 +296,7 @@ public class AuthControllerTest {
         //give
         JSONObject token = signin("string@aa.bb");
         String accessToken = token.get("accessToken").toString();
-        
+
         //when
         ResultActions actions = this.mockMvc.perform(
                     get("/auth/")

@@ -45,6 +45,7 @@ public class CustomSimpleUrlAuthenticationSuccessHandler extends SimpleUrlAuthen
         DefaultAssert.isAuthentication(!response.isCommitted());
 
 //        String targetUrl = determineTargetUrl(request, response, authentication);
+//        clearAuthenticationAttributes(request, response);
 //        getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
         sendTokenResponse(request, response, authentication);
@@ -59,16 +60,30 @@ public class CustomSimpleUrlAuthenticationSuccessHandler extends SimpleUrlAuthen
         Token token = Token.builder()
                 .userEmail(tokenMapping.getUserEmail())
                 .refreshToken(tokenMapping.getRefreshToken())
+                .accessToken(tokenMapping.getAccessToken())
                 .build();
         tokenRepository.save(token);
 
-        // ObjectMapper를 사용하여 TokenResponse 객체를 JSON 문자열로 변환
-        ObjectMapper objectMapper = new ObjectMapper();
-        String tokenResponseJson = objectMapper.writeValueAsString(new TokenResponse(tokenMapping.getAccessToken()));
+//        TokenResponse tokenResponse = TokenResponse.toTokenMapping(tokenMapping);
 
-        // 응답 본문에 JSON 형식으로 토큰을 담아서 보냄
-        response.setContentType("application/json");
-        response.getWriter().write(tokenResponseJson);
+        Cookie accessTokenCookie = new Cookie("accessToken", tokenMapping.getAccessToken());
+        Cookie refreshTokenCookie = new Cookie("refreshToken", tokenMapping.getAccessToken());
+
+        accessTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setHttpOnly(true);
+
+        accessTokenCookie.setSecure(true);
+        refreshTokenCookie.setSecure(true);
+
+        response.addCookie(accessTokenCookie);
+        response.addCookie(refreshTokenCookie);
+
+        // ObjectMapper를 사용하여 TokenResponse 객체를 JSON 문자열로 변환
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        String tokenResponseJson = objectMapper.writeValueAsString(tokenResponse);
+//
+//        response.setContentType("application/json");
+//        response.getWriter().write(tokenResponseJson);
 
         clearAuthenticationAttributes(request, response);
     }

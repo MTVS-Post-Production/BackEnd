@@ -3,24 +3,24 @@ package com.alal.backend.service.auth;
 
 import com.alal.backend.advice.assertThat.DefaultAssert;
 import com.alal.backend.config.security.token.UserPrincipal;
+import com.alal.backend.domain.dto.response.JwtTokenResponse;
 import com.alal.backend.domain.entity.user.Provider;
 import com.alal.backend.domain.entity.user.Role;
 import com.alal.backend.domain.entity.user.Token;
 import com.alal.backend.domain.entity.user.User;
 import com.alal.backend.domain.mapping.TokenMapping;
-import com.alal.backend.payload.response.TestTokenResponse;
+import com.alal.backend.domain.dto.response.TestTokenResponse;
 import com.alal.backend.payload.request.auth.ProfileUpdateRequest;
 import com.alal.backend.payload.request.auth.RefreshTokenRequest;
 import com.alal.backend.payload.request.auth.SignInRequest;
 import com.alal.backend.payload.request.auth.SignUpRequest;
 import com.alal.backend.payload.response.ApiResponse;
 import com.alal.backend.payload.response.AuthResponse;
-import com.alal.backend.payload.response.ProfileUpdateResponse;
+import com.alal.backend.domain.dto.response.ProfileUpdateResponse;
 import com.alal.backend.payload.response.Message;
 import com.alal.backend.repository.auth.TokenRepository;
 import com.alal.backend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,8 +31,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.Cookie;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -45,6 +47,9 @@ public class AuthService {
     
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
+
+    private static final String ACCESS_TOKEN_VALUE = "accessToken";
+    private static final String REFRESH_TOKEN_VALUE = "refreshToken";
     
 
     public ResponseEntity<?> whoAmI(UserPrincipal userPrincipal){
@@ -179,10 +184,23 @@ public class AuthService {
         return true;
     }
 
-    public TestTokenResponse getToken(String userEmail) {
-        Optional<Token> token = tokenRepository.findByUserEmail(userEmail);
-        TestTokenResponse testTokenResponse = TestTokenResponse.toEntity(token.get());
+    public JwtTokenResponse getAccessTokenAndRefreshTokenAfterOauthLogin(Cookie[] cookies) {
+        if (cookies == null) {
+            throw new IllegalArgumentException();
+        }
 
-        return testTokenResponse;
+        String accessToken = findCookieValue(cookies, ACCESS_TOKEN_VALUE);
+        String refreshToken = findCookieValue(cookies, REFRESH_TOKEN_VALUE);
+
+        return JwtTokenResponse.fromCookie(accessToken, refreshToken);
+    }
+
+    private String findCookieValue(Cookie[] cookies, String cookieName) {
+        return Arrays.stream(cookies)
+                .filter(cookie -> cookieName.equals(cookie.getName()))
+                .map(Cookie::getValue)
+                .findFirst()
+                .orElseThrow(
+                        () -> new IllegalArgumentException());
     }
 }

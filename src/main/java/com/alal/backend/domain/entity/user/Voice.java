@@ -1,7 +1,7 @@
 package com.alal.backend.domain.entity.user;
 
 import com.alal.backend.payload.request.auth.FlaskVoiceRequest;
-import com.alal.backend.payload.response.FlaskResponse;
+import com.alal.backend.domain.dto.response.FlaskResponse;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -2,7 +2,7 @@ package com.alal.backend.service.user;
 
 import com.alal.backend.payload.request.auth.FlaskRequest;
 import com.alal.backend.payload.request.auth.FlaskVoiceRequest;
-import com.alal.backend.payload.response.FlaskResponse;
+import com.alal.backend.domain.dto.response.FlaskResponse;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;

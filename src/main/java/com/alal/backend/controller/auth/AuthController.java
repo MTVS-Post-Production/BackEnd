@@ -6,7 +6,7 @@ import com.alal.backend.advice.payload.ErrorResponse;
 import com.alal.backend.config.security.token.CurrentUser;
 import com.alal.backend.config.security.token.UserPrincipal;
 import com.alal.backend.domain.entity.user.User;
-import com.alal.backend.payload.response.TestTokenResponse;
+import com.alal.backend.domain.dto.response.TestTokenResponse;
 import com.alal.backend.payload.request.auth.*;
 import com.alal.backend.payload.response.AuthResponse;
 import com.alal.backend.payload.response.Message;
@@ -21,10 +21,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.IOException;
 
 @Tag(name = "Authorization", description = "Authorization API")
 @RequiredArgsConstructor
@@ -119,18 +117,5 @@ public class AuthController {
         @Parameter(description = "Schemas의 RefreshTokenRequest를 참고해주세요.", required = true) @Valid @RequestBody RefreshTokenRequest tokenRefreshRequest
     ) {
         return authService.signout(tokenRefreshRequest);
-    }
-
-    @Operation(summary = "이메일을 통한 토큰 응답", description = "이메일을 받아 엑세스 토큰과 리프레시 토큰을 응답합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "토큰 응답 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Message.class))}),
-            @ApiResponse(responseCode = "400", description = "토큰 응답 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-    })
-    @GetMapping("/token/{userEmail}")
-    @ResponseBody
-    public ResponseEntity<TestTokenResponse> testGet(@PathVariable String userEmail){
-        TestTokenResponse testTokenResponse = authService.getToken(userEmail);
-
-        return ResponseEntity.ok(testTokenResponse);
     }
 }

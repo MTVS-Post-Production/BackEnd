@@ -44,27 +44,25 @@ public class CustomSimpleUrlAuthenticationSuccessHandler extends SimpleUrlAuthen
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         DefaultAssert.isAuthentication(!response.isCommitted());
 
-//        String targetUrl = determineTargetUrl(request, response, authentication);
-//        clearAuthenticationAttributes(request, response);
-//        getRedirectStrategy().sendRedirect(request, response, targetUrl);
-
-        sendTokenResponse(request, response, authentication);
+        String targetUrl = determineTargetUrl(request, response, authentication);
+        clearAuthenticationAttributes(request, response);
+        getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
-    protected void sendTokenResponse(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         Optional<String> redirectUri = CustomCookie.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME).map(Cookie::getValue);
 
-        DefaultAssert.isAuthentication(!(redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())));
+        DefaultAssert.isAuthentication( !(redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) );
+
+        String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
         TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
         Token token = Token.builder()
                 .userEmail(tokenMapping.getUserEmail())
-                .refreshToken(tokenMapping.getRefreshToken())
                 .accessToken(tokenMapping.getAccessToken())
+                .refreshToken(tokenMapping.getRefreshToken())
                 .build();
         tokenRepository.save(token);
-
-//        TokenResponse tokenResponse = TokenResponse.toTokenMapping(tokenMapping);
 
         Cookie accessTokenCookie = new Cookie("accessToken", tokenMapping.getAccessToken());
         Cookie refreshTokenCookie = new Cookie("refreshToken", tokenMapping.getAccessToken());
@@ -78,32 +76,8 @@ public class CustomSimpleUrlAuthenticationSuccessHandler extends SimpleUrlAuthen
         response.addCookie(accessTokenCookie);
         response.addCookie(refreshTokenCookie);
 
-        // ObjectMapper를 사용하여 TokenResponse 객체를 JSON 문자열로 변환
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        String tokenResponseJson = objectMapper.writeValueAsString(tokenResponse);
-//
-//        response.setContentType("application/json");
-//        response.getWriter().write(tokenResponseJson);
-
-        clearAuthenticationAttributes(request, response);
-    }
-
-    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        Optional<String> redirectUri = CustomCookie.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME).map(Cookie::getValue);
-
-        DefaultAssert.isAuthentication( !(redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) );
-
-        String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
-
-        TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
-        Token token = Token.builder()
-                .userEmail(tokenMapping.getUserEmail())
-                .refreshToken(tokenMapping.getRefreshToken())
-                .build();
-        tokenRepository.save(token);
-
         return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("token", tokenMapping.getAccessToken())
+//                .queryParam("token", tokenMapping.getAccessToken())<
                 .build().toUriString();
     }
 

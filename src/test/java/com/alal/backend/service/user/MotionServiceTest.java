@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.alal.backend.domain.entity.user.User;
-import com.alal.backend.payload.response.UpdateUserHistoryResponse;
-import com.alal.backend.payload.response.ViewResponse;
+import com.alal.backend.domain.dto.response.UpdateUserHistoryResponse;
+import com.alal.backend.domain.dto.response.ViewResponse;
 import com.alal.backend.repository.user.UserRepository;
 import java.util.ArrayList;
 import java.util.Arrays;

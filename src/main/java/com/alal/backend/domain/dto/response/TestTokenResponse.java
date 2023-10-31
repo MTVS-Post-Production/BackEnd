@@ -1,4 +1,4 @@
-package com.alal.backend.payload.response;
+package com.alal.backend.domain.dto.response;
 
 import com.alal.backend.domain.entity.user.Token;
 import lombok.Builder;

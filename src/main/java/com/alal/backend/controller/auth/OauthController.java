@@ -24,9 +24,4 @@ public class OauthController {
     public ResponseEntity<JwtTokenResponse> oauthLoginSuccess(HttpServletRequest request) {
         return ResponseEntity.ok(authService.getAccessTokenAndRefreshTokenAfterOauthLogin(request.getCookies()));
     }
-
-//    @GetMapping
-//    public String oauthLoginSuccess() {
-//        return "main/kakao";
-//    }
 }

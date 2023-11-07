@@ -1,4 +1,4 @@
-package com.alal.backend.controller.view;
+package com.alal.backend.controller.user;
 
 import com.alal.backend.config.security.token.CurrentUser;
 import com.alal.backend.config.security.token.UserPrincipal;

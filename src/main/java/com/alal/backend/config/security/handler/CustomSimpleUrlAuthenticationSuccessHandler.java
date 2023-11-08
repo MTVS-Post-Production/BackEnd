@@ -3,16 +3,12 @@ package com.alal.backend.config.security.handler;
 
 import com.alal.backend.advice.assertThat.DefaultAssert;
 import com.alal.backend.config.security.OAuth2Config;
-import com.alal.backend.config.security.token.TokenResponse;
 import com.alal.backend.config.security.util.CustomCookie;
 import com.alal.backend.domain.entity.user.Token;
 import com.alal.backend.domain.mapping.TokenMapping;
 import com.alal.backend.repository.auth.CustomAuthorizationRequestRepository;
 import com.alal.backend.repository.auth.TokenRepository;
 import com.alal.backend.service.auth.CustomTokenProviderService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -25,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import static com.alal.backend.repository.auth.CustomAuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
@@ -57,28 +52,37 @@ public class CustomSimpleUrlAuthenticationSuccessHandler extends SimpleUrlAuthen
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
         TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
+        createAccessTokenAndRefreshToken(tokenMapping);
+        createTokenCookie(tokenMapping, response);
+
+        return UriComponentsBuilder.fromUriString(targetUrl)
+                .build().toUriString();
+    }
+
+    private void createAccessTokenAndRefreshToken(TokenMapping tokenMapping) {
         Token token = Token.builder()
                 .userEmail(tokenMapping.getUserEmail())
                 .accessToken(tokenMapping.getAccessToken())
                 .refreshToken(tokenMapping.getRefreshToken())
                 .build();
         tokenRepository.save(token);
+    }
 
+    private void createTokenCookie(TokenMapping tokenMapping, HttpServletResponse response) {
         Cookie accessTokenCookie = new Cookie("accessToken", tokenMapping.getAccessToken());
         Cookie refreshTokenCookie = new Cookie("refreshToken", tokenMapping.getAccessToken());
 
-        accessTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setHttpOnly(true);
+        accessTokenCookie.setHttpOnly(false);
+        refreshTokenCookie.setHttpOnly(false);
 
-        accessTokenCookie.setSecure(true);
-        refreshTokenCookie.setSecure(true);
+        accessTokenCookie.setSecure(false);
+        refreshTokenCookie.setSecure(false);
+
+        accessTokenCookie.setPath("/");
+        refreshTokenCookie.setPath("/");
 
         response.addCookie(accessTokenCookie);
         response.addCookie(refreshTokenCookie);
-
-        return UriComponentsBuilder.fromUriString(targetUrl)
-//                .queryParam("token", tokenMapping.getAccessToken())<
-                .build().toUriString();
     }
 
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {

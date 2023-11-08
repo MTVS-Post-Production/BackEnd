@@ -2,8 +2,8 @@ package com.alal.backend.service.user;
 
 import com.alal.backend.domain.entity.user.User;
 import com.alal.backend.domain.entity.user.Voice;
-import com.alal.backend.payload.request.auth.FlaskRequest;
-import com.alal.backend.payload.request.auth.FlaskVoiceRequest;
+import com.alal.backend.payload.request.user.FlaskRequest;
+import com.alal.backend.payload.request.user.FlaskVoiceRequest;
 import com.alal.backend.domain.dto.response.FlaskResponse;
 import com.alal.backend.domain.dto.response.UpdateUserHistoryResponse;
 import com.alal.backend.domain.dto.response.ViewResponse;

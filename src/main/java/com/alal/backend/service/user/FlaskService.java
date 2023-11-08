@@ -1,7 +1,7 @@
 package com.alal.backend.service.user;
 
-import com.alal.backend.payload.request.auth.FlaskRequest;
-import com.alal.backend.payload.request.auth.FlaskVoiceRequest;
+import com.alal.backend.payload.request.user.FlaskRequest;
+import com.alal.backend.payload.request.user.FlaskVoiceRequest;
 import com.alal.backend.domain.dto.response.FlaskResponse;
 import java.util.List;
 import java.util.Map;

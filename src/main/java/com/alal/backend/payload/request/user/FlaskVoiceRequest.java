@@ -1,4 +1,4 @@
-package com.alal.backend.payload.request.auth;
+package com.alal.backend.payload.request.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

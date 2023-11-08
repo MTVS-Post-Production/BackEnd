@@ -1,7 +1,7 @@
 package com.alal.backend.utils;
 
 import com.alal.backend.domain.entity.user.Memo;
-import com.alal.backend.payload.request.user.UploadMemoRequest;
+import com.alal.backend.domain.dto.request.UploadMemoRequest;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;

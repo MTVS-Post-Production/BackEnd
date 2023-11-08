@@ -52,6 +52,8 @@ dependencies {
 
     //live Server
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-csv
+    implementation group: 'org.apache.commons', name: 'commons-csv', version: '1.8'
 
 }
 

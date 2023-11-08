@@ -1,12 +1,10 @@
 package com.alal.backend.domain.entity.user;
 
 import com.alal.backend.domain.entity.time.DefaultTime;
-import com.alal.backend.payload.request.auth.ProfileUpdateRequest;
+import com.alal.backend.payload.request.user.ProfileUpdateRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;

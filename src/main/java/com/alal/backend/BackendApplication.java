@@ -4,12 +4,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 @EnableJpaAuditing
 @SpringBootApplication
-//@PropertySource(value = {"classpath:database/database.yml"})
-//@PropertySource(value = {"classpath:oauth2/oauth2.yml"})
-//@PropertySource(value = {"classpath:swagger/springdoc.yml"})
+@EnableAsync
 public class BackendApplication {
 
     public static void main(String[] args) {

@@ -1,15 +1,18 @@
 package com.alal.backend.service.user;
 
+import com.alal.backend.domain.dto.request.UploadImageRequest;
+import com.alal.backend.domain.dto.response.FlaskResponse;
+import com.alal.backend.domain.dto.response.ImageFlaskResponse;
 import com.alal.backend.payload.request.user.FlaskRequest;
 import com.alal.backend.payload.request.user.FlaskVoiceRequest;
-import com.alal.backend.domain.dto.response.FlaskResponse;
-import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +20,9 @@ public class FlaskService {
 
     @Value("${ai.model.serving.url}")
     private String flaskUrl;
+
+    @Value("${ai.model.serving.imageUrl}")
+    private String flaskImageUrl;
 
     private final WebClient webClient;
 
@@ -51,5 +57,19 @@ public class FlaskService {
                 .block();
 
         return flaskResponse;
+    }
+
+    public ImageFlaskResponse uploadImage(UploadImageRequest uploadImageRequest, Long userId) {
+        ImageFlaskResponse imageFlaskResponse = webClient.post()
+                .uri(flaskImageUrl)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(Map.of("image", uploadImageRequest.getImageEncodingString(),
+                        "image_name", uploadImageRequest.getDescription(),
+                        "user_id", userId))
+                .retrieve()
+                .bodyToMono(ImageFlaskResponse.class)
+                .block();
+
+        return imageFlaskResponse;
     }
 }

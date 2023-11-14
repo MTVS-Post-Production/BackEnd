@@ -53,10 +53,10 @@ public class ViewController {
     @PostMapping("/video")
     @ResponseBody
     public ResponseEntity<UpdateUserHistoryResponse> videoPost(@RequestBody FlaskRequest flaskRequest
-//                            ,@CurrentUser UserPrincipal userPrincipal
+                            ,@CurrentUser UserPrincipal userPrincipal
     ) {
-//        Long userId = userPrincipal.getId();
-        Long userId = 1L;
+        Long userId = userPrincipal.getId();
+//        Long userId = 1L;
         UpdateUserHistoryResponse updateUserHistoryResponse = motionService.findUrlByUploadMp4(flaskRequest, userId);
 
         return ResponseEntity.ok(updateUserHistoryResponse);

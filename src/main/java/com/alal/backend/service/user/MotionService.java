@@ -1,5 +1,6 @@
 package com.alal.backend.service.user;
 
+import com.alal.backend.domain.entity.user.Motion;
 import com.alal.backend.domain.entity.user.User;
 import com.alal.backend.domain.entity.user.Voice;
 import com.alal.backend.payload.request.user.FlaskRequest;
@@ -88,11 +89,12 @@ public class MotionService {
         List<String> allFbxs = new ArrayList<>();
 
         for (String userHistory : userHistories) {
-            Page<String> gifPage = motionRepository.findGifByMotionContaining(userHistory, pageable);
-            Page<String> fbxPage = motionRepository.findFbxByMotionContaining(userHistory, pageable);
+            Page<Motion> motionPage = motionRepository.findByMotionContaining(userHistory, pageable);
 
-            allGifs.addAll(gifPage.getContent());
-            allFbxs.addAll(fbxPage.getContent());
+            motionPage.getContent().stream().forEach(motion -> {
+                allGifs.add(motion.getMotionGif());
+                allFbxs.add(motion.getMotionFbx());
+            });
         }
 
         ViewResponse viewResponse = ViewResponse.fromList(allGifs, allFbxs);

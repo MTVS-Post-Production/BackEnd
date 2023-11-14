@@ -27,7 +27,7 @@ public class FlaskService {
     private final WebClient webClient;
 
     private static final String CHECK_POSE_URI = "/checkpose/";
-    private static final String CONVERT_VOICE_URI = "/voice";
+    private static final String CONVERT_VOICE_URI = "/voice/convert";
 
     public List<FlaskResponse> communicateWithFlaskServer(FlaskRequest flaskRequest) {
         // 파일을 Flask 서버로 전송

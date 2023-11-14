@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.reactive.result.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
@@ -65,12 +66,21 @@ public class ViewController {
     @PostMapping("/voice")
     @ResponseBody
     public ResponseEntity<VoiceResponse> voicePost(@RequestBody FlaskVoiceRequest flaskRequest
-//                                                   @CurrentUser UserPrincipal userPrincipal
+//                                                   ,@CurrentUser UserPrincipal userPrincipal
                                                    ) {
         Long userId = 1L;
+//        Long userId = userPrincipal.getId();
         VoiceResponse voiceResponse = motionService.uploadAndRespondWithAudioFileSuccess(flaskRequest, userId);
 
         return ResponseEntity.ok(voiceResponse);
+    }
+
+    @PostMapping("/test")
+    public RedirectView voicePost2(@RequestBody FlaskVoiceRequest flaskRequest) {
+        Long userId = 1L;
+        VoiceResponse voiceResponse = motionService.uploadAndRespondWithAudioFileSuccess(flaskRequest, userId);
+
+        return new RedirectView(voiceResponse.getVoiceUrl());
     }
 
     // 웹에서 다운로드 버튼 클릭 시 /view/result?fbxUrl=... 로 리다이렉트

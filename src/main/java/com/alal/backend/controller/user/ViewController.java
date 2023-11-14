@@ -75,14 +75,6 @@ public class ViewController {
         return ResponseEntity.ok(voiceResponse);
     }
 
-    @PostMapping("/test")
-    public RedirectView voicePost2(@RequestBody FlaskVoiceRequest flaskRequest) {
-        Long userId = 1L;
-        VoiceResponse voiceResponse = motionService.uploadAndRespondWithAudioFileSuccess(flaskRequest, userId);
-
-        return new RedirectView(voiceResponse.getVoiceUrl());
-    }
-
     // 웹에서 다운로드 버튼 클릭 시 /view/result?fbxUrl=... 로 리다이렉트
     @PostMapping("/send/fbx")
     @ResponseBody

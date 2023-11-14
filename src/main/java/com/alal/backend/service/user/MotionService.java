@@ -114,6 +114,7 @@ public class MotionService {
                 );
     }
 
+
     private Voice getVoiceById(Long userId) {
         return voiceRepository.findById(userId).get();
     }

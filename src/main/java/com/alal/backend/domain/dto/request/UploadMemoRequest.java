@@ -1,4 +1,4 @@
-package com.alal.backend.payload.request.user;
+package com.alal.backend.domain.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;

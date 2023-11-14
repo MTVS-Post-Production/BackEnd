@@ -40,7 +40,7 @@ public class Memo {
                 .author(author)
                 .content(content)
                 .writtenAt(writtenAt)
-                .group(new Group(groupName))
+                .group(Group.fromUser(groupName))
                 .build();
     }
 }

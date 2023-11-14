@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.reactive.result.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
@@ -37,10 +38,10 @@ public class ViewController {
 
     @GetMapping
     public String main(Model model,
-                       @CurrentUser UserPrincipal userPrincipal,
+//                       @CurrentUser UserPrincipal userPrincipal,
                        @PageableDefault(size = 30) Pageable pageable) {
-        Long userId = userPrincipal.getId();
-//        Long userId = 1L;
+//        Long userId = userPrincipal.getId();
+        Long userId = 1L;
         Page<ViewResponse> viewResponses = motionService.createViewResponse(userId, pageable);
 
         model.addAttribute("motionUrls", viewResponses);
@@ -52,10 +53,10 @@ public class ViewController {
     @PostMapping("/video")
     @ResponseBody
     public ResponseEntity<UpdateUserHistoryResponse> videoPost(@RequestBody FlaskRequest flaskRequest
-                            ,@CurrentUser UserPrincipal userPrincipal
+//                            ,@CurrentUser UserPrincipal userPrincipal
     ) {
-        Long userId = userPrincipal.getId();
-//        Long userId = 1L;
+//        Long userId = userPrincipal.getId();
+        Long userId = 1L;
         UpdateUserHistoryResponse updateUserHistoryResponse = motionService.findUrlByUploadMp4(flaskRequest, userId);
 
         return ResponseEntity.ok(updateUserHistoryResponse);
@@ -65,9 +66,10 @@ public class ViewController {
     @PostMapping("/voice")
     @ResponseBody
     public ResponseEntity<VoiceResponse> voicePost(@RequestBody FlaskVoiceRequest flaskRequest
-//                                                   @CurrentUser UserPrincipal userPrincipal
+//                                                   ,@CurrentUser UserPrincipal userPrincipal
                                                    ) {
         Long userId = 1L;
+//        Long userId = userPrincipal.getId();
         VoiceResponse voiceResponse = motionService.uploadAndRespondWithAudioFileSuccess(flaskRequest, userId);
 
         return ResponseEntity.ok(voiceResponse);

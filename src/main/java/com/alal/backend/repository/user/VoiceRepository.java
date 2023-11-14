@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VoiceRepository extends JpaRepository<Voice, Long> {
     Voice findByUserIdAndModelName(Long userId, String modelName);
+
+    Voice findByUserId(Long userId);
 }

@@ -62,7 +62,7 @@ public class MotionService {
     public VoiceResponse uploadAndRespondWithAudioFileSuccess(FlaskVoiceRequest flaskRequest, Long userId) {
         // Flask 서버 통신
         FlaskResponse flaskResponse = flaskService.communicateWithFlaskServerByVoice(flaskRequest, userId);
-        Voice voice = getVoiceById(userId);
+        Voice voice = voiceRepository.findByUserId(userId);
 
         if (voice == null) {
             Voice createdVoice = Voice.fromDto(flaskResponse, userId, flaskRequest);
@@ -114,11 +114,9 @@ public class MotionService {
                 );
     }
 
+
     private Voice getVoiceById(Long userId) {
-        return voiceRepository.findById(userId)
-                .orElseThrow(
-                        () -> new IllegalArgumentException("음성이 존재하지 않습니다.")
-                );
+        return voiceRepository.findById(userId).get();
     }
 
     private List<String> getUserUserHistory(User user
@@ -127,5 +125,4 @@ public class MotionService {
                 .map(String::valueOf)
                 .collect(Collectors.toList());
     }
-
 }

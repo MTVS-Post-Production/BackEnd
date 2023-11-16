@@ -46,6 +46,8 @@
 
         .image-container {
             display: flex;
+            justify-content: center;
+            align-items: center;
             flex-wrap: wrap;
         }
 
@@ -95,7 +97,7 @@
     </style>
 </head>
 <body>
-<!--<th:block th:insert="~{common/header}"/>-->
+<th:block th:insert="~{common/header}"/>
 <div class="image-container" th:each="motionUrl : ${motionUrls}">
     <div class="image-item" th:each="gifUrl, gifIndex : ${motionUrl.gifUrls}">
         <div style="position:relative; display:inline-block;">
@@ -105,7 +107,6 @@
     </div>
 </div>
 
-<!-- 페이징  -->
 <div class="pagination">
     <ul class="pagination">
         <li th:class="${motionUrls.first} ? 'page-item disabled' : 'page-item'">
@@ -119,8 +120,6 @@
         </li>
     </ul>
 </div>
-
-
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

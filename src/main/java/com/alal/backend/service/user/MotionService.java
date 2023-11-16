@@ -85,29 +85,47 @@ public class MotionService {
         User user = getUserById(userId);
         List<String> userHistories = getUserUserHistory(user);
 
-        List<String> allGifs = new ArrayList<>(userHistories.size());
-        List<String> allFbxs = new ArrayList<>(userHistories.size());
+        List<Motion> motions = findMotionsByUserHistories(userHistories);
+        List<String> allGifs = getGifsFromMotions(motions);
+        List<String> allFbxs = getFbxsFromMotions(motions);
+
+        return createViewResponsePage(allGifs, allFbxs, pageable);
+    }
+
+    private List<Motion> findMotionsByUserHistories(List<String> userHistories) {
+        List<Motion> allMotions = new ArrayList<>();
 
         for (String userHistory : userHistories) {
             List<Motion> motions = motionRepository.findByMotionContaining(userHistory);
-            motions.forEach(motion -> {
-                allGifs.add(motion.getMotionGif());
-                allFbxs.add(motion.getMotionFbx());
-            });
+            allMotions.addAll(motions);
         }
 
+        return allMotions;
+    }
+
+    private List<String> getGifsFromMotions(List<Motion> motions) {
+        return motions.stream()
+                .map(Motion::getMotionGif)
+                .collect(Collectors.toList());
+    }
+
+    private List<String> getFbxsFromMotions(List<Motion> motions) {
+        return motions.stream()
+                .map(Motion::getMotionFbx)
+                .collect(Collectors.toList());
+    }
+
+    private Page<ViewResponse> createViewResponsePage(List<String> allGifs, List<String> allFbxs, Pageable pageable) {
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), allGifs.size());
 
-        List<ViewResponse> content;
-        if (start < end) {
-            content = Collections.singletonList(ViewResponse.fromList(allGifs.subList(start, end), allFbxs.subList(start, end)));
-        } else {
-            content = Collections.emptyList();
-        }
+        List<ViewResponse> content = (start < end)
+                ? Collections.singletonList(ViewResponse.fromList(allGifs.subList(start, end), allFbxs.subList(start, end)))
+                : Collections.emptyList();
 
         return new PageImpl<>(content, pageable, allGifs.size());
     }
+
 
 
     @Transactional(readOnly = true)

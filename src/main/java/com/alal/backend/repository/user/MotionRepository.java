@@ -11,6 +11,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MotionRepository extends JpaRepository<Motion, Long> {
+    @Query("select m.motionGif from Motion m where m.motionGif like %:message%")
+    Page<String> findGifByMotionContaining(@Param("message") String message, Pageable pageable);
+
+    @Query("select m.motionFbx from Motion m where m.motionFbx like %:message%")
+    Page<String> findFbxByMotionContaining(@Param("message") String message, Pageable pageable);
+
     @Query("select m from Motion m where m.motionGif like %:userHistory% or m.motionFbx like %:userHistory%")
-    Page<Motion> findByMotionContaining(@Param("userHistory") String userHistory, Pageable pageable);
+    List<Motion> findByMotionContaining(@Param("userHistory") String userHistory);
 }

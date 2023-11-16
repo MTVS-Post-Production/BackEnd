@@ -28,7 +28,7 @@ public class ImageController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ReadImageResponse>> read(@PageableDefault(size = 30) Pageable pageable
+    public ResponseEntity<Page<ReadImageResponse>> read(@PageableDefault(size = 18) Pageable pageable
 //                                                  , @CurrentUser UserPrincipal userPrincipal
     ) {
         Long userId = 1L;

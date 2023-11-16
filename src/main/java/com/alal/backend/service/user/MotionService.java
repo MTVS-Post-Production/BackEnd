@@ -85,22 +85,30 @@ public class MotionService {
         User user = getUserById(userId);
         List<String> userHistories = getUserUserHistory(user);
 
-        List<String> allGifs = new ArrayList<>();
-        List<String> allFbxs = new ArrayList<>();
+        List<String> allGifs = new ArrayList<>(userHistories.size());
+        List<String> allFbxs = new ArrayList<>(userHistories.size());
 
         for (String userHistory : userHistories) {
-            Page<Motion> motionPage = motionRepository.findByMotionContaining(userHistory, pageable);
-
-            motionPage.getContent().stream().forEach(motion -> {
+            List<Motion> motions = motionRepository.findByMotionContaining(userHistory);
+            motions.forEach(motion -> {
                 allGifs.add(motion.getMotionGif());
                 allFbxs.add(motion.getMotionFbx());
             });
         }
 
-        ViewResponse viewResponse = ViewResponse.fromList(allGifs, allFbxs);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), allGifs.size());
 
-        return new PageImpl<>(Collections.singletonList(viewResponse), pageable, allGifs.size());
+        List<ViewResponse> content;
+        if (start < end) {
+            content = Collections.singletonList(ViewResponse.fromList(allGifs.subList(start, end), allFbxs.subList(start, end)));
+        } else {
+            content = Collections.emptyList();
+        }
+
+        return new PageImpl<>(content, pageable, allGifs.size());
     }
+
 
     @Transactional(readOnly = true)
     public VoiceResponse findByVoiceUrlWithUserId(Long userId, String modelName) {

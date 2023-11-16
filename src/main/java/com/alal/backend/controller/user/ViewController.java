@@ -38,7 +38,7 @@ public class ViewController {
     @GetMapping
     public String motionPage(Model model,
 //                       @CurrentUser UserPrincipal userPrincipal,
-                             @PageableDefault(size = 30) Pageable pageable) {
+                             @PageableDefault(size = 12) Pageable pageable) {
 //        Long userId = userPrincipal.getId();
         Long userId = 1L;
         Page<ViewResponse> viewResponses = motionService.createViewResponse(userId, pageable);

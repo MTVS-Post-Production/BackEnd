@@ -34,8 +34,10 @@
 
         .motion-image {
             transition: filter 0.3s;
-            max-width :100%;
-            height:auto; // 이미지 크기 조절
+            max-width: 100%;
+            max-height: 400px;
+            width: auto;
+            height: auto;
         }
 
         .motion-image.blurred {
@@ -93,7 +95,7 @@
     </style>
 </head>
 <body>
-<th:block th:insert="~{common/header}"/>
+<!--<th:block th:insert="~{common/header}"/>-->
 <div class="image-container" th:each="motionUrl : ${motionUrls}">
     <div class="image-item" th:each="gifUrl, gifIndex : ${motionUrl.gifUrls}">
         <div style="position:relative; display:inline-block;">
@@ -154,6 +156,6 @@
     });
 </script>
 
-<th:block th:insert="~{common/footer}"/>
+<!--<th:block th:insert="~{common/footer}"/>-->
 </body>
 </html>

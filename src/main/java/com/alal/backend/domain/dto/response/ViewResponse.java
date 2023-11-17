@@ -3,7 +3,6 @@ package com.alal.backend.domain.dto.response;
 import lombok.*;
 
 import java.util.List;
-import org.springframework.data.domain.Page;
 
 @Getter
 @Setter
@@ -11,21 +10,11 @@ import org.springframework.data.domain.Page;
 @ToString
 public class ViewResponse {
 
-    private List<String> gifUrls;
+    private List<GifUrlResponse> gifUrls;
 
-    private List<String> fbxUrls;
+    private List<FbxUrlResponse> fbxUrls;
 
-    public static ViewResponse fromPage(Page<String> gifPage, Page<String> fbxPage) {
-        List<String> gifUrls = gifPage.getContent();
-        List<String> fbxUrls = fbxPage.getContent();
-
-        return ViewResponse.builder()
-                .gifUrls(gifUrls)
-                .fbxUrls(fbxUrls)
-                .build();
-    }
-
-    public static ViewResponse fromList(List<String> allGifs, List<String> allFbxs) {
+    public static ViewResponse fromList(List<GifUrlResponse> allGifs, List<FbxUrlResponse> allFbxs) {
         return ViewResponse.builder()
                 .fbxUrls(allFbxs)
                 .gifUrls(allGifs)

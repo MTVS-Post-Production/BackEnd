@@ -86,7 +86,7 @@ public class MotionService {
         List<GifUrlResponse> allGifs = getGifsFromMotions(motions);
         List<FbxUrlResponse> allFbxs = getFbxsFromMotions(motions);
 
-        return createViewResponsePage(allGifs, allFbxs, pageable);
+        return createViewResponsePage(allGifs, allFbxs, pageable, userHistories);
     }
 
     private List<Motion> findMotionsByUserHistories(List<String> userHistories) {
@@ -125,7 +125,7 @@ public class MotionService {
         return fileNameWithExtension.substring(0, pos);
     }
 
-    private Page<ViewResponse> createViewResponsePage(List<GifUrlResponse> allGifs, List<FbxUrlResponse> allFbxs, Pageable pageable) {
+    private Page<ViewResponse> createViewResponsePage(List<GifUrlResponse> allGifs, List<FbxUrlResponse> allFbxs, Pageable pageable, List<String> userHistories) {
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), allGifs.size());
 
@@ -133,7 +133,7 @@ public class MotionService {
         List<FbxUrlResponse> pagedFbxs = allFbxs.subList(start, end);
 
         List<ViewResponse> content = (start < end)
-                ? Collections.singletonList(ViewResponse.fromList(pagedGifs, pagedFbxs))
+                ? Collections.singletonList(ViewResponse.fromList(pagedGifs, pagedFbxs, userHistories))
                 : Collections.emptyList();
 
         return new PageImpl<>(content, pageable, allGifs.size());

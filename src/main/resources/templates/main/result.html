@@ -3,11 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <title>Result</title>
+  <style>
+    body {
+      background-color: black;
+    }
+    .white-text {
+      color: white;
+      margin-bottom: 10px;
+    }
+    .center-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 70vh;
+      transform: translateY(-10%);
+    }
+    .previous-button {
+      background-color: white;
+      margin-top: 15px;
+      border-radius: 5px;
+      padding: 5px;
+      color: #007bff;
+    }
+    .center-container img {
+      width: 20%;
+      height: auto;
+    }
+    .top-text {
+      color: white;
+      text-align: center;
+      font-size: 5em;
+      margin-top: 50px;
+    }
+  </style>
 </head>
 <body>
-<th:block th:insert="~{common/header}"/>
-<h1>다운로드 완료 페이지</h1>
-<img th:src="${gifUrl}" alt="Motion Image">
-<p th:text="${title}"/>
+<p class="top-text">Download Completed</p>
+<div class="center-container">
+  <p th:text="${title}" class="white-text"/>
+  <img th:src="${gifUrl}" alt="Motion Image">
+  <button onclick="goBack()" class="previous-button">Previous</button>
+</div>
+
+<script>
+  function goBack() {
+    window.history.back();
+  }
+</script>
+
 </body>
 </html>

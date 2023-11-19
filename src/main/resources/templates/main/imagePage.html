@@ -109,7 +109,10 @@
 <div class="container">
     <div class="tab-content">
         <div th:each="viewResponse : ${motionUrls}" role="tabpanel">
-            <p th:text="${viewResponse.resultMotions}"></p>
+            <button style="background-color: white;">All</button>
+            <th:block th:each="resultMotion : ${viewResponse.resultMotions}">
+                <button th:value="${resultMotion}" th:text="${resultMotion}" style="background-color: white;"></button>
+            </th:block>
         </div>
     </div>
 </div>
@@ -123,7 +126,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="pagination">
     <ul class="pagination">
@@ -169,6 +171,22 @@
                         alert("다운로드에 실패하였습니다.");
                     });
 
+            });
+        });
+
+        var buttons = document.querySelectorAll('button');
+        buttons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                var filter = this.value;
+                var images = document.querySelectorAll('.image-item');
+                images.forEach(function(image) {
+                    var title = image.querySelector('div').textContent;
+                    if (filter === 'All' || title.includes(filter)) {
+                        image.style.display = 'block';
+                    } else {
+                        image.style.display = 'none';
+                    }
+                });
             });
         });
     });

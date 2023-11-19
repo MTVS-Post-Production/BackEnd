@@ -56,10 +56,10 @@
             flex-wrap: wrap;
         }
 
-        .image-item {임
+        .image-item {
             position:relative;
             display:inline-block;
-            margin-right: 10px;
+            margin-right: 20px;
             margin-bottom: 10px;
             color: white;
             text-align: center;
@@ -71,6 +71,7 @@
             list-style: none;
             padding: 0;
             justify-content: center;
+            margin-top: 20px;
         }
 
         .pagination .page-item {
@@ -102,6 +103,23 @@
             background-color: #fff;
             border-color: #dee2e6;
         }
+
+        .container {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            margin-left: 20px;
+        }
+
+        .tab-content button {
+            margin: 5px;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .motion-image div {
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
@@ -129,14 +147,14 @@
 
 <div class="pagination">
     <ul class="pagination">
-        <li th:class="${motionUrls.first} ? 'page-item disabled' : 'page-item'">
-            <a th:href="@{'?page=' + ${motionUrls.number - 1}}" class="page-link">Previous</a>
+        <li th:class="${((motionUrls.number / 5) * 5) < 5} ? 'page-item disabled' : 'page-item'">
+            <a th:href="@{'?page=' + ${{(motionUrls.number / 5) * 5 - 5}}}" class="page-link">Previous</a>
         </li>
-        <li th:each="i : ${#numbers.sequence(0, motionUrls.totalPages - 1)}" th:class="${i == motionUrls.number} ? 'page-item active' : 'page-item'">
+        <li th:each="i : ${#numbers.sequence((motionUrls.number / 5) * 5, (motionUrls.number / 5) * 5 + 4)}" th:class="(${i == motionUrls.number} ? 'page-item active' : 'page-item') + (${i >= motionUrls.totalPages} ? ' disabled' : '')">
             <a th:href="@{'?page=' + ${i}}" class="page-link" th:text="${i + 1}"></a>
         </li>
-        <li th:class="${motionUrls.last} ? 'page-item disabled' : 'page-item'">
-            <a th:href="@{'?page=' + ${motionUrls.number + 1}}" class="page-link">Next</a>
+        <li th:class="${((motionUrls.number / 5) * 5) >= motionUrls.totalPages -5} ? 'page-item disabled' : 'page-item'">
+            <a th:href="@{'?page=' + ${{(motionUrls.number / 5) * 5 + 5}}}" class="page-link">Next</a>
         </li>
     </ul>
 </div>

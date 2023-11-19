@@ -1,5 +1,6 @@
 package com.alal.backend.service.user;
 
+import com.alal.backend.domain.entity.user.Motion;
 import com.alal.backend.domain.entity.user.User;
 import com.alal.backend.domain.entity.user.Voice;
 import com.alal.backend.payload.request.user.FlaskRequest;
@@ -84,21 +85,48 @@ public class MotionService {
         User user = getUserById(userId);
         List<String> userHistories = getUserUserHistory(user);
 
-        List<String> allGifs = new ArrayList<>();
-        List<String> allFbxs = new ArrayList<>();
+        List<Motion> motions = findMotionsByUserHistories(userHistories);
+        List<String> allGifs = getGifsFromMotions(motions);
+        List<String> allFbxs = getFbxsFromMotions(motions);
+
+        return createViewResponsePage(allGifs, allFbxs, pageable);
+    }
+
+    private List<Motion> findMotionsByUserHistories(List<String> userHistories) {
+        List<Motion> allMotions = new ArrayList<>();
 
         for (String userHistory : userHistories) {
-            Page<String> gifPage = motionRepository.findGifByMotionContaining(userHistory, pageable);
-            Page<String> fbxPage = motionRepository.findFbxByMotionContaining(userHistory, pageable);
-
-            allGifs.addAll(gifPage.getContent());
-            allFbxs.addAll(fbxPage.getContent());
+            List<Motion> motions = motionRepository.findByMotionContaining(userHistory);
+            allMotions.addAll(motions);
         }
 
-        ViewResponse viewResponse = ViewResponse.fromList(allGifs, allFbxs);
-
-        return new PageImpl<>(Collections.singletonList(viewResponse), pageable, allGifs.size());
+        return allMotions;
     }
+
+    private List<String> getGifsFromMotions(List<Motion> motions) {
+        return motions.stream()
+                .map(Motion::getMotionGif)
+                .collect(Collectors.toList());
+    }
+
+    private List<String> getFbxsFromMotions(List<Motion> motions) {
+        return motions.stream()
+                .map(Motion::getMotionFbx)
+                .collect(Collectors.toList());
+    }
+
+    private Page<ViewResponse> createViewResponsePage(List<String> allGifs, List<String> allFbxs, Pageable pageable) {
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), allGifs.size());
+
+        List<ViewResponse> content = (start < end)
+                ? Collections.singletonList(ViewResponse.fromList(allGifs.subList(start, end), allFbxs.subList(start, end)))
+                : Collections.emptyList();
+
+        return new PageImpl<>(content, pageable, allGifs.size());
+    }
+
+
 
     @Transactional(readOnly = true)
     public VoiceResponse findByVoiceUrlWithUserId(Long userId, String modelName) {

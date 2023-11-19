@@ -1,7 +1,5 @@
 package com.alal.backend.controller.user;
 
-import com.alal.backend.config.security.token.CurrentUser;
-import com.alal.backend.config.security.token.UserPrincipal;
 import com.alal.backend.payload.request.auth.FbxRequest;
 import com.alal.backend.payload.request.user.FlaskRequest;
 import com.alal.backend.payload.request.user.FlaskVoiceRequest;
@@ -12,6 +10,7 @@ import com.alal.backend.domain.dto.response.VoiceResponse;
 import com.alal.backend.service.user.MotionService;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.reactive.result.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
@@ -36,10 +34,11 @@ public class ViewController {
 
     private final MotionService motionService;
 
+
     @GetMapping
-    public String main(Model model,
+    public String motionPage(Model model,
 //                       @CurrentUser UserPrincipal userPrincipal,
-                       @PageableDefault(size = 30) Pageable pageable) {
+                             @PageableDefault(size = 12) Pageable pageable) {
 //        Long userId = userPrincipal.getId();
         Long userId = 1L;
         Page<ViewResponse> viewResponses = motionService.createViewResponse(userId, pageable);

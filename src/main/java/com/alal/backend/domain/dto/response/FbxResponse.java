@@ -8,10 +8,14 @@ import lombok.Data;
 @Builder
 public class FbxResponse {
     private String fbxUrl;
+    private String gifUrl;
+    private String title;
 
     public static FbxResponse fromFbxUrl(FbxRequest fbxRequest) {
         return FbxResponse.builder()
                 .fbxUrl(fbxRequest.getFbxUrl())
+                .gifUrl(fbxRequest.getGifUrl())
+                .title(fbxRequest.getTitle())
                 .build();
     }
 }

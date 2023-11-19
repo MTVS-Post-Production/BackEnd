@@ -17,8 +17,8 @@
         .send-btn {
             display: block;
             position: absolute;
-            bottom: 20px;
-            right: 1px;
+            bottom: 40px;
+            right: -3px;
             z-index: 1;
             border:none;
             color:white;
@@ -139,7 +139,7 @@
     <div class="image-item" th:each="gifUrl, gifIndex : ${motionUrl.gifUrls}">
         <div class="motion-image" style="position:relative; display:inline-block;">
             <img th:src="${gifUrl.gifUrl}" alt="Motion Image">
-            <img th:src="@{/assets/img/download.png}" class='send-btn' th:data-url="${motionUrl.fbxUrls[gifIndex.index].fbxUrl}"/>
+            <img th:src="@{/assets/img/download.png}" class='send-btn' th:data-gifurl="${gifUrl.gifUrl}" th:data-fbxurl="${motionUrl.fbxUrls[gifIndex.index].fbxUrl}" th:data-title="${gifUrl.gifFileName}"/>
             <div th:text="${gifUrl.gifFileName}"></div>
         </div>
     </div>
@@ -176,9 +176,11 @@
         buttons.forEach(function(button) {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
-                var fbxUrl = this.getAttribute('data-url');
+                var gifUrl = this.getAttribute('data-gifurl');
+                var fbxUrl = this.getAttribute('data-fbxurl');
+                var title = this.getAttribute('data-title');
 
-                axios.post('/view/send/fbx', { 'fbxUrl': fbxUrl })
+                axios.post('/view/send/fbx', { 'gifUrl': gifUrl, 'fbxUrl': fbxUrl, 'title': title })
                     .then(function(response){
                         const redirectUrl = '/view/result?fbxUrl=' + fbxUrl;
                         console.log(redirectUrl);
@@ -188,7 +190,6 @@
                     .catch(function(error){
                         alert("다운로드에 실패하였습니다.");
                     });
-
             });
         });
 

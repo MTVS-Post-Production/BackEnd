@@ -10,14 +10,15 @@ import java.util.List;
 @ToString
 public class ViewResponse {
 
-    private List<GifUrlResponse> gifUrls;
-    private List<FbxUrlResponse> fbxUrls;
-    private List<String> resultMotions;
+    private final List<GifUrlResponse> gifUrls;
+    private final List<FbxUrlResponse> fbxUrls;
+    private final List<String> resultMotions;
+    private final String motionName;
 
     public static ViewResponse fromList(List<GifUrlResponse> allGifs, List<FbxUrlResponse> allFbxs, List<String> userHistories) {
         return ViewResponse.builder()
-                .fbxUrls(allFbxs)
                 .gifUrls(allGifs)
+                .fbxUrls(allFbxs)
                 .resultMotions(userHistories)
                 .build();
     }

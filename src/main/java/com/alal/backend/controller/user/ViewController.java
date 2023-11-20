@@ -113,8 +113,16 @@ public class ViewController {
         return ResponseEntity.ok(voiceResponse);
     }
 
-//    @GetMapping("/voice/result/{}")
-//    public String filterPage(@PageableDefault(size = 12) Pageable pageable, Model model) {
-//
-//    }
+    @GetMapping("/filter")
+    public String filterPage(@PageableDefault(size = 12) Pageable pageable, Model model, @RequestParam("motion") String motionName
+                             //            @CurrentUser UserPrincipal userPrincipal,
+                             ) {
+        Long userId = 1L;
+        Page<ViewResponse> viewResponses = motionService.createViewResponseByMotionName(motionName, pageable, userId);
+
+        model.addAttribute("motionUrls", viewResponses);
+        model.addAttribute("motionName", motionName);
+
+        return "main/filterPage";
+    }
 }

@@ -81,18 +81,18 @@
         .pagination .page-link {
             display: block;
             padding: 0.5rem 1rem;
-            color: #007bff;
-            background-color: #fff;
-            border: 1px solid #dee2e6;
+            color: white;
+            background-color: #323232;
+            /*border: 1px solid #dee2e6;*/
             border-radius: 0.25rem;
             transition: background-color 0.3s ease;
         }
 
         .pagination .page-link:hover {
             z-index: 2;
-            color: #0056b3;
+            color: #d6d6d6;
             text-decoration: none;
-            background-color: #e9ecef;
+            background-color: #454545;
             border-color: #dee2e6;
         }
 
@@ -100,7 +100,7 @@
             color: #6c757d;
             pointer-events: none;
             cursor: not-allowed;
-            background-color: #fff;
+            background-color: #323232;
             border-color: #dee2e6;
         }
 
@@ -126,6 +126,19 @@
             margin-bottom: 20px;
             width: 117%;
         }
+
+        .tab-button {
+            background-color: #323232;
+            color: white;
+        }
+
+        .tab-button:hover {
+            z-index: 2;
+            color: #d6d6d6;
+            text-decoration: none;
+            background-color: #454545;
+            border-color: #dee2e6;
+        }
     </style>
 </head>
 <body>
@@ -133,9 +146,9 @@
 <div class="container">
     <div class="tab-content">
         <div th:each="viewResponse : ${motionUrls}" role="tabpanel">
-            <button style="background-color: white;">All</button>
+            <button style="background-color: #323232; color: white;">All</button>
             <th:block th:each="resultMotion : ${viewResponse.resultMotions}">
-                <button th:value="${resultMotion}" th:text="${resultMotion}" style="background-color: white;"></button>
+                <button th:value="${resultMotion}" th:text="${resultMotion}" class="tab-button"></button>
             </th:block>
         </div>
         <hr color="white" class="downHr">

@@ -106,19 +106,25 @@
 
         .container {
             margin-top: 20px;
-            margin-bottom: 20px;
             margin-left: 55px;
         }
 
         .tab-content button {
             margin: 5px;
-            border-radius: 5px;
             padding: 5px;
+            width: 100px;
+            height: 30px;
+            clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
         }
 
         .motion-image div {
             margin-top: 15px;
             margin-bottom: 5px;
+        }
+
+        .downHr {
+            margin-bottom: 20px;
+            width: 117%;
         }
     </style>
 </head>
@@ -132,6 +138,7 @@
                 <button th:value="${resultMotion}" th:text="${resultMotion}" style="background-color: white;"></button>
             </th:block>
         </div>
+        <hr color="white" class="downHr">
     </div>
 </div>
 

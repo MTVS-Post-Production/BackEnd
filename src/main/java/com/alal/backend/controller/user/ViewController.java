@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/view")
 @RequiredArgsConstructor
@@ -77,8 +79,10 @@ public class ViewController {
     // 웹에서 다운로드 버튼 클릭 시 /view/result?fbxUrl=... 로 리다이렉트
     @PostMapping("/send/fbx")
     @ResponseBody
-    public ResponseEntity<FbxResponse> send(@RequestBody FbxRequest fbxRequest){
+    public ResponseEntity<FbxResponse> send(@RequestBody FbxRequest fbxRequest, HttpSession session){
         FbxResponse response = FbxResponse.fromFbxUrl(fbxRequest);
+        session.setAttribute("gifUrl", response.getGifUrl());
+        session.setAttribute("title", response.getTitle());
         URI redirectUri = UriComponentsBuilder.fromPath("/view/result")
                 .queryParam("fbxUrl", response.getFbxUrl())
                 .build()
@@ -88,8 +92,11 @@ public class ViewController {
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
+
     @GetMapping("/result")
-    public String resultPage() {
+    public String resultPage(Model model, HttpSession session) {
+        model.addAttribute("gifUrl", session.getAttribute("gifUrl"));
+        model.addAttribute("title", session.getAttribute("title"));
         return "main/result";
     }
 

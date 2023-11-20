@@ -1,14 +1,11 @@
 package com.alal.backend.service.user;
 
+import com.alal.backend.domain.dto.response.*;
 import com.alal.backend.domain.entity.user.Motion;
 import com.alal.backend.domain.entity.user.User;
 import com.alal.backend.domain.entity.user.Voice;
 import com.alal.backend.payload.request.user.FlaskRequest;
 import com.alal.backend.payload.request.user.FlaskVoiceRequest;
-import com.alal.backend.domain.dto.response.FlaskResponse;
-import com.alal.backend.domain.dto.response.UpdateUserHistoryResponse;
-import com.alal.backend.domain.dto.response.ViewResponse;
-import com.alal.backend.domain.dto.response.VoiceResponse;
 import com.alal.backend.repository.user.MotionRepository;
 import com.alal.backend.repository.user.UserRepository;
 import com.alal.backend.repository.user.VoiceRepository;
@@ -86,10 +83,10 @@ public class MotionService {
         List<String> userHistories = getUserUserHistory(user);
 
         List<Motion> motions = findMotionsByUserHistories(userHistories);
-        List<String> allGifs = getGifsFromMotions(motions);
-        List<String> allFbxs = getFbxsFromMotions(motions);
+        List<GifUrlResponse> allGifs = getGifsFromMotions(motions);
+        List<FbxUrlResponse> allFbxs = getFbxsFromMotions(motions);
 
-        return createViewResponsePage(allGifs, allFbxs, pageable);
+        return createViewResponsePage(allGifs, allFbxs, pageable, userHistories);
     }
 
     private List<Motion> findMotionsByUserHistories(List<String> userHistories) {
@@ -103,29 +100,44 @@ public class MotionService {
         return allMotions;
     }
 
-    private List<String> getGifsFromMotions(List<Motion> motions) {
+    private List<GifUrlResponse> getGifsFromMotions(List<Motion> motions) {
         return motions.stream()
-                .map(Motion::getMotionGif)
+                .map(motion -> GifUrlResponse.builder()
+                        .gifFileName(getFileName(motion.getMotionGif()))
+                        .gifUrl(motion.getMotionGif())
+                        .build())
                 .collect(Collectors.toList());
     }
 
-    private List<String> getFbxsFromMotions(List<Motion> motions) {
+    private List<FbxUrlResponse> getFbxsFromMotions(List<Motion> motions) {
         return motions.stream()
-                .map(Motion::getMotionFbx)
+                .map(motion -> FbxUrlResponse.builder()
+                        .fbxFileName(getFileName(motion.getMotionFbx()))
+                        .fbxUrl(motion.getMotionFbx())
+                        .build())
                 .collect(Collectors.toList());
     }
 
-    private Page<ViewResponse> createViewResponsePage(List<String> allGifs, List<String> allFbxs, Pageable pageable) {
+    private String getFileName(String url) {
+        String[] parts = url.split("/");
+        String fileNameWithExtension = parts[parts.length - 1];
+        int pos = fileNameWithExtension.lastIndexOf(".");
+        return fileNameWithExtension.substring(0, pos);
+    }
+
+    private Page<ViewResponse> createViewResponsePage(List<GifUrlResponse> allGifs, List<FbxUrlResponse> allFbxs, Pageable pageable, List<String> userHistories) {
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), allGifs.size());
 
+        List<GifUrlResponse> pagedGifs = allGifs.subList(start, end);
+        List<FbxUrlResponse> pagedFbxs = allFbxs.subList(start, end);
+
         List<ViewResponse> content = (start < end)
-                ? Collections.singletonList(ViewResponse.fromList(allGifs.subList(start, end), allFbxs.subList(start, end)))
+                ? Collections.singletonList(ViewResponse.fromList(pagedGifs, pagedFbxs, userHistories))
                 : Collections.emptyList();
 
         return new PageImpl<>(content, pageable, allGifs.size());
     }
-
 
 
     @Transactional(readOnly = true)

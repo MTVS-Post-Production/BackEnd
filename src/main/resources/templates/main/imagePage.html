@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<!--    <link rel="stylesheet" href="/css/imagePageStyle.css" />-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <!--    <link rel="stylesheet" href="/css/imagePageStyle.css" />-->
 
     <style>
         body {
@@ -13,23 +15,21 @@
         }
 
         .send-btn {
-            display: none;
+            display: block;
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            bottom: 40px;
+            right: -3px;
             z-index: 1;
-
-
-            background-color:#4CAF50; /* 초록 */
             border:none;
             color:white;
-            padding:15px 32px;
+            padding:5px 10px;
             text-align:center;
             text-decoration:none;
-            display:inline-block;
-            font-size:16px;
+            font-size:12px;
             visibility: hidden;
+            background-size: cover;
+            width: 60px;
+            height: 50px;
         }
 
         .motion-image {
@@ -40,27 +40,38 @@
             height: auto;
         }
 
-        .motion-image.blurred {
+        .highlight {
+            outline: 2px solid #5B88C6;
+            outline-offset: 3px;
+        }
+
+        .blurred {
             filter: blur(5px);
         }
 
         .image-container {
             display: flex;
+            justify-content: center;
+            align-items: center;
             flex-wrap: wrap;
         }
 
         .image-item {
             position:relative;
             display:inline-block;
-            margin-right: 10px;
+            margin-right: 20px;
             margin-bottom: 10px;
+            color: white;
+            text-align: center;
+            font-size: 14px;
         }
 
         .pagination {
             display: flex;
             list-style: none;
             padding: 0;
-            justify-content: center; /* Center-align pagination */
+            justify-content: center;
+            margin-top: 20px;
         }
 
         .pagination .page-item {
@@ -92,44 +103,71 @@
             background-color: #fff;
             border-color: #dee2e6;
         }
+
+        .container {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            margin-left: 55px;
+        }
+
+        .tab-content button {
+            margin: 5px;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .motion-image div {
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
-<!--<th:block th:insert="~{common/header}"/>-->
-<div class="image-container" th:each="motionUrl : ${motionUrls}">
-    <div class="image-item" th:each="gifUrl, gifIndex : ${motionUrl.gifUrls}">
-        <div style="position:relative; display:inline-block;">
-            <img th:src="${gifUrl}" alt="Motion Image" class="motion-image">
-            <button type='button' class='send-btn' th:data-url="${motionUrl.fbxUrls[gifIndex.index]}">DownLoad</button>
+<th:block th:insert="~{common/header}"/>
+<div class="container">
+    <div class="tab-content">
+        <div th:each="viewResponse : ${motionUrls}" role="tabpanel">
+            <button style="background-color: white;">All</button>
+            <th:block th:each="resultMotion : ${viewResponse.resultMotions}">
+                <button th:value="${resultMotion}" th:text="${resultMotion}" style="background-color: white;"></button>
+            </th:block>
         </div>
     </div>
 </div>
 
-<!-- 페이징  -->
+<div class="image-container" th:each="motionUrl : ${motionUrls}">
+    <div class="image-item" th:each="gifUrl, gifIndex : ${motionUrl.gifUrls}">
+        <div class="motion-image" style="position:relative; display:inline-block;">
+            <img th:src="${gifUrl.gifUrl}" alt="Motion Image">
+            <img th:src="@{/assets/img/download.png}" class='send-btn' th:data-gifurl="${gifUrl.gifUrl}" th:data-fbxurl="${motionUrl.fbxUrls[gifIndex.index].fbxUrl}" th:data-title="${gifUrl.gifFileName}"/>
+            <div th:text="${gifUrl.gifFileName}"></div>
+        </div>
+    </div>
+</div>
+
 <div class="pagination">
     <ul class="pagination">
-        <li th:class="${motionUrls.first} ? 'page-item disabled' : 'page-item'">
-            <a th:href="@{'?page=' + ${motionUrls.number - 1}}" class="page-link">Previous</a>
+        <li th:class="${((motionUrls.number / 5) * 5) < 5} ? 'page-item disabled' : 'page-item'">
+            <a th:href="@{'?page=' + ${{(motionUrls.number / 5) * 5 - 5}}}" class="page-link">Previous</a>
         </li>
-        <li th:each="i : ${#numbers.sequence(0, motionUrls.totalPages - 1)}" th:class="${i == motionUrls.number} ? 'page-item active' : 'page-item'">
+        <li th:each="i : ${#numbers.sequence((motionUrls.number / 5) * 5, (motionUrls.number / 5) * 5 + 4)}" th:class="(${i == motionUrls.number} ? 'page-item active' : 'page-item') + (${i >= motionUrls.totalPages} ? ' disabled' : '')">
             <a th:href="@{'?page=' + ${i}}" class="page-link" th:text="${i + 1}"></a>
         </li>
-        <li th:class="${motionUrls.last} ? 'page-item disabled' : 'page-item'">
-            <a th:href="@{'?page=' + ${motionUrls.number + 1}}" class="page-link">Next</a>
+        <li th:class="${((motionUrls.number / 5) * 5) >= motionUrls.totalPages -5} ? 'page-item disabled' : 'page-item'">
+            <a th:href="@{'?page=' + ${{(motionUrls.number / 5) * 5 + 5}}}" class="page-link">Next</a>
         </li>
     </ul>
 </div>
-
-
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var images = document.querySelectorAll('.motion-image');
         images.forEach(function(image) {
             image.addEventListener('click', function() {
-                var sendBtn = this.parentElement.querySelector('.send-btn');
-                this.classList.toggle('blurred');
+                this.classList.toggle('highlight');
+                this.querySelector('img').classList.toggle('blurred');
 
+                var sendBtn = this.querySelector('.send-btn');
                 sendBtn.style.visibility = sendBtn.style.visibility === 'visible' ? 'hidden' : 'visible';
             });
         });
@@ -138,9 +176,11 @@
         buttons.forEach(function(button) {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
-                var fbxUrl = this.getAttribute('data-url');
+                var gifUrl = this.getAttribute('data-gifurl');
+                var fbxUrl = this.getAttribute('data-fbxurl');
+                var title = this.getAttribute('data-title');
 
-                axios.post('/view/send/fbx', { 'fbxUrl': fbxUrl })
+                axios.post('/view/send/fbx', { 'gifUrl': gifUrl, 'fbxUrl': fbxUrl, 'title': title })
                     .then(function(response){
                         const redirectUrl = '/view/result?fbxUrl=' + fbxUrl;
                         console.log(redirectUrl);
@@ -150,7 +190,22 @@
                     .catch(function(error){
                         alert("다운로드에 실패하였습니다.");
                     });
+            });
+        });
 
+        var buttons = document.querySelectorAll('button');
+        buttons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                var filter = this.value;
+                var images = document.querySelectorAll('.image-item');
+                images.forEach(function(image) {
+                    var title = image.querySelector('div').textContent;
+                    if (filter === 'All' || title.includes(filter)) {
+                        image.style.display = 'block';
+                    } else {
+                        image.style.display = 'none';
+                    }
+                });
             });
         });
     });

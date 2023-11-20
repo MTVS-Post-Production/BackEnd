@@ -78,6 +78,7 @@ public class MotionService {
     }
 
     // Gif, Fbx Url을 찾는 공통 로직
+    @Transactional(readOnly = true)
     public Page<ViewResponse> createViewResponse(Long userId, Pageable pageable) {
         User user = getUserById(userId);
         List<String> userHistories = getUserUserHistory(user);

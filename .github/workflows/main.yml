@@ -47,6 +47,11 @@ jobs:
         run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
         shell: bash
 
+      - name: create secrets file
+        run: |
+          touch secrets.json		
+          echo "${{ secrets.SECRET_JSON }}" >> ./src/main/secrets.json
+
       - name: Add permission
         run: chmod +x gradlew
 

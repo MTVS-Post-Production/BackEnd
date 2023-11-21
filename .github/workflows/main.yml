@@ -50,7 +50,7 @@ jobs:
       - name: create secrets file
         run: |
           touch secrets.json		
-          echo "${{ secrets.SECRET_JSON }}" >> ./src/main/secrets.json
+          echo "${{ secrets.SECRET_JSON }}" >> ./src/main/resources/config/secret.json
 
       - name: Add permission
         run: chmod +x gradlew

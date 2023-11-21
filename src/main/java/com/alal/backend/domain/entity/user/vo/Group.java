@@ -19,4 +19,9 @@ public class Group {
                 .name(userGroup)
                 .build();
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

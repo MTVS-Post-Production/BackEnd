@@ -51,9 +51,14 @@ dependencies {
 
 
     //live Server
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+//    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     // https://mvnrepository.com/artifact/org.apache.commons/commons-csv
     implementation group: 'org.apache.commons', name: 'commons-csv', version: '1.8'
+
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-gcp-starter
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-gcp-starter', version: '1.2.5.RELEASE'
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-gcp-storage
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-gcp-storage', version: '1.2.8.RELEASE'
 
 }
 

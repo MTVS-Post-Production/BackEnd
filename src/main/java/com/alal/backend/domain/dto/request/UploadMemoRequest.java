@@ -8,4 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 public class UploadMemoRequest {
     private MultipartFile csvFile;
+
+    public String getExt() {
+        return csvFile.getContentType();
+    }
 }

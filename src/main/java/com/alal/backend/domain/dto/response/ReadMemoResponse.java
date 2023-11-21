@@ -8,19 +8,13 @@ import lombok.Getter;
 @Getter
 @Builder
 public class ReadMemoResponse {
-    private Long id;
-    private String author;
-    private String content;
-    private String writtenAt;
-    private Group group;
+    private String uploadUrl;
+    private String groupName;
 
     public static ReadMemoResponse fromEntity(Memo memo) {
         return ReadMemoResponse.builder()
-                .id(memo.getId())
-                .author(memo.getAuthor())
-                .content(memo.getContent())
-                .writtenAt(memo.getWrittenAt())
-                .group(memo.getGroup())
+                .uploadUrl(memo.getUploadUrl())
+                .groupName(memo.getGroup().toString())
                 .build();
     }
 }

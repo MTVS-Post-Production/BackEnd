@@ -20,6 +20,7 @@ bin/
 **/main/resources/oauth2/oauth2.yml
 **/main/resources/swagger/springdoc.yml
 **/main/resources/application.yml
+**/main/resources/config/secret.json
 
 
 ### IntelliJ IDEA ###

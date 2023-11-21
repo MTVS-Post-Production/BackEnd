@@ -17,30 +17,20 @@ public class Memo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     @Comment("메모 번호")
-    private Long id;
+    private Long memoId;
 
     @Column
-    @Comment("작성자")
-    private String author;
-
-    @Column
-    @Comment("메모 내용")
-    private String content;
-
-    @Column
-    @Comment("작성 일시")
-    private String writtenAt;
+    @Comment("메모 구글 스토리지 주소")
+    private String uploadUrl;
 
     @Column
     @Comment("그룹명")
     private Group group;
 
-    public static Memo toEntity(String author, String content, String writtenAt, String groupName) {
+    public static Memo fromEntity(String uploadUrl, String userGroup) {
         return Memo.builder()
-                .author(author)
-                .content(content)
-                .writtenAt(writtenAt)
-                .group(Group.fromUser(groupName))
+                .uploadUrl(uploadUrl)
+                .group(new Group(userGroup))
                 .build();
     }
 }

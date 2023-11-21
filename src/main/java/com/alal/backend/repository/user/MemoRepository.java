@@ -12,4 +12,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MemoRepository extends JpaRepository<Memo, Long>{
     Page<Memo> findAllByGroup(Group group, Pageable pageable);
+
+    Memo findByGroup(Group userGroup);
 }

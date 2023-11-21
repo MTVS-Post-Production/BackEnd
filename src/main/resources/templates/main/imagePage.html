@@ -34,11 +34,8 @@
         }
 
         .motion-image {
-            transition: filter 0.3s;
-            max-width: 100%;
-            max-height: 400px;
-            width: auto;
-            height: auto;
+            position: relative;
+            overflow: hidden;
         }
 
         .highlight {
@@ -52,9 +49,10 @@
 
         .image-container {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             flex-wrap: wrap;
+            margin-left: 3%;
         }
 
         .image-item {
@@ -66,14 +64,17 @@
             text-align: center;
             font-size: 14px;
         }
-
         .pagination {
             display: flex;
             list-style: none;
             padding: 0;
             justify-content: center;
             margin-top: 20px;
+            position: fixed;
+            bottom: 15%;
+            width: 100%;
         }
+
 
         .pagination .page-item {
             margin-right: 5px;
@@ -125,12 +126,13 @@
 
         .downHr {
             margin-bottom: 20px;
-            width: 117%;
+            width: 104%;
         }
 
         .tab-button {
             background-color: #323232;
             color: white;
+            letter-spacing: 2px;
         }
 
         .tab-button:hover {
@@ -144,6 +146,7 @@
         .allBtn {
             background-color: #323232;
             color: white;
+            letter-spacing: 2px;
         }
 
         .allBtn:hover {
@@ -157,6 +160,32 @@
         .tab-button, .allBtn {
             transition: background-color 0.3s ease, color 0.3s ease;
         }
+
+        .pagination .page-item.active .page-link {
+            background-color: #656565;
+            border-color: #dee2e6;
+        }
+
+        .allBtn.active, .tab-button.active {
+            background-color: #656565;
+            letter-spacing: 2px;
+        }
+
+        .motion-image img:hover {
+            opacity: 0.3;
+            transform: scale(1.1);
+        }
+
+        .motion-image img {
+            transition: transform 0.3s ease;
+        }
+
+        .send-btn:hover {
+            filter: brightness(40%);
+        }
+        .gifName {
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
@@ -164,7 +193,7 @@
 <div class="container">
     <div class="tab-content">
         <div th:each="viewResponse : ${motionUrls}" role="tabpanel">
-            <button class="allBtn">All</button>
+            <button class="allBtn" value="All">All</button>
             <th:block th:each="resultMotion : ${viewResponse.resultMotions}">
                 <button th:value="${resultMotion}" th:text="${resultMotion}" class="tab-button"></button>
             </th:block>
@@ -179,7 +208,7 @@
             <img th:src="${gifUrl.gifUrl}" alt="Motion Image">
             <img th:src="@{/assets/img/download.png}" class='send-btn' th:data-gifurl="${gifUrl.gifUrl}"
                  th:data-fbxurl="${motionUrl.fbxUrls[gifIndex.index].fbxUrl}" th:data-title="${gifUrl.gifFileName}"/>
-            <div th:text="${gifUrl.gifFileName}"></div>
+            <div th:text="${gifUrl.gifFileName}" class="gifName"></div>
         </div>
     </div>
 </div>
@@ -234,12 +263,11 @@
                 });
             });
 
-            var buttons = document.querySelectorAll('button');
-            buttons.forEach(function(button) {
+            var allButtons = document.querySelectorAll('button');
+            allButtons.forEach(function(button) {
                 button.addEventListener('click', function() {
                     var filter = this.value;
                     var endpoint;
-                    console.log(filter);
 
                     if (filter === 'All') {
                         endpoint = '/view';
@@ -256,6 +284,21 @@
                         });
                 });
             });
+
+            var urlParams = new URLSearchParams(window.location.search);
+            var motion = urlParams.get('motion');
+
+            if (motion) {
+                var activeButton = document.querySelector('.tab-button[value="' + motion + '"]');
+                if (activeButton) {
+                    activeButton.classList.add('active');
+                }
+            } else {
+                var allButton = document.querySelector('.allBtn');
+                if (allButton) {
+                    allButton.classList.add('active');
+                }
+            }
         });
 </script>
 </body>

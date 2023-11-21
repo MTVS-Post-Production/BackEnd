@@ -155,15 +155,25 @@ public class MotionService {
                 );
     }
 
-
-    private Voice getVoiceById(Long userId) {
-        return voiceRepository.findById(userId).get();
-    }
-
-    private List<String> getUserUserHistory(User user
-    ) {
+    private List<String> getUserUserHistory(User user) {
         return Arrays.stream(user.getUserHistory().split(", "))
                 .map(String::valueOf)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ViewResponse> createViewResponseByMotionName(String motionName, Pageable pageable, Long userId) {
+        User user = getUserById(userId);
+        List<String> userHistories = getUserUserHistory(user);
+
+        List<Motion> motions = findMotionsByUserHistory(motionName);
+        List<GifUrlResponse> allGifs = getGifsFromMotions(motions);
+        List<FbxUrlResponse> allFbxs = getFbxsFromMotions(motions);
+
+        return createViewResponsePage(allGifs, allFbxs, pageable, userHistories);
+    }
+
+    private List<Motion> findMotionsByUserHistory(String motionName) {
+        return motionRepository.findByMotionContaining(motionName);
     }
 }

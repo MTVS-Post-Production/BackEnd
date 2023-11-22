@@ -5,6 +5,7 @@ import com.alal.backend.domain.dto.request.UploadMemoRequest;
 import com.alal.backend.domain.dto.request.UploadProjectRequest;
 import com.alal.backend.domain.dto.request.vo.StaffVO;
 import com.alal.backend.domain.dto.response.ReadMemoResponse;
+import com.alal.backend.domain.dto.response.ReadProjectsResponse;
 import com.alal.backend.domain.dto.response.UploadMemoResponse;
 import com.alal.backend.domain.dto.response.UploadProjectResponse;
 import com.alal.backend.domain.entity.user.*;
@@ -19,6 +20,8 @@ import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -172,5 +175,14 @@ public class GroupService {
                 .filter(vo -> vo.getEmail().equals(email))
                 .findFirst()
                 .orElseThrow(() -> new UserNotFoundException(email));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ReadProjectsResponse> readProjects(Long userId, Pageable pageable) {
+        User user = getUser(userId);
+        Group group = getUserGroup(user);
+
+        return projectRepository.findAllByGroupOrderByProjectIdDesc(group, pageable)
+                .map(ReadProjectsResponse::fromEntity);
     }
 }

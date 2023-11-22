@@ -1,4 +1,4 @@
-package com.alal.backend.domain.entity.user;
+package com.alal.backend.domain.entity.project;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 

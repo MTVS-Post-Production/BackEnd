@@ -40,10 +40,10 @@ public class ViewController {
 
     @GetMapping
     public String motionPage(Model model,
-                       @CurrentUser UserPrincipal userPrincipal,
+//                       @CurrentUser UserPrincipal userPrincipal,
                              @PageableDefault(size = 12) Pageable pageable) {
-        Long userId = userPrincipal.getId();
-//        Long userId = 1L;
+//        Long userId = userPrincipal.getId();
+        Long userId = 1L;
         Page<ViewResponse> viewResponses = motionService.createViewResponse(userId, pageable);
 
         model.addAttribute("motionUrls", viewResponses);
@@ -68,10 +68,10 @@ public class ViewController {
     @PostMapping("/voice")
     @ResponseBody
     public ResponseEntity<VoiceResponse> voicePost(@RequestBody FlaskVoiceRequest flaskRequest
-                                                   ,@CurrentUser UserPrincipal userPrincipal
+//                                                   ,@CurrentUser UserPrincipal userPrincipal
                                                    ) {
-//        Long userId = 1L;
-        Long userId = userPrincipal.getId();
+        Long userId = 1L;
+//        Long userId = userPrincipal.getId();
         VoiceResponse voiceResponse = motionService.uploadAndRespondWithAudioFileSuccess(flaskRequest, userId);
 
         return ResponseEntity.ok(voiceResponse);
@@ -104,11 +104,11 @@ public class ViewController {
     @GetMapping("/voice/result")
     @ResponseBody
     public ResponseEntity<VoiceResponse> getVoiceByUserId(
-            @CurrentUser UserPrincipal userPrincipal,
+//            @CurrentUser UserPrincipal userPrincipal,
             @RequestParam("modelName") String modelName
             ) {
-        Long userId = userPrincipal.getId();
-//        Long userId = 1L;
+//        Long userId = userPrincipal.getId();
+        Long userId = 1L;
         VoiceResponse voiceResponse = motionService.findByVoiceUrlWithUserId(userId, modelName);
 
         return ResponseEntity.ok(voiceResponse);

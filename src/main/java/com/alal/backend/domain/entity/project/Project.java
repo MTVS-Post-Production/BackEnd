@@ -1,4 +1,4 @@
-package com.alal.backend.domain.entity.user;
+package com.alal.backend.domain.entity.project;
 
 import com.alal.backend.domain.dto.request.UploadProjectRequest;
 import com.alal.backend.domain.entity.user.vo.Group;
@@ -43,6 +43,9 @@ public class Project {
 
     @OneToMany(mappedBy = "project")
     private List<ProjectMember> projectMembers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project")
+    private List<ProjectAvatar> projectAvatars = new ArrayList<>();
 
     public static Project fromDto(Group group, UploadProjectRequest uploadProjectRequest, String posterUrl) {
         return Project.builder()

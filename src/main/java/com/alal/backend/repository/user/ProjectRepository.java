@@ -1,6 +1,6 @@
 package com.alal.backend.repository.user;
 
-import com.alal.backend.domain.entity.user.Project;
+import com.alal.backend.domain.entity.project.Project;
 import com.alal.backend.domain.entity.user.vo.Group;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

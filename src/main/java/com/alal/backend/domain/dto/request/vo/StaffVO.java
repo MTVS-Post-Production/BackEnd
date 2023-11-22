@@ -1,6 +1,6 @@
 package com.alal.backend.domain.dto.request.vo;
 
-import com.alal.backend.domain.entity.user.StaffRole;
+import com.alal.backend.domain.entity.project.StaffRole;
 import lombok.*;
 
 import javax.persistence.Embeddable;

@@ -1,7 +1,6 @@
 package com.alal.backend.domain.dto.response;
 
-import com.alal.backend.domain.entity.user.Memo;
-import com.alal.backend.domain.entity.user.vo.Group;
+import com.alal.backend.domain.entity.project.Memo;
 import lombok.Builder;
 import lombok.Getter;
 

@@ -87,7 +87,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                         .permitAll()
                     .antMatchers("/login/**","/auth/**", "/oauth2/**"
                             , "/view/**"
-                            , "/group/**"
+                            , "/group/**", "/group/**/**"
                             , "/image/**"
                     )
                         .permitAll()

@@ -8,13 +8,12 @@ import com.alal.backend.domain.dto.response.ReadMemoResponse;
 import com.alal.backend.domain.dto.response.ReadProjectsResponse;
 import com.alal.backend.domain.dto.response.UploadMemoResponse;
 import com.alal.backend.domain.dto.response.UploadProjectResponse;
+import com.alal.backend.domain.entity.project.*;
 import com.alal.backend.domain.entity.user.*;
 import com.alal.backend.domain.entity.user.vo.Group;
+import com.alal.backend.repository.ProjectAvatarRepository;
 import com.alal.backend.repository.ProjectMemberRepository;
-import com.alal.backend.repository.user.MemoRepository;
-import com.alal.backend.repository.user.ProjectRepository;
-import com.alal.backend.repository.user.StaffRepository;
-import com.alal.backend.repository.user.UserRepository;
+import com.alal.backend.repository.user.*;
 import com.alal.backend.utils.Parser;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
@@ -36,6 +35,8 @@ public class GroupService {
     private final StaffRepository staffRepository;
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository projectMemberRepository;
+    private final AvatarRepository avatarRepository;
+    private final ProjectAvatarRepository projectAvatarRepository;
 
     private final Parser parser;
     private final Storage storage;
@@ -103,11 +104,37 @@ public class GroupService {
 
     @Transactional
     public UploadProjectResponse uploadProject(UploadProjectRequest uploadProjectRequest, Long userId) {
-        List<Staff> staffs =saveStaff(uploadProjectRequest);
+        List<Staff> staffs = saveStaff(uploadProjectRequest);
         Project project = saveProject(uploadProjectRequest, userId);
+        List<Avatar> avatars = saveAvatar(uploadProjectRequest, userId);
+
         addProjectMembers(staffs, project);
+        addProjectAvatars(avatars, project);
 
         return UploadProjectResponse.fromEntity(project);
+    }
+
+    private void addProjectAvatars(List<Avatar> avatars, Project project) {
+        List<ProjectAvatar> projectAvatars = new ArrayList<>();
+        for (Avatar avatar : avatars) {
+            ProjectAvatar projectAvatar = ProjectAvatar.fromEntity(avatar, project);
+            projectAvatars.add(projectAvatar);
+        }
+
+        projectAvatarRepository.saveAll(projectAvatars);
+    }
+
+    private List<Avatar> saveAvatar(UploadProjectRequest uploadProjectRequest, Long userId) {
+        User user = getUser(userId);
+        Group group = getUserGroup(user);
+        List<Avatar> avatars = new ArrayList<>();
+
+        for (String avatarName : uploadProjectRequest.getAvatarName()) {
+            Avatar avatar = Avatar.fromEntityAndName(group, avatarName);
+            avatars.add(avatar);
+        }
+
+        return avatarRepository.saveAll(avatars);
     }
 
     private void addProjectMembers(List<Staff> staffs, Project project) {

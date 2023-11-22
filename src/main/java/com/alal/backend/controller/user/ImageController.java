@@ -1,5 +1,7 @@
 package com.alal.backend.controller.user;
 
+import com.alal.backend.config.security.token.CurrentUser;
+import com.alal.backend.config.security.token.UserPrincipal;
 import com.alal.backend.domain.dto.request.UploadImageRequest;
 import com.alal.backend.domain.dto.response.ReadImageResponse;
 import com.alal.backend.domain.dto.response.UploadImageResponse;
@@ -21,17 +23,19 @@ public class ImageController {
     @Async
     @PostMapping("upload")
     public ResponseEntity<UploadImageResponse> upload(@RequestBody UploadImageRequest uploadImageRequest
-//                                                      ,@CurrentUser UserPrincipal userPrincipal
+                                                      ,@CurrentUser UserPrincipal userPrincipal
     ) {
-        Long userId = 1L;
+//        Long userId = 1L;
+        Long userId = userPrincipal.getId();
         return ResponseEntity.ok(imageService.uploadImage(uploadImageRequest, userId));
     }
 
     @GetMapping
     public ResponseEntity<Page<ReadImageResponse>> read(@PageableDefault(size = 18) Pageable pageable
-//                                                  , @CurrentUser UserPrincipal userPrincipal
+                                                  , @CurrentUser UserPrincipal userPrincipal
     ) {
-        Long userId = 1L;
+//        Long userId = 1L;
+        Long userId = userPrincipal.getId();
         return ResponseEntity.ok(imageService.readImages(userId, pageable));
     }
 }

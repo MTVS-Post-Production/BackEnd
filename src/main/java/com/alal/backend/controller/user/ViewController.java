@@ -1,5 +1,7 @@
 package com.alal.backend.controller.user;
 
+import com.alal.backend.config.security.token.CurrentUser;
+import com.alal.backend.config.security.token.UserPrincipal;
 import com.alal.backend.payload.request.auth.FbxRequest;
 import com.alal.backend.payload.request.user.FlaskRequest;
 import com.alal.backend.payload.request.user.FlaskVoiceRequest;
@@ -10,7 +12,6 @@ import com.alal.backend.domain.dto.response.VoiceResponse;
 import com.alal.backend.service.user.MotionService;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -39,10 +40,10 @@ public class ViewController {
 
     @GetMapping
     public String motionPage(Model model,
-//                       @CurrentUser UserPrincipal userPrincipal,
+                       @CurrentUser UserPrincipal userPrincipal,
                              @PageableDefault(size = 12) Pageable pageable) {
-//        Long userId = userPrincipal.getId();
-        Long userId = 1L;
+        Long userId = userPrincipal.getId();
+//        Long userId = 1L;
         Page<ViewResponse> viewResponses = motionService.createViewResponse(userId, pageable);
 
         model.addAttribute("motionUrls", viewResponses);
@@ -54,10 +55,10 @@ public class ViewController {
     @PostMapping("/video")
     @ResponseBody
     public ResponseEntity<UpdateUserHistoryResponse> videoPost(@RequestBody FlaskRequest flaskRequest
-//                            ,@CurrentUser UserPrincipal userPrincipal
+                            ,@CurrentUser UserPrincipal userPrincipal
     ) {
-//        Long userId = userPrincipal.getId();
-        Long userId = 1L;
+        Long userId = userPrincipal.getId();
+//        Long userId = 1L;
         UpdateUserHistoryResponse updateUserHistoryResponse = motionService.findUrlByUploadMp4(flaskRequest, userId);
 
         return ResponseEntity.ok(updateUserHistoryResponse);
@@ -67,10 +68,10 @@ public class ViewController {
     @PostMapping("/voice")
     @ResponseBody
     public ResponseEntity<VoiceResponse> voicePost(@RequestBody FlaskVoiceRequest flaskRequest
-//                                                   ,@CurrentUser UserPrincipal userPrincipal
+                                                   ,@CurrentUser UserPrincipal userPrincipal
                                                    ) {
-        Long userId = 1L;
-//        Long userId = userPrincipal.getId();
+//        Long userId = 1L;
+        Long userId = userPrincipal.getId();
         VoiceResponse voiceResponse = motionService.uploadAndRespondWithAudioFileSuccess(flaskRequest, userId);
 
         return ResponseEntity.ok(voiceResponse);
@@ -103,11 +104,11 @@ public class ViewController {
     @GetMapping("/voice/result")
     @ResponseBody
     public ResponseEntity<VoiceResponse> getVoiceByUserId(
-//            @CurrentUser UserPrincipal userPrincipal,
+            @CurrentUser UserPrincipal userPrincipal,
             @RequestParam("modelName") String modelName
             ) {
-//        Long userId = userPrincipal.getId();
-        Long userId = 1L;
+        Long userId = userPrincipal.getId();
+//        Long userId = 1L;
         VoiceResponse voiceResponse = motionService.findByVoiceUrlWithUserId(userId, modelName);
 
         return ResponseEntity.ok(voiceResponse);
@@ -115,9 +116,10 @@ public class ViewController {
 
     @GetMapping("/filter")
     public String filterPage(@PageableDefault(size = 12) Pageable pageable, Model model, @RequestParam("motion") String motionName
-                             //            @CurrentUser UserPrincipal userPrincipal,
+                                         , @CurrentUser UserPrincipal userPrincipal
                              ) {
-        Long userId = 1L;
+//        Long userId = 1L;
+        Long userId = userPrincipal.getId();
         Page<ViewResponse> viewResponses = motionService.createViewResponseByMotionName(motionName, pageable, userId);
 
         model.addAttribute("motionUrls", viewResponses);

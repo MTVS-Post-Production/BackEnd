@@ -3,14 +3,11 @@ package com.alal.backend.service.user;
 import com.alal.backend.advice.error.UserNotFoundException;
 import com.alal.backend.domain.dto.request.UploadMemoRequest;
 import com.alal.backend.domain.dto.request.UploadProjectRequest;
-import com.alal.backend.domain.dto.request.vo.StaffVO;
-import com.alal.backend.domain.dto.response.ReadMemoResponse;
-import com.alal.backend.domain.dto.response.ReadProjectsResponse;
-import com.alal.backend.domain.dto.response.UploadMemoResponse;
-import com.alal.backend.domain.dto.response.UploadProjectResponse;
+import com.alal.backend.domain.vo.StaffVO;
+import com.alal.backend.domain.dto.response.*;
 import com.alal.backend.domain.entity.project.*;
 import com.alal.backend.domain.entity.user.*;
-import com.alal.backend.domain.entity.user.vo.Group;
+import com.alal.backend.domain.vo.Group;
 import com.alal.backend.repository.ProjectAvatarRepository;
 import com.alal.backend.repository.ProjectMemberRepository;
 import com.alal.backend.repository.user.*;
@@ -138,13 +135,13 @@ public class GroupService {
     }
 
     private void addProjectMembers(List<Staff> staffs, Project project) {
-        List<ProjectMember> projectMembers = new ArrayList<>();
+        List<ProjectStaff> projectStaffs = new ArrayList<>();
         for (Staff staff : staffs) {
-            ProjectMember projectMember = ProjectMember.fromEntity(staff, project);
-            projectMembers.add(projectMember);
+            ProjectStaff projectStaff = ProjectStaff.fromEntity(staff, project);
+            projectStaffs.add(projectStaff);
         }
 
-        projectMemberRepository.saveAll(projectMembers);
+        projectMemberRepository.saveAll(projectStaffs);
     }
 
     private Project saveProject(UploadProjectRequest uploadProjectRequest, Long userId) {
@@ -211,5 +208,30 @@ public class GroupService {
 
         return projectRepository.findAllByGroupOrderByProjectIdDesc(group, pageable)
                 .map(ReadProjectsResponse::fromEntity);
+    }
+
+    @Transactional(readOnly = true)
+    public ReadProjectResponse readProject(Long projectId) {
+        Project project = projectRepository.findByProjectId(projectId);
+        List<Avatar> avatars = findAvatars(project);
+        List<Staff> staffs = findStaffs(project);
+
+        return ReadProjectResponse.fromEntity(project, avatars, staffs);
+    }
+
+    private List<Staff> findStaffs(Project project) {
+        List<ProjectStaff> projectStaffs = projectMemberRepository.findAllByProject(project);
+
+        return projectStaffs.stream()
+                .map(ProjectStaff::getStaff)
+                .collect(Collectors.toList());
+    }
+
+    private List<Avatar> findAvatars(Project project) {
+        List<ProjectAvatar> projectAvatars = projectAvatarRepository.findAllByProject(project);
+
+        return projectAvatars.stream()
+                .map(ProjectAvatar::getAvatar)
+                .collect(Collectors.toList());
     }
 }

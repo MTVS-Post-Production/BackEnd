@@ -4,6 +4,7 @@ import com.alal.backend.config.security.token.CurrentUser;
 import com.alal.backend.config.security.token.UserPrincipal;
 import com.alal.backend.domain.dto.request.UpdateAvatarRequest;
 import com.alal.backend.domain.dto.response.*;
+import com.alal.backend.domain.dto.response.*;
 import com.alal.backend.domain.dto.request.UploadMemoRequest;
 import com.alal.backend.domain.dto.request.UploadProjectRequest;
 import com.alal.backend.service.user.GroupService;
@@ -57,5 +58,10 @@ public class GroupController {
 //        Long userId = userPrincipal.getId();
         Long userId = 1L;
         return ResponseEntity.ok(groupService.readProjects(userId, pageable).getContent());
+    }
+
+    @GetMapping("/project/{id}")
+    public ResponseEntity<ReadProjectResponse> readProject(@PathVariable("id") Long projectId) {
+        return ResponseEntity.ok(groupService.readProject(projectId));
     }
 }

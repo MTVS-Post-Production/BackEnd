@@ -1,7 +1,7 @@
 package com.alal.backend.repository.user;
 
 import com.alal.backend.domain.entity.project.Memo;
-import com.alal.backend.domain.entity.user.vo.Group;
+import com.alal.backend.domain.vo.Group;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

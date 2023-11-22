@@ -1,4 +1,4 @@
-package com.alal.backend.domain.dto.request.vo;
+package com.alal.backend.domain.vo;
 
 import com.alal.backend.domain.entity.project.StaffRole;
 import lombok.*;

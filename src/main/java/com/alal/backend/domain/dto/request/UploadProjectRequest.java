@@ -1,6 +1,6 @@
 package com.alal.backend.domain.dto.request;
 
-import com.alal.backend.domain.vo.StaffVO;
+import com.alal.backend.domain.dto.request.vo.StaffVO;
 import lombok.Getter;
 import lombok.Setter;
 

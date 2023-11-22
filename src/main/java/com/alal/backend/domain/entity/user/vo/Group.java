@@ -1,4 +1,4 @@
-package com.alal.backend.domain.vo;
+package com.alal.backend.domain.entity.user.vo;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

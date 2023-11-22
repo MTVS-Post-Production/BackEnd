@@ -1,7 +1,7 @@
 package com.alal.backend.domain.entity.project;
 
 import com.alal.backend.domain.dto.request.UploadProjectRequest;
-import com.alal.backend.domain.vo.Group;
+import com.alal.backend.domain.entity.user.vo.Group;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,7 +42,7 @@ public class Project {
     private String poster;
 
     @OneToMany(mappedBy = "project")
-    private List<ProjectStaff> projectStaffs = new ArrayList<>();
+    private List<ProjectMember> projectMembers = new ArrayList<>();
 
     @OneToMany(mappedBy = "project")
     private List<ProjectAvatar> projectAvatars = new ArrayList<>();

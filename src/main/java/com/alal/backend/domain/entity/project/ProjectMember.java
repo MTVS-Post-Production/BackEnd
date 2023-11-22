@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Table
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class ProjectStaff {
+public class ProjectMember {
     @Id
     @GeneratedValue
     private Long projectMemberId;
@@ -23,8 +23,8 @@ public class ProjectStaff {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    public static ProjectStaff fromEntity(Staff staff, Project project) {
-        return ProjectStaff.builder()
+    public static ProjectMember fromEntity(Staff staff, Project project) {
+        return ProjectMember.builder()
                 .staff(staff)
                 .project(project)
                 .build();

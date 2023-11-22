@@ -1,6 +1,7 @@
 package com.alal.backend.domain.entity.project;
 
-import com.alal.backend.domain.vo.Group;
+import com.alal.backend.domain.dto.request.UploadProjectRequest;
+import com.alal.backend.domain.entity.user.vo.Group;
 import lombok.*;
 import org.hibernate.annotations.Comment;
 

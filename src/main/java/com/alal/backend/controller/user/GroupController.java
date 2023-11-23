@@ -2,12 +2,10 @@ package com.alal.backend.controller.user;
 
 import com.alal.backend.config.security.token.CurrentUser;
 import com.alal.backend.config.security.token.UserPrincipal;
-import com.alal.backend.domain.dto.response.ReadProjectsResponse;
+import com.alal.backend.domain.dto.request.UpdateAvatarRequest;
+import com.alal.backend.domain.dto.response.*;
 import com.alal.backend.domain.dto.request.UploadMemoRequest;
 import com.alal.backend.domain.dto.request.UploadProjectRequest;
-import com.alal.backend.domain.dto.response.ReadMemoResponse;
-import com.alal.backend.domain.dto.response.UploadMemoResponse;
-import com.alal.backend.domain.dto.response.UploadProjectResponse;
 import com.alal.backend.service.user.GroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

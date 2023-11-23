@@ -1,9 +1,9 @@
 package com.alal.backend.domain.entity.project;
 
 
-import com.alal.backend.domain.dto.request.vo.StaffVO;
+import com.alal.backend.domain.vo.StaffVO;
 import com.alal.backend.domain.entity.user.User;
-import com.alal.backend.domain.entity.user.vo.Group;
+import com.alal.backend.domain.vo.Group;
 import lombok.*;
 import org.hibernate.annotations.Comment;
 
@@ -29,6 +29,14 @@ public class Staff {
     private Long userId;
 
     @Column
+    @Comment("스태프 이름")
+    private String staffName;
+
+    @Column
+    @Comment("스태프 프로필")
+    private String staffProfile;
+
+    @Column
     @Comment("역할")
     private StaffRole staffRole;
 
@@ -37,11 +45,13 @@ public class Staff {
     private Group group;
 
     @OneToMany(mappedBy = "staff")
-    private List<ProjectMember> projectMembers = new ArrayList<>();
+    private List<ProjectStaff> projectStaffs = new ArrayList<>();
 
     public static Staff fromVOAndUser(User user, StaffVO staffVO) {
         return Staff.builder()
                 .userId(user.getId())
+                .staffName(user.getName())
+                .staffProfile(user.getImageUrl())
                 .group(new Group(user.getUserGroup()))
                 .staffRole(staffVO.getStaffRole())
                 .build();

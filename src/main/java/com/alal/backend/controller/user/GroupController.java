@@ -3,13 +3,12 @@ package com.alal.backend.controller.user;
 import com.alal.backend.config.security.token.CurrentUser;
 import com.alal.backend.config.security.token.UserPrincipal;
 import com.alal.backend.domain.dto.request.UpdateAvatarRequest;
-import com.alal.backend.domain.dto.response.*;
-import com.alal.backend.domain.dto.response.*;
 import com.alal.backend.domain.dto.request.UploadMemoRequest;
 import com.alal.backend.domain.dto.request.UploadProjectRequest;
+import com.alal.backend.domain.dto.response.*;
+import com.alal.backend.service.user.AvatarService;
 import com.alal.backend.service.user.GroupService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +22,7 @@ import java.util.List;
 public class GroupController {
 
     private final GroupService groupService;
+    private final AvatarService avatarService;
 
     @PostMapping("/memo/upload")
     public ResponseEntity<UploadMemoResponse> upload(@RequestBody UploadMemoRequest uploadMemoRequest
@@ -63,5 +63,10 @@ public class GroupController {
     @GetMapping("/project/{id}")
     public ResponseEntity<ReadProjectResponse> readProject(@PathVariable("id") Long projectId) {
         return ResponseEntity.ok(groupService.readProject(projectId));
+    }
+
+    @PatchMapping("/avatar")
+    public ResponseEntity<UpdateAvatarResponse> update(@RequestBody UpdateAvatarRequest avatarRequest) {
+        return ResponseEntity.ok(avatarService.updateAvatar(avatarRequest));
     }
 }

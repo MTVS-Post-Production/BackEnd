@@ -1,5 +1,6 @@
 package com.alal.backend.domain.entity.project;
 
+import com.alal.backend.domain.info.AvatarInfo;
 import com.alal.backend.domain.vo.Group;
 import lombok.*;
 import org.hibernate.annotations.Comment;
@@ -44,5 +45,26 @@ public class Avatar {
                 .avatarImage(DEFAULT_IMAGE)
                 .group(group)
                 .build();
+    }
+
+    public void update(String avatarUrl, AvatarInfo avatarInfo) {
+        updateAvatarName(avatarInfo.getAvatarName());
+        updateAvatarImage(avatarUrl);
+    }
+
+    private void updateAvatarName(String avatarName) {
+        if (avatarName != null) {
+            this.avatarName = avatarName;
+        }
+    }
+
+    private void updateAvatarImage(String avatarUrl) {
+        if (avatarImage != null) {
+            this.avatarImage = avatarUrl;
+        }
+    }
+
+    public void updateNameOnly(AvatarInfo avatarInfo) {
+        updateAvatarName(avatarInfo.getAvatarName());
     }
 }

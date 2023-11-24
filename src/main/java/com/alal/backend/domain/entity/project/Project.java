@@ -41,10 +41,10 @@ public class Project {
     @Comment("포스터")
     private String poster;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectStaff> projectStaffs = new ArrayList<>();
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
     private List<ProjectAvatar> projectAvatars = new ArrayList<>();
 
     public static Project fromDto(Group group, UploadProjectRequest uploadProjectRequest, String posterUrl) {

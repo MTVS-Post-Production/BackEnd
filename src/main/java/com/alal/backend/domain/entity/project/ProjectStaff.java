@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class ProjectStaff {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long projectMemberId;
 
     @ManyToOne

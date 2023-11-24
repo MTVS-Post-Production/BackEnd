@@ -1,10 +1,8 @@
 package com.alal.backend.domain.dto.response;
 
+import com.alal.backend.domain.entity.project.*;
 import com.alal.backend.domain.info.AvatarInfo;
 import com.alal.backend.domain.info.StaffInfo;
-import com.alal.backend.domain.entity.project.Avatar;
-import com.alal.backend.domain.entity.project.Project;
-import com.alal.backend.domain.entity.project.Staff;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -43,5 +41,34 @@ public class ReadProjectResponse {
         return avatars.stream()
                 .map(AvatarInfo::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    public static ReadProjectResponse fromEntities(Project project) {
+        List<AvatarInfo> avatarInfos = extractAvatarInfos(project);
+        List<StaffInfo> staffInfos = extractStaffInfos(project);
+
+        return ReadProjectResponse.builder()
+                .projectName(project.getProjectName())
+                .description(project.getDescription())
+                .poster(project.getPoster())
+                .avatarInfo(avatarInfos)
+                .staffInfo(staffInfos)
+                .build();
+    }
+
+    private static List<StaffInfo> extractStaffInfos(Project project) {
+        return fromStaffList(
+                project.getProjectStaffs().stream()
+                        .map(ProjectStaff::getStaff)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    private static List<AvatarInfo> extractAvatarInfos(Project project) {
+        return fromAvatarList(
+                project.getProjectAvatars().stream()
+                        .map(ProjectAvatar::getAvatar)
+                        .collect(Collectors.toList())
+        );
     }
 }

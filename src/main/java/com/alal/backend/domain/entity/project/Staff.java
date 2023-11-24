@@ -44,7 +44,7 @@ public class Staff {
     @Comment("그룹명")
     private Group group;
 
-    @OneToMany(mappedBy = "staff")
+    @OneToMany(mappedBy = "staff", fetch = FetchType.LAZY)
     private List<ProjectStaff> projectStaffs = new ArrayList<>();
 
     public static Staff fromVOAndUser(User user, StaffVO staffVO) {

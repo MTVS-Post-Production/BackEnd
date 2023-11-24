@@ -33,15 +33,17 @@ public class AvatarService {
         List<Avatar> avatars = findAvatars(avatarRequest);
         List<String> avatarUrls = uploadAvatarsAndGetUrls(avatarRequest.getAvatarInfos());
 
-        updateAvatars(avatars, avatarUrls, avatarRequest.getAvatarInfos());
+        avatars = updateAvatars(avatars, avatarUrls, avatarRequest.getAvatarInfos());
 
         return UpdateAvatarResponse.fromEntity(avatars);
     }
 
     private List<Avatar> findAvatars(UpdateAvatarRequest avatarRequest) {
-        return avatarRequest.getAvatarInfos().stream()
-                .map(avatarInfo -> avatarRepository.findByAvatarId(avatarInfo.getAvatarId()))
+        List<Long> avatarIds = avatarRequest.getAvatarInfos().stream()
+                .map(AvatarInfo::getAvatarId)
                 .collect(Collectors.toList());
+
+        return avatarRepository.findAllById(avatarIds);
     }
 
     private List<String> uploadAvatarsAndGetUrls(List<AvatarInfo> avatarInfos) {
@@ -57,7 +59,7 @@ public class AvatarService {
         byte[] decodedBytes = Base64.getDecoder().decode(avatarInfo.getAvatarImage());
 
         BlobInfo blobInfo = storage.create(
-                BlobInfo.newBuilder(bucketName, avatarInfo.getAvatarName())
+                BlobInfo.newBuilder(bucketName, String.valueOf(avatarInfo.getAvatarId()))
                         .setContentType("image/png")
                         .build(),
                 decodedBytes
@@ -66,9 +68,10 @@ public class AvatarService {
         return parser.parseBlobInfo(blobInfo);
     }
 
-    private void updateAvatars(List<Avatar> avatars, List<String> avatarUrls, List<AvatarInfo> avatarInfos) {
+    private List<Avatar> updateAvatars(List<Avatar> avatars, List<String> avatarUrls, List<AvatarInfo> avatarInfos) {
         IntStream.range(0, avatars.size())
                 .forEach(i -> updateAvatar(avatars.get(i), avatarUrls.get(i), avatarInfos.get(i)));
+        return avatarRepository.saveAll(avatars);
     }
 
     private void updateAvatar(Avatar avatar, String avatarUrl, AvatarInfo avatarInfo) {

@@ -3,6 +3,7 @@ package com.alal.backend.domain.entity.project;
 import com.alal.backend.domain.info.AvatarInfo;
 import com.alal.backend.domain.vo.Group;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
@@ -19,7 +20,7 @@ public class Avatar {
     private static final String DEFAULT_IMAGE = "https://storage.googleapis.com/memo-log/defaultImage.png";
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     @Comment("배역 번호")
     private Long avatarId;
@@ -36,7 +37,7 @@ public class Avatar {
     @Comment("그룹명")
     private Group group;
 
-    @OneToMany(mappedBy = "avatar")
+    @OneToMany(mappedBy = "avatar", fetch = FetchType.LAZY)
     private List<ProjectAvatar> projectAvatars = new ArrayList<>();
 
     public static Avatar fromEntityAndName(Group group, String avatarName) {

@@ -23,19 +23,19 @@ public class ImageController {
     @Async
     @PostMapping("upload")
     public ResponseEntity<UploadImageResponse> upload(@RequestBody UploadImageRequest uploadImageRequest
-                                                      ,@CurrentUser UserPrincipal userPrincipal
+//                                                      ,@CurrentUser UserPrincipal userPrincipal
     ) {
-//        Long userId = 1L;
-        Long userId = userPrincipal.getId();
+        Long userId = 1L;
+//        Long userId = userPrincipal.getId();
         return ResponseEntity.ok(imageService.uploadImage(uploadImageRequest, userId));
     }
 
     @GetMapping
     public ResponseEntity<Page<ReadImageResponse>> read(@PageableDefault(size = 18) Pageable pageable
-                                                  , @CurrentUser UserPrincipal userPrincipal
+//                                                  , @CurrentUser UserPrincipal userPrincipal
     ) {
-//        Long userId = 1L;
-        Long userId = userPrincipal.getId();
+        Long userId = 1L;
+//        Long userId = userPrincipal.getId();
         return ResponseEntity.ok(imageService.readImages(userId, pageable));
     }
 }

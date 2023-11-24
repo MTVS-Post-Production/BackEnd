@@ -11,14 +11,12 @@ import lombok.Setter;
 public class UploadProjectResponse {
     private String projectName;
     private String description;
-    private String posterName;
     private String groupName;
 
     public static UploadProjectResponse fromEntity(Project project) {
         return UploadProjectResponse.builder()
                 .projectName(project.getProjectName())
                 .description(project.getDescription())
-                .posterName(project.getProjectName())
                 .groupName(project.getGroup().toString())
                 .build();
     }

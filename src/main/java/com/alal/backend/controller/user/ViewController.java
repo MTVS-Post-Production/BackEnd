@@ -55,10 +55,10 @@ public class ViewController {
     @PostMapping("/video")
     @ResponseBody
     public ResponseEntity<UpdateUserHistoryResponse> videoPost(@RequestBody FlaskRequest flaskRequest
-                            ,@CurrentUser UserPrincipal userPrincipal
+//                            ,@CurrentUser UserPrincipal userPrincipal
     ) {
-        Long userId = userPrincipal.getId();
-//        Long userId = 1L;
+//        Long userId = userPrincipal.getId();
+        Long userId = 1L;
         UpdateUserHistoryResponse updateUserHistoryResponse = motionService.findUrlByUploadMp4(flaskRequest, userId);
 
         return ResponseEntity.ok(updateUserHistoryResponse);
@@ -116,10 +116,10 @@ public class ViewController {
 
     @GetMapping("/filter")
     public String filterPage(@PageableDefault(size = 12) Pageable pageable, Model model, @RequestParam("motion") String motionName
-                                         , @CurrentUser UserPrincipal userPrincipal
+//                                         , @CurrentUser UserPrincipal userPrincipal
                              ) {
-//        Long userId = 1L;
-        Long userId = userPrincipal.getId();
+        Long userId = 1L;
+//        Long userId = userPrincipal.getId();
         Page<ViewResponse> viewResponses = motionService.createViewResponseByMotionName(motionName, pageable, userId);
 
         model.addAttribute("motionUrls", viewResponses);

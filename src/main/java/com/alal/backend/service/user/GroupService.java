@@ -220,17 +220,13 @@ public class GroupService {
     }
 
     private List<Staff> findStaffs(Project project) {
-        List<ProjectStaff> projectStaffs = projectMemberRepository.findAllByProject(project);
-
-        return projectStaffs.stream()
+        return project.getProjectStaffs().stream()
                 .map(ProjectStaff::getStaff)
                 .collect(Collectors.toList());
     }
 
     private List<Avatar> findAvatars(Project project) {
-        List<ProjectAvatar> projectAvatars = projectAvatarRepository.findAllByProject(project);
-
-        return projectAvatars.stream()
+        return project.getProjectAvatars().stream()
                 .map(ProjectAvatar::getAvatar)
                 .collect(Collectors.toList());
     }

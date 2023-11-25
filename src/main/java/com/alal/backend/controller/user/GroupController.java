@@ -60,10 +60,7 @@ public class GroupController {
 
     @GetMapping("/project/{id}")
     public ResponseEntity<ReadProjectResponse> readProject(@PathVariable("id") Long projectId) {
-        long start = System.nanoTime();
         ReadProjectResponse readProjectResponse = groupService.readProject(projectId);
-        long end = System.nanoTime();
-        System.out.println("수행시간: " + (end - start) + " ns");
         return ResponseEntity.ok(readProjectResponse);
     }
 

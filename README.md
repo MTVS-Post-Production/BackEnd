@@ -84,15 +84,15 @@
     <td align="center"><a href="https://github.com/"><img src="https://avatars.githubusercontent.com/" width="150px;" alt="">
     <td align="center"><a href="https://github.com/"><img src="https://avatars.githubusercontent.com/" width="150px;" alt="">
     <td align="center"><a href="https://github.com/"><img src="https://avatars.githubusercontent.com/" width="150px;" alt="">
-    <td align="center"><a href="https://github.com/"><img src="https://avatars.githubusercontent.com/" width="150px;" alt="">
+    <td align="center"><a href="https://github.com/JoeHeeJae"><img src="https://avatars.githubusercontent.com/JoeHeeJae" width="150px;" alt="">
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/MinSooC"><b>차민수</b></td>
     <td align="center"><a href="https://github.com/fortress43-dev"><b>도경원</b></td>
-    <td align="center"><a href="https://github.com/MinSooC"><b>임성준</b></td>
-    <td align="center"><a href="https://github.com/MinSooC"><b>김효겸</b></td>
-    <td align="center"><a href="https://github.com/MinSooC"><b>이은서</b></td>
-    <td align="center"><a href="https://github.com/MinSooC"><b>조희재</b></td>
+    <td align="center"><a href="https://github.com/"><b>임성준</b></td>
+    <td align="center"><a href="https://github.com/"><b>김효겸</b></td>
+    <td align="center"><a href="https://github.com/"><b>이은서</b></td>
+    <td align="center"><a href="https://github.com/JoeHeeJae"><b>조희재</b></td>
   </tr>
     <tr>
     <td align="center"><strong>AI</strong></td>

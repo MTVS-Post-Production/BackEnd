@@ -202,15 +202,12 @@ public class GroupService {
     }
 
     @Transactional(readOnly = true)
-    public ReadProjectsResponseList readProjects(Long userId, Pageable pageable) {
+    public Page<ReadProjectsResponse> readProjects(Long userId, Pageable pageable) {
         User user = getUser(userId);
         Group group = getUserGroup(user);
 
-        List<ReadProjectsResponse> readProjectsResponses= projectRepository.findAllByGroupOrderByProjectIdDesc(group, pageable)
-                .map(ReadProjectsResponse::fromEntity)
-                .getContent();
-
-        return ReadProjectsResponseList.from(readProjectsResponses);
+        return projectRepository.findAllByGroupOrderByProjectIdDesc(group, pageable)
+                .map(ReadProjectsResponse::fromEntity);
     }
 
     @Transactional(readOnly = true)

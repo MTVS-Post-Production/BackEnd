@@ -50,12 +50,12 @@ public class GroupController {
     }
 
     @GetMapping("/project/all")
-    public ResponseEntity<List<ReadProjectsResponse>> readProjects(@PageableDefault(value = 8) Pageable pageable
+    public ResponseEntity<ReadProjectsResponseList> readProjects(@PageableDefault(value = 8) Pageable pageable
 //            , @CurrentUser UserPrincipal userPrincipal
             ) {
 //        Long userId = userPrincipal.getId();
         Long userId = 1L;
-        return ResponseEntity.ok(groupService.readProjects(userId, pageable).getContent());
+        return ResponseEntity.ok(groupService.readProjects(userId, pageable));
     }
 
     @GetMapping("/project/{id}")

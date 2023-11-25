@@ -1,6 +1,4 @@
-## 💚 Life : Backend>
-
-<br>
+## 💡 Life : Backend>
 
 ## 🤔 About Life
 - 소/중규모 애니메이션 제작 공정에 있어 프리비즈 단계에서 애니메이션의 퀄리티를 높여 전체 제작 단계를 간소화시키는 작업이 이루어지고 있습니다. 또한 언리얼 제작 환경에 특화된 병렬 방식 제작 파이프라인을 도입하여 기존 제작 공정 기간을 단축시키고 효율성을 증대시키는 것이 목표입니다.
@@ -57,6 +55,8 @@
 - DataBase : `Mysql 8.1.0`
 - ORM : `Hibernate`
 
+<br>
+
 ## ⚙️ 기술 스택
 <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white"> <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=for-the-badge&logo=Spring Security&logoColor=white"> <img src="https://img.shields.io/badge/Spring WebClient-6DB33F?style=for-the-badge&logo=Spring WebClient&logoColor=white"> <img src="https://img.shields.io/badge/ThymeLeaf-114d15?style=for-the-badge&logo=ThymeLeaf&logoColor=white"> <img src="https://img.shields.io/badge/JPA-6DB33F?style=for-the-badge&logo=JPA&logoColor=white"> <img src="https://img.shields.io/badge/Mysql-3085c9?style=for-the-badge&logo=Mysql&logoColor=white"> <img src="https://img.shields.io/badge/Google Cloud-3075c9?style=for-the-badge&logo=Google Cloud&logoColor=white">
 
@@ -68,13 +68,43 @@
 - [프로젝트 상세 조회 N+1 개선]()
 - [프로젝트 생성 시간 최적화]()
 
+<br>
+
 ## 🤝 협업툴
-<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/> <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white"/> <img src="https://img.shields.io/badge/Miro-F7DF1E?style=for-the-badge&logo=Miro&logoColor=black"/>
+<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/> <img src="https://img.shields.io/badge/Google Cloud-000000?style=for-the-badge&logo=Google Cloud&logoColor=white"/> <img src="https://img.shields.io/badge/Miro-F7DF1E?style=for-the-badge&logo=Miro&logoColor=black"/>
 
 <br>
-<br>
-<br>
 
+## 🤝 Collaborator
+
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/MinSooC"><img src="https://avatars.githubusercontent.com/MinSooC" width="150px;" alt="">
+    <td align="center"><a href="https://github.com/fortress43-dev"><img src="https://avatars.githubusercontent.com/fortress43-dev" width="150px;" alt="">
+    <td align="center"><a href="https://github.com/"><img src="https://avatars.githubusercontent.com/" width="150px;" alt="">
+    <td align="center"><a href="https://github.com/"><img src="https://avatars.githubusercontent.com/" width="150px;" alt="">
+    <td align="center"><a href="https://github.com/"><img src="https://avatars.githubusercontent.com/" width="150px;" alt="">
+    <td align="center"><a href="https://github.com/"><img src="https://avatars.githubusercontent.com/" width="150px;" alt="">
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/MinSooC"><b>차민수</b></td>
+    <td align="center"><a href="https://github.com/fortress43-dev"><b>도경원</b></td>
+    <td align="center"><a href="https://github.com/MinSooC"><b>임성준</b></td>
+    <td align="center"><a href="https://github.com/MinSooC"><b>김효겸</b></td>
+    <td align="center"><a href="https://github.com/MinSooC"><b>이은서</b></td>
+    <td align="center"><a href="https://github.com/MinSooC"><b>조희재</b></td>
+  </tr>
+    <tr>
+    <td align="center"><strong>AI</strong></td>
+    <td align="center"><strong>Unreal</strong></td>
+    <td align="center"><strong>Unreal</strong></td>
+    <td align="center"><strong>Unreal</strong></td>
+    <td align="center"><strong>3D Modeling</strong></td>
+    <td align="center"><strong>Data Science</strong></td>
+  </tr>
+</table>
+
+<br>
 
 ## 🤝 컨벤션
 

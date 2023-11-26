@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -14,12 +13,17 @@ import java.util.Base64;
 @Service
 public class Parser {
     public String parseBlobInfo(BlobInfo blobInfo) {
-        try {
-            String encodedName = URLEncoder.encode(blobInfo.getName(), StandardCharsets.UTF_8.toString());
-            return String.format("https://storage.googleapis.com/%s/%s", blobInfo.getBucket(), encodedName);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("URL 인코딩에 실패했습니다.", e);
+        String[] splitName = blobInfo.getName().split(" ");
+        StringBuilder encodedName = new StringBuilder();
+
+        for (String part : splitName) {
+            encodedName.append(URLEncoder.encode(part, StandardCharsets.UTF_8));
+            encodedName.append("%20");
         }
+
+        encodedName.setLength(encodedName.length() - 3);
+
+        return String.format("https://storage.googleapis.com/%s/%s", blobInfo.getBucket(), encodedName.toString());
     }
 
     public static String encodeImageToBase64(byte[] imageBytes) {

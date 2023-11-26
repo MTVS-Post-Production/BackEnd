@@ -9,11 +9,9 @@ import javax.validation.constraints.NotBlank;
 public class ProfileUpdateRequest {
 
     @Schema( type = "string", example = "미미고등학교", description="사용자 그룹을 입력해주세요")
-    @NotBlank
     private String userGroup;
 
     @Schema( type = "string", example = "string", description="변경할 닉네임을 입력해주세요")
-    @NotBlank
     private String userName;
 
     @Schema( type = "string", example = "string", description="변경할 닉네임을 입력해주세요")

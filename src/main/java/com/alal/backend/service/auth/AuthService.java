@@ -75,8 +75,8 @@ public class AuthService {
     }
 
     @Transactional
-    public ResponseEntity<?> modify(UserPrincipal userPrincipal, @Valid ProfileUpdateRequest profileUpdateRequest) {
-        Optional<User> user = userRepository.findById(userPrincipal.getId());
+    public ResponseEntity<?> modify(Long userId, @Valid ProfileUpdateRequest profileUpdateRequest) {
+        Optional<User> user = userRepository.findById(userId);
 
         user.get().updateProfile(profileUpdateRequest);
 

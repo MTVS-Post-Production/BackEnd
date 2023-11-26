@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -206,11 +207,21 @@ public class GroupService {
         User user = getUser(userId);
         Group group = getUserGroup(user);
 
-        List<ReadProjectsResponse> readProjectsResponses = projectRepository.findAllByGroupOrderByProjectIdDesc(group, pageable)
-                .map(ReadProjectsResponse::fromEntity)
-                .getContent();
+        List<ReadProjectsResponse> readProjectsResponses = findAllProjects(group, pageable);
 
         return ReadProjectsResponseList.from(readProjectsResponses);
+    }
+
+    private List<ReadProjectsResponse> findAllProjects(Group group, Pageable pageable) {
+        return projectRepository.findAllByGroupOrderByProjectIdDesc(group, pageable)
+                .map(project -> {
+                    try {
+                        return ReadProjectsResponse.fromEntity(project);
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                })
+                .getContent();
     }
 
     @Transactional(readOnly = true)

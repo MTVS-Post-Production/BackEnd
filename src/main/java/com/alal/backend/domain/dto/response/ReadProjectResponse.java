@@ -20,6 +20,7 @@ public class ReadProjectResponse {
     private final String poster;
     private final List<AvatarInfo> avatarInfo;
     private final List<StaffInfo> staffInfo;
+    private final String script;
 
     public static ReadProjectResponse fromEntity(Project project, List<Avatar> avatars, List<Staff> staffs) throws IOException {
         List<AvatarInfo> avatarInfos = fromAvatarList(avatars);
@@ -32,6 +33,7 @@ public class ReadProjectResponse {
                 .poster(base64Poster)
                 .avatarInfo(avatarInfos)
                 .staffInfo(staffInfos)
+                .script(project.getScript())
                 .build();
     }
 

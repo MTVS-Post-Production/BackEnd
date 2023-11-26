@@ -14,4 +14,5 @@ public class UploadProjectRequest {
     private List<StaffVO> staffs;
     private List<String> avatarName;
     private String poster;
+    private String script;
 }

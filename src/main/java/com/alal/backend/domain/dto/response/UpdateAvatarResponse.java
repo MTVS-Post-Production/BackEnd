@@ -5,6 +5,8 @@ import com.alal.backend.domain.info.AvatarInfo;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +25,13 @@ public class UpdateAvatarResponse {
 
     private static List<AvatarInfo> fromAvatarList(List<Avatar> avatars) {
         return avatars.stream()
-                .map(AvatarInfo::fromEntity)
+                .map(avatar -> {
+                    try {
+                        return AvatarInfo.fromEntity(avatar);
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                })
                 .collect(Collectors.toList());
     }
 }

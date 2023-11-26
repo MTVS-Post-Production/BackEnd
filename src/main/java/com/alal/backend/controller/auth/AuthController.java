@@ -63,10 +63,12 @@ public class AuthController {
     })
     @PatchMapping(value = "/")
     public ResponseEntity<?> modify(
-            @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+//            @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
             @Parameter(description = "Schemas의 ChangePasswordRequest를 참고해주세요.", required = true) @RequestBody ProfileUpdateRequest profileUpdateRequest
             ) {
-        return authService.modify(userPrincipal, profileUpdateRequest);
+        Long userId = 1L;
+//        Long userId = userPrincipal.getId();
+        return authService.modify(userId, profileUpdateRequest);
     }
 
     @Operation(summary = "유저 로그인", description = "유저 로그인을 수행합니다.")

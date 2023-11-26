@@ -71,9 +71,27 @@ public class User extends DefaultTime {
     }
 
     public void updateProfile(ProfileUpdateRequest profileUpdateRequest) {
-        this.userGroup = profileUpdateRequest.getUserGroup();
-        this.name = profileUpdateRequest.getUserName();
-        this.imageUrl = profileUpdateRequest.getBase64ProfileImage();
+        updateProfileName(profileUpdateRequest);
+        updateImage(profileUpdateRequest);
+        updateGroup(profileUpdateRequest);
+    }
+
+    private void updateGroup(ProfileUpdateRequest profileUpdateRequest) {
+        if (profileUpdateRequest.getUserGroup() != null) {
+            this.userGroup = profileUpdateRequest.getUserGroup();
+        }
+    }
+
+    private void updateImage(ProfileUpdateRequest profileUpdateRequest) {
+        if (profileUpdateRequest.getBase64ProfileImage() != null) {
+            this.imageUrl = profileUpdateRequest.getBase64ProfileImage();
+        }
+    }
+
+    private void updateProfileName(ProfileUpdateRequest profileUpdateRequest) {
+        if (profileUpdateRequest.getUserName() != null) {
+            this.name = profileUpdateRequest.getUserName();
+        }
     }
 
     public void historyUpdate(String responseToString) {

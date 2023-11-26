@@ -12,7 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/group")
@@ -59,7 +59,7 @@ public class GroupController {
     }
 
     @GetMapping("/project/{id}")
-    public ResponseEntity<ReadProjectResponse> readProject(@PathVariable("id") Long projectId) {
+    public ResponseEntity<ReadProjectResponse> readProject(@PathVariable("id") Long projectId) throws IOException {
         ReadProjectResponse readProjectResponse = groupService.readProject(projectId);
         return ResponseEntity.ok(readProjectResponse);
     }

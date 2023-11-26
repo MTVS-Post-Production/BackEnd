@@ -3,11 +3,11 @@ package com.alal.backend.service.user;
 import com.alal.backend.advice.error.UserNotFoundException;
 import com.alal.backend.domain.dto.request.UploadMemoRequest;
 import com.alal.backend.domain.dto.request.UploadProjectRequest;
-import com.alal.backend.domain.vo.StaffVO;
 import com.alal.backend.domain.dto.response.*;
 import com.alal.backend.domain.entity.project.*;
-import com.alal.backend.domain.entity.user.*;
+import com.alal.backend.domain.entity.user.User;
 import com.alal.backend.domain.vo.Group;
+import com.alal.backend.domain.vo.StaffVO;
 import com.alal.backend.repository.ProjectAvatarRepository;
 import com.alal.backend.repository.ProjectMemberRepository;
 import com.alal.backend.repository.user.*;
@@ -16,11 +16,11 @@ import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -214,7 +214,7 @@ public class GroupService {
     }
 
     @Transactional(readOnly = true)
-    public ReadProjectResponse readProject(Long projectId) {
+    public ReadProjectResponse readProject(Long projectId) throws IOException {
         Project project = projectRepository.findByProjectId(projectId);
         List<Avatar> avatars = findAvatars(project);
         List<Staff> staffs = findStaffs(project);

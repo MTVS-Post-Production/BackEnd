@@ -5,13 +5,21 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 @Service
 public class Parser {
     public String parseBlobInfo(BlobInfo blobInfo) {
-        return String.format("https://storage.googleapis.com/%s/%s", blobInfo.getBucket(), blobInfo.getName());
+        try {
+            String encodedName = URLEncoder.encode(blobInfo.getName(), StandardCharsets.UTF_8.toString());
+            return String.format("https://storage.googleapis.com/%s/%s", blobInfo.getBucket(), encodedName);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("URL 인코딩에 실패했습니다.", e);
+        }
     }
 
     public static String encodeImageToBase64(byte[] imageBytes) {

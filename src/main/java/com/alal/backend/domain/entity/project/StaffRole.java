@@ -3,7 +3,7 @@ package com.alal.backend.domain.entity.project;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum StaffRole {
-    DIRECTER("directer"),
+    DIRECTER("director"),
     GENERAL("general");
 
     private final String role;

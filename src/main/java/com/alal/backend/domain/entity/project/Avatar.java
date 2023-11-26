@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Avatar {
-    private static final String DEFAULT_IMAGE = "https://storage.googleapis.com/memo-log/defaultImage.png";
+    private static final String DEFAULT_IMAGE = "https://storage.googleapis.com/memo-log/defaultImage.jpg";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

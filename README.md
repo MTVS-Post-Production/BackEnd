@@ -66,7 +66,6 @@
 - [Git Action에서 Json 파일이 생성이 안되는 현상](https://velog.io/@bbbbooo/Git-Action-Json-%EC%83%9D%EC%84%B1)
 - [페이징 쿼리 개선](https://velog.io/@bbbbooo/%ED%8E%98%EC%9D%B4%EC%A7%95-%EC%BF%BC%EB%A6%AC-%EC%B5%9C%EC%A0%81%ED%99%94)
 - [프로젝트 상세 조회 N+1 개선]()
-- [프로젝트 생성 시간 최적화]()
 
 <br>
 

@@ -79,22 +79,25 @@
 
 <table>
   <tr>
+    <td align="center"><a href="https://github.com/bbbbooo"><img src="https://avatars.githubusercontent.com/bbbbooo" width="150px;" alt="">
     <td align="center"><a href="https://github.com/MinSooC"><img src="https://avatars.githubusercontent.com/MinSooC" width="150px;" alt="">
     <td align="center"><a href="https://github.com/fortress43-dev"><img src="https://avatars.githubusercontent.com/fortress43-dev" width="150px;" alt="">
-    <td align="center"><a href="https://github.com/"><img src="https://avatars.githubusercontent.com/" width="150px;" alt="">
-    <td align="center"><a href="https://github.com/"><img src="https://avatars.githubusercontent.com/" width="150px;" alt="">
+    <td align="center"><a href="https://github.com/sungjun0629"><img src="https://avatars.githubusercontent.com/sungjun0629" width="150px;" alt="">
+    <td align="center"><a href="https://github.com/HANARU"><img src="https://avatars.githubusercontent.com/HANARU" width="150px;" alt="">
     <td align="center"><a href="https://github.com/"><img src="https://avatars.githubusercontent.com/" width="150px;" alt="">
     <td align="center"><a href="https://github.com/JoeHeeJae"><img src="https://avatars.githubusercontent.com/JoeHeeJae" width="150px;" alt="">
   </tr>
   <tr>
+    <td align="center"><a href="https://github.com/bbbbooo"><b>이현석</b></td>
     <td align="center"><a href="https://github.com/MinSooC"><b>차민수</b></td>
     <td align="center"><a href="https://github.com/fortress43-dev"><b>도경원</b></td>
-    <td align="center"><a href="https://github.com/"><b>임성준</b></td>
-    <td align="center"><a href="https://github.com/"><b>김효겸</b></td>
+    <td align="center"><a href="https://github.com/sungjun0629"><b>임성준</b></td>
+    <td align="center"><a href="https://github.com/HANARU"><b>김효겸</b></td>
     <td align="center"><a href="https://github.com/"><b>이은서</b></td>
     <td align="center"><a href="https://github.com/JoeHeeJae"><b>조희재</b></td>
   </tr>
     <tr>
+    <td align="center"><strong>Backend</strong></td>
     <td align="center"><strong>AI</strong></td>
     <td align="center"><strong>Unreal</strong></td>
     <td align="center"><strong>Unreal</strong></td>
@@ -103,6 +106,7 @@
     <td align="center"><strong>Data Science</strong></td>
   </tr>
 </table>
+
 
 <br>
 

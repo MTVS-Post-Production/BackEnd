@@ -45,18 +45,19 @@ public class GroupService {
     @Transactional
     public UploadMemoResponse uploadMemo(UploadMemoRequest uploadMemoRequest, Long userId) {
         User user = getUser(userId);
-        String uploadUrl = uploadStorage(user, uploadMemoRequest);
 
-        return saveMemo(uploadUrl, user);
+        return saveMemo(uploadMemoRequest, user);
     }
 
-    private UploadMemoResponse saveMemo(String uploadUrl, User user) {
+    private UploadMemoResponse saveMemo(UploadMemoRequest uploadMemoRequest, User user) {
         Memo memo = memoRepository.findByGroup(getUserGroup(user));
-
-        if (memo == null) {
-            Memo createdMemo = Memo.fromEntity(uploadUrl, user.getUserGroup());
-            memoRepository.save(createdMemo);
+        if (memo != null) {
+            memoRepository.delete(memo);
         }
+
+        String uploadUrl = uploadStorage(user, uploadMemoRequest);
+        Memo createdMemo = Memo.fromEntity(uploadUrl, user.getUserGroup());
+        memoRepository.save(createdMemo);
 
         return UploadMemoResponse.fromEntity(uploadUrl);
     }

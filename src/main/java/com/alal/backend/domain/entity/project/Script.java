@@ -1,5 +1,6 @@
 package com.alal.backend.domain.entity.project;
 
+import com.alal.backend.domain.dto.request.UploadSceneRequest;
 import lombok.*;
 import org.hibernate.annotations.Comment;
 

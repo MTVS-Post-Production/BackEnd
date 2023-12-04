@@ -8,12 +8,12 @@ import java.util.List;
 @Builder
 public class ReadSceneResponseList {
     private List<ReadSceneResponse> readSceneResponses;
-    private Long sceneId;
+    private Long scriptId;
 
     public static ReadSceneResponseList from(List<ReadSceneResponse> readSceneResponses, Script script) {
         return ReadSceneResponseList.builder()
                 .readSceneResponses(readSceneResponses)
-                .sceneId(script.getScriptId())
+                .scriptId(script.getScriptId())
                 .build();
     }
 }

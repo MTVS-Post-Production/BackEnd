@@ -1,6 +1,8 @@
 package com.alal.backend.domain.entity.project;
 
+import com.alal.backend.domain.dto.request.UploadSceneRequest;
 import com.alal.backend.domain.dto.response.ReadSceneResponse;
+import com.alal.backend.domain.dto.response.UploadSceneResponse;
 import lombok.*;
 import org.hibernate.annotations.Comment;
 
@@ -35,12 +37,27 @@ public class Scene {
     @JoinColumn(name = "script_id")
     private Script script;
 
+    public static Scene from(UploadSceneRequest uploadSceneRequest, Script script, String thumbnailUrl) {
+        return Scene.builder()
+                .story(uploadSceneRequest.getStory())
+                .levelPosition(uploadSceneRequest.getLevelPosition())
+                .script(script)
+                .thumbnail(thumbnailUrl)
+                .build();
+    }
+
     public ReadSceneResponse toReadSceneResponse() {
         return ReadSceneResponse.builder()
                 .sceneId(this.sceneId)
                 .story(this.levelPosition)
                 .levelPosition(this.levelPosition)
                 .thumbnail(this.thumbnail)
+                .build();
+    }
+
+    public UploadSceneResponse toUploadResponse() {
+        return UploadSceneResponse.builder()
+                .sceneId(this.sceneId)
                 .build();
     }
 }

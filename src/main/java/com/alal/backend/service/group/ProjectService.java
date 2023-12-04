@@ -22,6 +22,8 @@ public class ProjectService {
     private final SceneRepository sceneRepository;
     private final ScriptRepository scriptRepository;
 
+    private final GoogleService googleService;
+
     @Transactional(readOnly = true)
     public ReadSceneResponseList readAllScene(Long projectId) {
         Script script = scriptRepository.getReferenceById(projectId);
@@ -36,6 +38,12 @@ public class ProjectService {
 
     @Transactional
     public UploadSceneResponse uploadScene(UploadSceneRequest uploadSceneRequest) {
-        return null;
+        Script script = scriptRepository.getReferenceById(uploadSceneRequest.getScriptId());
+        String thumbnailUrl = googleService.uploadImage(uploadSceneRequest);
+        Scene scene = Scene.from(uploadSceneRequest, script, thumbnailUrl);
+
+        sceneRepository.save(scene);
+
+        return scene.toUploadResponse();
     }
 }

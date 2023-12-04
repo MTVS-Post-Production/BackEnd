@@ -7,7 +7,7 @@ import com.alal.backend.domain.dto.request.UploadSceneRequest;
 import com.alal.backend.domain.dto.response.*;
 import com.alal.backend.service.group.ProjectService;
 import com.alal.backend.service.user.AvatarService;
-import com.alal.backend.service.user.GroupService;
+import com.alal.backend.service.group.GroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/group")

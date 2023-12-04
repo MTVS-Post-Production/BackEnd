@@ -1,10 +1,10 @@
-package com.alal.backend.service.user;
+package com.alal.backend.service.group;
 
 import com.alal.backend.domain.dto.request.UpdateAvatarRequest;
 import com.alal.backend.domain.dto.response.UpdateAvatarResponse;
 import com.alal.backend.domain.entity.project.Avatar;
 import com.alal.backend.domain.info.AvatarInfo;
-import com.alal.backend.repository.user.AvatarRepository;
+import com.alal.backend.repository.group.AvatarRepository;
 import com.alal.backend.utils.Parser;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;

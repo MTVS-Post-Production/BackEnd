@@ -6,7 +6,6 @@ import com.alal.backend.domain.dto.request.UploadProjectRequest;
 import com.alal.backend.domain.dto.response.*;
 import com.alal.backend.domain.entity.project.*;
 import com.alal.backend.domain.entity.user.User;
-import com.alal.backend.domain.info.ScriptInfo;
 import com.alal.backend.domain.vo.Group;
 import com.alal.backend.domain.vo.StaffVO;
 import com.alal.backend.repository.ProjectAvatarRepository;
@@ -46,6 +45,8 @@ public class GroupService {
     private String bucketName;
 
     private static final String SCRIPTS_FOLDER = "Scripts/";
+    private static final String POSTER_FOLDER = "Poster/";
+    private static final String MEMO_FOLDER = "Memo/";
 
     @Transactional
     public UploadMemoResponse uploadMemo(UploadMemoRequest uploadMemoRequest, Long userId) {
@@ -69,9 +70,10 @@ public class GroupService {
 
     private String uploadStorage(User user, UploadMemoRequest uploadMemoRequest) {
         byte[] decodedBytes = Base64.getDecoder().decode(uploadMemoRequest.getCsvFile());
+        String memoUrl = MEMO_FOLDER + user.getUserGroup() + ".csv";
 
         BlobInfo blobInfo = storage.create(
-                BlobInfo.newBuilder(bucketName, user.getUserGroup() + ".csv")
+                BlobInfo.newBuilder(bucketName, memoUrl)
                         .setContentType("text/csv")
                         .build(),
                 decodedBytes
@@ -120,34 +122,25 @@ public class GroupService {
     }
 
     private void saveScripts(UploadProjectRequest uploadProjectRequest, Project project) {
-        List<String> scriptUrls = uploadScripts(uploadProjectRequest);
-        List<Script> scripts = new ArrayList<>();
-        for (String scriptUrl : scriptUrls) {
-            Script script = Script.from(scriptUrl, project);
-            scripts.add(script);
-        }
+        String scriptUrl = uploadScripts(uploadProjectRequest);
+        Script script = Script.from(scriptUrl, project);
 
-        scriptRepository.saveAll(scripts);
+        scriptRepository.save(script);
     }
 
-    private List<String> uploadScripts(UploadProjectRequest uploadProjectRequest) {
-        List<String> scriptUrls = new ArrayList<>();
-        for (ScriptInfo scriptInfo : uploadProjectRequest.getScripts()) {
-            byte[] decodedBytes = scriptInfo.encodeBase64();
-            String scriptName = SCRIPTS_FOLDER + UUID.randomUUID();
+    private String uploadScripts(UploadProjectRequest uploadProjectRequest) {
+        byte[] decodedBytes = uploadProjectRequest.encodeBase64();
+        String scriptName = SCRIPTS_FOLDER + uploadProjectRequest.getProjectName();
 
-            BlobInfo blobInfo = storage.create(
-                    BlobInfo.newBuilder(bucketName, scriptName)
-                            .setContentType("text/csv")
-                            .build(),
-                    decodedBytes
-            );
+        BlobInfo blobInfo = storage.create(
+                BlobInfo.newBuilder(bucketName, scriptName)
+                        .setContentType("text/csv")
+                        .build(),
+                decodedBytes
+        );
 
-            scriptUrls.add(parser.parseBlobInfo(blobInfo));
-        }
-
-        return scriptUrls;
-    }
+        return parser.parseBlobInfo(blobInfo);
+}
 
     private void addProjectAvatars(List<Avatar> avatars, Project project) {
         List<ProjectAvatar> projectAvatars = new ArrayList<>();
@@ -193,9 +186,10 @@ public class GroupService {
 
     private String uploadPoster(UploadProjectRequest uploadProjectRequest) {
         byte[] decodedBytes = Base64.getDecoder().decode(uploadProjectRequest.getPoster());
+        String posterUrl = POSTER_FOLDER + uploadProjectRequest.getProjectName();
 
         BlobInfo blobInfo = storage.create(
-                BlobInfo.newBuilder(bucketName, uploadProjectRequest.getProjectName())
+                BlobInfo.newBuilder(bucketName, posterUrl)
                         .setContentType("image/png")
                         .build(),
                 decodedBytes

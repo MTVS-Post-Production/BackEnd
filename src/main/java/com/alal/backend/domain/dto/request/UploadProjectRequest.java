@@ -1,10 +1,10 @@
 package com.alal.backend.domain.dto.request;
 
-import com.alal.backend.domain.info.ScriptInfo;
 import com.alal.backend.domain.vo.StaffVO;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Base64;
 import java.util.List;
 
 @Getter
@@ -15,5 +15,9 @@ public class UploadProjectRequest {
     private List<StaffVO> staffs;
     private List<String> avatarName;
     private String poster;
-    private List<ScriptInfo> scripts;
+    private String script;
+
+    public byte[] encodeBase64() {
+        return Base64.getDecoder().decode(script);
+    }
 }

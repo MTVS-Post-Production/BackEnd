@@ -4,6 +4,7 @@ import com.alal.backend.domain.dto.request.UpdateAvatarRequest;
 import com.alal.backend.domain.dto.request.UploadMemoRequest;
 import com.alal.backend.domain.dto.request.UploadProjectRequest;
 import com.alal.backend.domain.dto.response.*;
+import com.alal.backend.service.group.ProjectService;
 import com.alal.backend.service.user.AvatarService;
 import com.alal.backend.service.user.GroupService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/group")
@@ -21,6 +23,7 @@ public class GroupController {
 
     private final GroupService groupService;
     private final AvatarService avatarService;
+    private final ProjectService projectService;
 
     @PostMapping("/memo/upload")
     public ResponseEntity<UploadMemoResponse> upload(@RequestBody UploadMemoRequest uploadMemoRequest
@@ -32,7 +35,7 @@ public class GroupController {
     }
 
     @GetMapping("/memo")
-    public ResponseEntity<ReadMemoResponse> read(
+    public ResponseEntity<ReadMemoResponse> readAll(
 //            @CurrentUser UserPrincipal userPrincipal
     ) {
         Long userId = 1L;
@@ -67,5 +70,10 @@ public class GroupController {
     @PatchMapping("/avatar")
     public ResponseEntity<UpdateAvatarResponse> update(@RequestBody UpdateAvatarRequest avatarRequest) {
         return ResponseEntity.ok(avatarService.updateAvatar(avatarRequest));
+    }
+
+    @GetMapping("/scene/{id}")
+    public ResponseEntity<List<ReadSceneResponse>> readAll(@PathVariable("id") Long scriptId) {
+        return ResponseEntity.ok(projectService.readAllScene(scriptId));
     }
 }

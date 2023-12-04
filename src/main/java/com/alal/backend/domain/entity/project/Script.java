@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table
@@ -28,6 +30,9 @@ public class Script {
     @Column
     @Comment("업로드된 대본 Url")
     private String scriptUrl;
+
+    @OneToMany(mappedBy = "script", fetch = FetchType.LAZY)
+    private List<Scene> scenes = new ArrayList<>();
 
     public static Script from(String scriptUrl, Project project) {
         return Script.builder()

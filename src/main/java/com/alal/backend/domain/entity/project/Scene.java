@@ -1,5 +1,6 @@
 package com.alal.backend.domain.entity.project;
 
+import com.alal.backend.domain.dto.response.ReadSceneResponse;
 import lombok.*;
 import org.hibernate.annotations.Comment;
 
@@ -29,4 +30,17 @@ public class Scene {
     @Column
     @Comment("장면 썸네일")
     private String thumbnail;
+
+    @ManyToOne
+    @JoinColumn(name = "script_id")
+    private Script script;
+
+    public ReadSceneResponse toReadSceneResponse() {
+        return ReadSceneResponse.builder()
+                .sceneId(this.sceneId)
+                .story(this.levelPosition)
+                .levelPosition(this.levelPosition)
+                .thumbnail(this.thumbnail)
+                .build();
+    }
 }

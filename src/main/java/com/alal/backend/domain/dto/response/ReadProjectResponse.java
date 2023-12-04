@@ -33,7 +33,6 @@ public class ReadProjectResponse {
                 .poster(base64Poster)
                 .avatarInfo(avatarInfos)
                 .staffInfo(staffInfos)
-                .script(project.getScript())
                 .build();
     }
 

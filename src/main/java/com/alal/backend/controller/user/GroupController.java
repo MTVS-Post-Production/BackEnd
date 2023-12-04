@@ -73,7 +73,7 @@ public class GroupController {
     }
 
     @GetMapping("/scene/{id}")
-    public ResponseEntity<List<ReadSceneResponse>> readAll(@PathVariable("id") Long scriptId) {
-        return ResponseEntity.ok(projectService.readAllScene(scriptId));
+    public ResponseEntity<List<ReadSceneResponse>> readAll(@PathVariable("id") Long projectId) {
+        return ResponseEntity.ok(projectService.readAllScene(projectId));
     }
 }

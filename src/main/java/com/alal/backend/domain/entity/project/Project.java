@@ -41,9 +41,8 @@ public class Project {
     @Comment("포스터")
     private String poster;
 
-    @Column
-    @Comment("클라이언트 대본 주소")
-    private String script;
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private List<Script> scripts = new ArrayList<>();
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectStaff> projectStaffs = new ArrayList<>();
@@ -57,7 +56,6 @@ public class Project {
                 .projectName(uploadProjectRequest.getProjectName())
                 .description(uploadProjectRequest.getDescription())
                 .poster(posterUrl)
-                .script(uploadProjectRequest.getScript())
                 .build();
     }
 }

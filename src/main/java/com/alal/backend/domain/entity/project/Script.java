@@ -1,6 +1,9 @@
 package com.alal.backend.domain.entity.project;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
@@ -25,4 +28,11 @@ public class Script {
     @Column
     @Comment("업로드된 대본 Url")
     private String scriptUrl;
+
+    public static Script from(String scriptUrl, Project project) {
+        return Script.builder()
+                .scriptUrl(scriptUrl)
+                .project(project)
+                .build();
+    }
 }

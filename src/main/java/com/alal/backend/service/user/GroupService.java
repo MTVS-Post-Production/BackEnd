@@ -10,6 +10,7 @@ import com.alal.backend.domain.vo.Group;
 import com.alal.backend.domain.vo.StaffVO;
 import com.alal.backend.repository.ProjectAvatarRepository;
 import com.alal.backend.repository.ProjectMemberRepository;
+import com.alal.backend.repository.ScriptRepository;
 import com.alal.backend.repository.user.*;
 import com.alal.backend.utils.Parser;
 import com.google.cloud.storage.BlobInfo;
@@ -35,12 +36,17 @@ public class GroupService {
     private final ProjectMemberRepository projectMemberRepository;
     private final AvatarRepository avatarRepository;
     private final ProjectAvatarRepository projectAvatarRepository;
+    private final ScriptRepository scriptRepository;
 
     private final Parser parser;
     private final Storage storage;
 
     @Value("${spring.cloud.gcp.storage.bucket}")
     private String bucketName;
+
+    private static final String SCRIPTS_FOLDER = "Scripts/";
+    private static final String POSTER_FOLDER = "Poster/";
+    private static final String MEMO_FOLDER = "Memo/";
 
     @Transactional
     public UploadMemoResponse uploadMemo(UploadMemoRequest uploadMemoRequest, Long userId) {
@@ -64,9 +70,10 @@ public class GroupService {
 
     private String uploadStorage(User user, UploadMemoRequest uploadMemoRequest) {
         byte[] decodedBytes = Base64.getDecoder().decode(uploadMemoRequest.getCsvFile());
+        String memoUrl = MEMO_FOLDER + user.getUserGroup() + ".csv";
 
         BlobInfo blobInfo = storage.create(
-                BlobInfo.newBuilder(bucketName, user.getUserGroup() + ".csv")
+                BlobInfo.newBuilder(bucketName, memoUrl)
                         .setContentType("text/csv")
                         .build(),
                 decodedBytes
@@ -107,11 +114,33 @@ public class GroupService {
         Project project = saveProject(uploadProjectRequest, userId);
         List<Avatar> avatars = saveAvatar(uploadProjectRequest, userId);
 
+        saveScripts(uploadProjectRequest, project);
         addProjectMembers(staffs, project);
         addProjectAvatars(avatars, project);
 
         return UploadProjectResponse.fromEntity(project);
     }
+
+    private void saveScripts(UploadProjectRequest uploadProjectRequest, Project project) {
+        String scriptUrl = uploadScripts(uploadProjectRequest);
+        Script script = Script.from(scriptUrl, project);
+
+        scriptRepository.save(script);
+    }
+
+    private String uploadScripts(UploadProjectRequest uploadProjectRequest) {
+        byte[] decodedBytes = uploadProjectRequest.encodeBase64();
+        String scriptName = SCRIPTS_FOLDER + uploadProjectRequest.getProjectName();
+
+        BlobInfo blobInfo = storage.create(
+                BlobInfo.newBuilder(bucketName, scriptName)
+                        .setContentType("text/csv")
+                        .build(),
+                decodedBytes
+        );
+
+        return parser.parseBlobInfo(blobInfo);
+}
 
     private void addProjectAvatars(List<Avatar> avatars, Project project) {
         List<ProjectAvatar> projectAvatars = new ArrayList<>();
@@ -157,9 +186,10 @@ public class GroupService {
 
     private String uploadPoster(UploadProjectRequest uploadProjectRequest) {
         byte[] decodedBytes = Base64.getDecoder().decode(uploadProjectRequest.getPoster());
+        String posterUrl = POSTER_FOLDER + uploadProjectRequest.getProjectName();
 
         BlobInfo blobInfo = storage.create(
-                BlobInfo.newBuilder(bucketName, uploadProjectRequest.getProjectName())
+                BlobInfo.newBuilder(bucketName, posterUrl)
                         .setContentType("image/png")
                         .build(),
                 decodedBytes

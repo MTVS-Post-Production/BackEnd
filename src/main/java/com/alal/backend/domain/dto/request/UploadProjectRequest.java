@@ -1,5 +1,6 @@
 package com.alal.backend.domain.dto.request;
 
+import com.alal.backend.domain.info.ScriptInfo;
 import com.alal.backend.domain.vo.StaffVO;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,5 +15,5 @@ public class UploadProjectRequest {
     private List<StaffVO> staffs;
     private List<String> avatarName;
     private String poster;
-    private String script;
+    private List<ScriptInfo> scripts;
 }

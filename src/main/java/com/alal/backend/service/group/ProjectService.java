@@ -31,7 +31,7 @@ public class ProjectService {
                 .map(Scene::toReadSceneResponse)
                 .collect(Collectors.toList());
 
-        return ReadSceneResponseList.from(readSceneResponses);
+        return ReadSceneResponseList.from(readSceneResponses, script);
     }
 
     @Transactional

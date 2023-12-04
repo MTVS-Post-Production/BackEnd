@@ -258,11 +258,10 @@ public class GroupService {
     @Transactional(readOnly = true)
     public ReadProjectResponse readProject(Long projectId) throws IOException {
         Project project = projectRepository.findByProjectId(projectId);
-        Script script = scriptRepository.getReferenceById(projectId);
         List<Avatar> avatars = findAvatars(project);
         List<Staff> staffs = findStaffs(project);
 
-        return ReadProjectResponse.fromEntity(project, avatars, staffs, script);
+        return ReadProjectResponse.fromEntity(project, avatars, staffs);
     }
 
     private List<Staff> findStaffs(Project project) {

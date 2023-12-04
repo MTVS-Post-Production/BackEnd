@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table
@@ -25,4 +26,11 @@ public class Script {
     @Column
     @Comment("업로드된 대본 Url")
     private String scriptUrl;
+
+    public static Script from(String scriptUrl, Project project) {
+        return Script.builder()
+                .scriptUrl(scriptUrl)
+                .project(project)
+                .build();
+    }
 }

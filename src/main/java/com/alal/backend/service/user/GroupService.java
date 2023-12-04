@@ -6,10 +6,12 @@ import com.alal.backend.domain.dto.request.UploadProjectRequest;
 import com.alal.backend.domain.dto.response.*;
 import com.alal.backend.domain.entity.project.*;
 import com.alal.backend.domain.entity.user.User;
+import com.alal.backend.domain.info.ScriptInfo;
 import com.alal.backend.domain.vo.Group;
 import com.alal.backend.domain.vo.StaffVO;
 import com.alal.backend.repository.ProjectAvatarRepository;
 import com.alal.backend.repository.ProjectMemberRepository;
+import com.alal.backend.repository.ScriptRepository;
 import com.alal.backend.repository.user.*;
 import com.alal.backend.utils.Parser;
 import com.google.cloud.storage.BlobInfo;
@@ -35,12 +37,15 @@ public class GroupService {
     private final ProjectMemberRepository projectMemberRepository;
     private final AvatarRepository avatarRepository;
     private final ProjectAvatarRepository projectAvatarRepository;
+    private final ScriptRepository scriptRepository;
 
     private final Parser parser;
     private final Storage storage;
 
     @Value("${spring.cloud.gcp.storage.bucket}")
     private String bucketName;
+
+    private static final String SCRIPTS_FOLDER = "Scripts/";
 
     @Transactional
     public UploadMemoResponse uploadMemo(UploadMemoRequest uploadMemoRequest, Long userId) {
@@ -107,10 +112,41 @@ public class GroupService {
         Project project = saveProject(uploadProjectRequest, userId);
         List<Avatar> avatars = saveAvatar(uploadProjectRequest, userId);
 
+        saveScripts(uploadProjectRequest, project);
         addProjectMembers(staffs, project);
         addProjectAvatars(avatars, project);
 
         return UploadProjectResponse.fromEntity(project);
+    }
+
+    private void saveScripts(UploadProjectRequest uploadProjectRequest, Project project) {
+        List<String> scriptUrls = uploadScripts(uploadProjectRequest);
+        List<Script> scripts = new ArrayList<>();
+        for (String scriptUrl : scriptUrls) {
+            Script script = Script.from(scriptUrl, project);
+            scripts.add(script);
+        }
+
+        scriptRepository.saveAll(scripts);
+    }
+
+    private List<String> uploadScripts(UploadProjectRequest uploadProjectRequest) {
+        List<String> scriptUrls = new ArrayList<>();
+        for (ScriptInfo scriptInfo : uploadProjectRequest.getScripts()) {
+            byte[] decodedBytes = scriptInfo.encodeBase64();
+            String scriptName = SCRIPTS_FOLDER + UUID.randomUUID();
+
+            BlobInfo blobInfo = storage.create(
+                    BlobInfo.newBuilder(bucketName, scriptName)
+                            .setContentType("text/csv")
+                            .build(),
+                    decodedBytes
+            );
+
+            scriptUrls.add(parser.parseBlobInfo(blobInfo));
+        }
+
+        return scriptUrls;
     }
 
     private void addProjectAvatars(List<Avatar> avatars, Project project) {

@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @EnableJpaAuditing
 @SpringBootApplication
-@EnableAsync
 @EnableCaching
 public class BackendApplication {
 

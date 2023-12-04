@@ -8,11 +8,13 @@ import com.alal.backend.payload.request.user.FlaskVoiceRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +32,7 @@ public class FlaskService {
     private static final String CONVERT_VOICE_URI = "/voice/convert";
 
     public List<FlaskResponse> communicateWithFlaskServer(FlaskRequest flaskRequest) {
-        // 파일을 Flask 서버로 전송
-        List<FlaskResponse> flaskResponses =  webClient.post()
+        return webClient.post()
                 .uri(flaskUrl + CHECK_POSE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(Map.of("pose", flaskRequest.getFileName()))
@@ -39,13 +40,11 @@ public class FlaskService {
                 .bodyToFlux(FlaskResponse.class)
                 .collectList()
                 .block();
-
-        return flaskResponses;
     }
 
     // Flask 서버 통신 (음성)
     public FlaskResponse communicateWithFlaskServerByVoice(FlaskVoiceRequest flaskRequest, Long userId) {
-        FlaskResponse flaskResponse =  webClient.post()
+        return webClient.post()
                 .uri(flaskUrl + CONVERT_VOICE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(Map.of("voice", flaskRequest.getFileName(),
@@ -55,12 +54,11 @@ public class FlaskService {
                 .retrieve()
                 .bodyToMono(FlaskResponse.class)
                 .block();
-
-        return flaskResponse;
     }
 
-    public ImageFlaskResponse uploadImage(UploadImageRequest uploadImageRequest, Long userId) {
-        ImageFlaskResponse imageFlaskResponse = webClient.post()
+    @Async
+    public CompletableFuture<ImageFlaskResponse> uploadImage(UploadImageRequest uploadImageRequest, Long userId) {
+        return CompletableFuture.completedFuture(webClient.post()
                 .uri(flaskImageUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(Map.of("image", uploadImageRequest.getImageEncodingString(),
@@ -68,8 +66,6 @@ public class FlaskService {
                         "user_id", userId))
                 .retrieve()
                 .bodyToMono(ImageFlaskResponse.class)
-                .block();
-
-        return imageFlaskResponse;
+                .block());
     }
 }

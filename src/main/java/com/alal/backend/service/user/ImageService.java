@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Service
 @RequiredArgsConstructor
@@ -24,19 +26,19 @@ public class ImageService {
     private final FlaskService flaskService;
 
     @Transactional
-    public UploadImageResponse uploadImage(UploadImageRequest uploadImageRequest, Long userId) {
+    public UploadImageResponse uploadImage(UploadImageRequest uploadImageRequest, Long userId) throws ExecutionException, InterruptedException {
         User user = getUser(userId);
-        ImageFlaskResponse imageFlaskResponse = flaskService.uploadImage(uploadImageRequest, userId);
+        CompletableFuture<ImageFlaskResponse> imageFlaskResponse = flaskService.uploadImage(uploadImageRequest, userId);
 
         Image image = imageRepository.findByUserId(user.getId());
         if (image == null) {
-            Image createdImage = Image.toEntity(imageFlaskResponse, userId);
+            Image createdImage = Image.toEntity(imageFlaskResponse.get(), userId);
             imageRepository.save(createdImage);
 
             return UploadImageResponse.fromEntity(createdImage);
         }
 
-        image.updateImageUrl(imageFlaskResponse);
+        image.updateImageUrl(imageFlaskResponse.get());
         return UploadImageResponse.fromEntity(image);
     }
 

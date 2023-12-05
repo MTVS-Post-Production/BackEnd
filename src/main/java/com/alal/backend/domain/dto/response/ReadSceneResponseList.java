@@ -10,11 +10,13 @@ import java.util.List;
 @Getter
 public class ReadSceneResponseList {
     private List<ReadSceneResponse> readSceneResponses;
+    private String scriptUrl;
     private Long scriptId;
 
     public static ReadSceneResponseList from(List<ReadSceneResponse> readSceneResponses, Script script) {
         return ReadSceneResponseList.builder()
                 .readSceneResponses(readSceneResponses)
+                .scriptUrl(script.getScriptUrl())
                 .scriptId(script.getScriptId())
                 .build();
     }

@@ -13,7 +13,6 @@ public class ReadProjectsResponse {
     private Long projectId;
     private String projectName;
     private String posterUrl;
-    private String script;
 
     public static ReadProjectsResponse fromEntity(Project project) throws IOException {
         String poster = Parser.downloadAndEncodeImage(project.getPoster());

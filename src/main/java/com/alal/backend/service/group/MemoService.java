@@ -7,19 +7,25 @@ import com.alal.backend.domain.entity.user.User;
 import com.alal.backend.domain.vo.Group;
 import com.alal.backend.repository.group.MemoRepository;
 import com.alal.backend.repository.group.ProjectRepository;
-import com.alal.backend.repository.user.*;
+import com.alal.backend.repository.user.UserRepository;
 import com.alal.backend.utils.Parser;
+import com.alal.backend.utils.event.UploadRollBackEvent;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.*;
+import java.util.Base64;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +37,7 @@ public class MemoService {
 
     private final Parser parser;
     private final Storage storage;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Value("${spring.cloud.gcp.storage.bucket}")
     private String bucketName;
@@ -43,17 +50,22 @@ public class MemoService {
         return saveMemo(uploadMemoRequest, user);
     }
 
-    private UploadMemoResponse saveMemo(UploadMemoRequest uploadMemoRequest, User user) {
+    private UploadMemoResponse saveMemo(UploadMemoRequest uploadMemoRequest, User user) throws StorageException {
         Memo memo = memoRepository.findByGroup(getUserGroup(user));
         if (memo != null) {
             memoRepository.delete(memo);
         }
 
         String uploadUrl = uploadStorage(user, uploadMemoRequest);
+        eventPublisher.publishEvent(new UploadRollBackEvent(bucketName, getObjectName(uploadUrl)));
         Memo createdMemo = Memo.fromEntity(uploadUrl, user.getUserGroup());
         memoRepository.save(createdMemo);
 
         return UploadMemoResponse.fromEntity(uploadUrl);
+    }
+
+    private String getObjectName(String uploadUrl) {
+        return uploadUrl.substring(uploadUrl.indexOf(bucketName) + bucketName.length() + 1);
     }
 
     private String uploadStorage(User user, UploadMemoRequest uploadMemoRequest) {

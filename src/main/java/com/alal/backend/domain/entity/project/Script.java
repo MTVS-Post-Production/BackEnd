@@ -1,5 +1,6 @@
 package com.alal.backend.domain.entity.project;
 
+import com.alal.backend.domain.dto.request.UploadSceneRequest;
 import lombok.*;
 import org.hibernate.annotations.Comment;
 
@@ -20,7 +21,7 @@ public class Script {
     @Comment("대본 번호")
     private Long scriptId;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "project_id")
     @Comment("프로젝트 번호")
     private Project project;

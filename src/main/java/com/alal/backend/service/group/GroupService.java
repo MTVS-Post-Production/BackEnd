@@ -1,4 +1,4 @@
-package com.alal.backend.service.user;
+package com.alal.backend.service.group;
 
 import com.alal.backend.advice.error.UserNotFoundException;
 import com.alal.backend.domain.dto.request.UploadMemoRequest;

@@ -42,9 +42,6 @@ public class Project {
     private String poster;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private List<Script> scripts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectStaff> projectStaffs = new ArrayList<>();
 
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)

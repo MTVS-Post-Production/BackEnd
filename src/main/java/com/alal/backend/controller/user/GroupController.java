@@ -3,10 +3,11 @@ package com.alal.backend.controller.user;
 import com.alal.backend.domain.dto.request.UpdateAvatarRequest;
 import com.alal.backend.domain.dto.request.UploadMemoRequest;
 import com.alal.backend.domain.dto.request.UploadProjectRequest;
+import com.alal.backend.domain.dto.request.UploadSceneRequest;
 import com.alal.backend.domain.dto.response.*;
 import com.alal.backend.service.group.ProjectService;
 import com.alal.backend.service.user.AvatarService;
-import com.alal.backend.service.user.GroupService;
+import com.alal.backend.service.group.GroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -14,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/group")
@@ -73,7 +73,12 @@ public class GroupController {
     }
 
     @GetMapping("/scene/{id}")
-    public ResponseEntity<List<ReadSceneResponse>> readAll(@PathVariable("id") Long projectId) {
+    public ResponseEntity<ReadSceneResponseList> readAll(@PathVariable("id") Long projectId) {
         return ResponseEntity.ok(projectService.readAllScene(projectId));
+    }
+
+    @PostMapping("/scene/upload")
+    public ResponseEntity<UploadSceneResponse> upload(@RequestBody UploadSceneRequest uploadSceneRequest) {
+        return ResponseEntity.ok(projectService.uploadScene(uploadSceneRequest));
     }
 }

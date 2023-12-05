@@ -1,4 +1,4 @@
-package com.alal.backend.repository.user;
+package com.alal.backend.repository.group;
 
 import com.alal.backend.domain.entity.project.Memo;
 import com.alal.backend.domain.vo.Group;

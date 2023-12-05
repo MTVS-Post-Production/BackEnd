@@ -1,4 +1,4 @@
-package com.alal.backend.repository;
+package com.alal.backend.repository.group;
 
 import com.alal.backend.domain.entity.project.Project;
 import com.alal.backend.domain.entity.project.ProjectAvatar;

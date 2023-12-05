@@ -1,4 +1,4 @@
-package com.alal.backend.repository.user;
+package com.alal.backend.repository.group;
 
 import com.alal.backend.domain.entity.project.Staff;
 import org.springframework.data.jpa.repository.JpaRepository;

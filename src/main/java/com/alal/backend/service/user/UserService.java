@@ -4,12 +4,14 @@ package com.alal.backend.service.user;
 import com.alal.backend.advice.assertThat.DefaultAssert;
 import com.alal.backend.config.security.token.UserPrincipal;
 import com.alal.backend.domain.entity.user.User;
+import com.alal.backend.domain.vo.Group;
 import com.alal.backend.payload.response.ApiResponse;
 import com.alal.backend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -22,5 +24,17 @@ public class UserService {
         DefaultAssert.isOptionalPresent(user);
         ApiResponse apiResponse = ApiResponse.builder().check(true).information(user.get()).build();
         return ResponseEntity.ok(apiResponse);
+    }
+
+    public Group getUserGroup(User user) {
+        return Group.fromUser(user.getUserGroup());
+    }
+
+    public User getUser(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty()) {
+            throw new NoSuchElementException("유저를 찾을 수 없습니다.");
+        }
+        return user.get();
     }
 }

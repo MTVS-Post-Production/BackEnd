@@ -5,6 +5,10 @@ on:
     branches:
       - develop
 
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
       - name: Run build result on server
         uses: appleboy/ssh-action@master
         with:

@@ -20,5 +20,6 @@ jobs:
           script: |
             echo "${{ secrets.RELEASE_GOOGLE_APPLICATION_CREDENTIALS }}" > /home/ubuntu/BackEnd/src/main/resources/config/secret.json
             export GOOGLE_APPLICATION_CREDENTIALS="/home/ubuntu/BackEnd/src/main/resources/config/secret.json"
+            cd /home/ubuntu/BackEnd/build/libs
             ps aux | grep BackEnd-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}' | xargs kill -9
             nohup java -jar BackEnd-0.0.1-SNAPSHOT.jar &

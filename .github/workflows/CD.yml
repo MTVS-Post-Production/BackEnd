@@ -5,6 +5,8 @@ on:
     branches:
       - develop
 
+permissions: write-all
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -16,7 +18,7 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            echo "${{ secrets.SECRET_JSON }}" > /home/ubuntu/BackEnd/src/main/resources/config/secret.json
+            echo '${{ secrets.SECRET_JSON }}' | tee /home/ubuntu/BackEnd/src/main/resources/config/secret.json > /dev/null
             export GOOGLE_APPLICATION_CREDENTIALS="/home/ubuntu/BackEnd/src/main/resources/config/secret.json"
             cd /home/ubuntu/BackEnd/build/libs
             ps aux | grep BackEnd-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}' | xargs kill -9

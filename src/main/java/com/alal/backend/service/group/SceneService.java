@@ -27,12 +27,11 @@ public class SceneService {
 
     @Transactional
     public UploadSceneResponse uploadScene(UploadSceneRequest uploadSceneRequest) {
-        Script script = scriptRepository.getReferenceById(uploadSceneRequest.getScriptId());
+        Script script = scriptRepository.getReferenceById(uploadSceneRequest.getProjectId());
         String thumbnailUrl = googleService.uploadImage(uploadSceneRequest);
-        Scene scene = Scene.from(uploadSceneRequest, script, thumbnailUrl);
+        Scene scene = uploadSceneRequest.from(script, thumbnailUrl);
 
         sceneRepository.save(scene);
-
         return scene.toUploadResponse();
     }
 }

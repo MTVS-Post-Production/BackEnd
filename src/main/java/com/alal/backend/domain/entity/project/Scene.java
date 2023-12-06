@@ -1,6 +1,5 @@
 package com.alal.backend.domain.entity.project;
 
-import com.alal.backend.domain.dto.request.UploadSceneRequest;
 import com.alal.backend.domain.dto.response.ReadSceneResponse;
 import com.alal.backend.domain.dto.response.UploadSceneResponse;
 import lombok.*;
@@ -18,8 +17,12 @@ public class Scene {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    @Comment("장면 번호")
+    @Comment("장면 아이디")
     private Long sceneId;
+
+    @Column
+    @Comment("장면 번호")
+    private Long sceneNo;
 
     @Column
     @Comment("장면 스토리")
@@ -36,15 +39,6 @@ public class Scene {
     @ManyToOne
     @JoinColumn(name = "script_id")
     private Script script;
-
-    public static Scene from(UploadSceneRequest uploadSceneRequest, Script script, String thumbnailUrl) {
-        return Scene.builder()
-                .story(uploadSceneRequest.getStory())
-                .levelPosition(uploadSceneRequest.getLevelPosition())
-                .script(script)
-                .thumbnail(thumbnailUrl)
-                .build();
-    }
 
     public ReadSceneResponse toReadSceneResponse() {
         return ReadSceneResponse.builder()

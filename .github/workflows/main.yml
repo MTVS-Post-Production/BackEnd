@@ -81,4 +81,4 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           source: "build/libs/*"
-          target: "/home/ubuntu/BackEnd/server/postproduction"
+          target: "/home/ubuntu/BackEnd"

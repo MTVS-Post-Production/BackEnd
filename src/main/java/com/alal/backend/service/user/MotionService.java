@@ -9,9 +9,6 @@ import com.alal.backend.payload.request.user.FlaskVoiceRequest;
 import com.alal.backend.repository.user.MotionRepository;
 import com.alal.backend.repository.user.UserRepository;
 import com.alal.backend.repository.user.VoiceRepository;
-
-import java.util.*;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,16 +16,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class MotionService {
-
     private final MotionRepository motionRepository;
-
     private final UserRepository userRepository;
-
     private final VoiceRepository voiceRepository;
-
     private final FlaskService flaskService;
 
     // 동영상 파일 Flask 서버와 통신 후 응답 메세지 유저 테이블에 저장
@@ -41,9 +37,8 @@ public class MotionService {
                 .collect(Collectors.joining(", "));
 
         User user = getUserById(userId);
-        UpdateUserHistoryResponse updateUserHistoryResponse = updateUserHistoryByResponseMessage(user, responseMessageToString);
 
-        return updateUserHistoryResponse;
+        return updateUserHistoryByResponseMessage(user, responseMessageToString);
     }
 
     @Transactional
@@ -64,15 +59,12 @@ public class MotionService {
             Voice createdVoice = Voice.fromDto(flaskResponse, userId, flaskRequest);
             voiceRepository.save(createdVoice);
 
-            VoiceResponse voiceResponse = VoiceResponse.fromEntity(createdVoice);
-
-            return voiceResponse;
+            return VoiceResponse.fromEntity(createdVoice);
         }
 
         voice.updateVoiceUrl(flaskResponse, flaskRequest);
-        VoiceResponse voiceResponse = VoiceResponse.fromEntity(voice);
 
-        return voiceResponse;
+        return VoiceResponse.fromEntity(voice);
     }
 
     // Gif, Fbx Url을 찾는 공통 로직

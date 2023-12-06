@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Loading</title>
@@ -31,8 +31,34 @@
 </head>
 <body>
 <div>
-    <h1>변환중입니다. 잠시만 기다려주십시오.</h1>
+    <h1>Loading...</h1>
     <div class="loader"></div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        let motionUrls = [[${motionUrls}]];
+
+        if (motionUrls) {
+            location.reload();
+        } else {
+            setInterval(async function() {
+                try {
+                    let response = await fetch('/view');
+                    if (response.ok) {
+                        let data = await response.json();
+                        if (data.motionUrls) {
+                            location.reload();
+                        }
+                    } else {
+                        console.log('Network response was not ok');
+                    }
+                } catch(error) {
+                    console.error('Error:', error);
+                }
+            }, 1000);
+        }
+        /*]]>*/
+    </script>
 </div>
 </body>
 </html>

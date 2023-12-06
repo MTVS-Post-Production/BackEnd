@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/view")
@@ -36,18 +36,16 @@ public class ViewController {
     @GetMapping
     public String motionPage(Model model,
 //                       @CurrentUser UserPrincipal userPrincipal,
-                             @PageableDefault(size = 12) Pageable pageable) {
+                             @PageableDefault(size = 12) Pageable pageable) throws IOException {
 //        Long userId = userPrincipal.getId();
         Long userId = 1L;
         List<String> userHistories = motionService.getUserHistories(userId);
+        Page<ViewResponse> optionalViewResponsePage = motionService.createViewResponse(userHistories, pageable);
+        model.addAttribute("motionUrls", optionalViewResponsePage);
 
         if (userHistories.isEmpty()) {
             return "main/loadingPage";
         }
-
-        Page<ViewResponse> optionalViewResponsePage = motionService.createViewResponse(userHistories, pageable);
-
-        model.addAttribute("motionUrls", optionalViewResponsePage);
 
         return "main/imagePage";
     }

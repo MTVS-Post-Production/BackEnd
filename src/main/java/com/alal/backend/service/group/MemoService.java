@@ -57,15 +57,11 @@ public class MemoService {
         }
 
         String uploadUrl = uploadStorage(user, uploadMemoRequest);
-        eventPublisher.publishEvent(new UploadRollBackEvent(bucketName, getObjectName(uploadUrl)));
+        eventPublisher.publishEvent(new UploadRollBackEvent(bucketName, uploadUrl));
         Memo createdMemo = Memo.fromEntity(uploadUrl, user.getUserGroup());
         memoRepository.save(createdMemo);
 
         return UploadMemoResponse.fromEntity(uploadUrl);
-    }
-
-    private String getObjectName(String uploadUrl) {
-        return uploadUrl.substring(uploadUrl.indexOf(bucketName) + bucketName.length() + 1);
     }
 
     private String uploadStorage(User user, UploadMemoRequest uploadMemoRequest) {

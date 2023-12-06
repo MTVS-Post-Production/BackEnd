@@ -27,35 +27,50 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        #doneMessage {
+            font-size: 2em;
+        }
     </style>
 </head>
 <body>
 <div>
     <h1>Loading...</h1>
     <div class="loader"></div>
+    <div id="doneMessage" style="display: none;">Done</div>
 
     <script th:inline="javascript">
         /*<![CDATA[*/
-        let motionUrls = [[${motionUrls}]];
+        var motionUrls = [[${motionUrls}]].content;
 
-        if (motionUrls) {
+        if (motionUrls && motionUrls.length > 0) {
             location.reload();
         } else {
             setInterval(async function() {
                 try {
                     let response = await fetch('/view');
-                    if (response.ok) {
-                        let data = await response.json();
-                        if (data.motionUrls) {
+                    if (!response.ok) {
+                        throw new Error(response.statusText);
+                    }
+                    let text = await response.text();
+                    let domParser = new DOMParser();
+                    let doc = domParser.parseFromString(text, 'text/html');
+                    let titleElement = doc.querySelector('title');
+                    let titleText = titleElement.textContent;
+                    if (titleText === 'Pose List') {
+                        document.querySelector('h1').style.display = 'none';
+                        document.querySelector('.loader').style.display = 'none';
+                        document.getElementById('doneMessage').style.display = 'block';
+                        setTimeout(function() {
+                            alert('Done!');
                             location.reload();
-                        }
-                    } else {
-                        console.log('Network response was not ok');
+                        }, 100);
                     }
                 } catch(error) {
                     console.error('Error:', error);
                 }
-            }, 1000);
+            }, 5000);
+
         }
         /*]]>*/
     </script>

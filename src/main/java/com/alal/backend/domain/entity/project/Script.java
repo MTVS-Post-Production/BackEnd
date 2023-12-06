@@ -1,6 +1,7 @@
 package com.alal.backend.domain.entity.project;
 
 import com.alal.backend.domain.dto.request.UploadSceneRequest;
+import com.alal.backend.domain.dto.response.ReadSceneResponseList;
 import lombok.*;
 import org.hibernate.annotations.Comment;
 
@@ -37,6 +38,12 @@ public class Script {
         return Script.builder()
                 .scriptUrl(scriptUrl)
                 .project(project)
+                .build();
+    }
+
+    public ReadSceneResponseList toReadSceneResponseList() {
+        return ReadSceneResponseList.builder()
+                .scriptUrl(scriptUrl)
                 .build();
     }
 }

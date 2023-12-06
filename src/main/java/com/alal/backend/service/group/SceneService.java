@@ -26,13 +26,8 @@ public class SceneService {
     @Transactional(readOnly = true)
     public ReadSceneResponseList readAllScene(Long projectId) {
         Script script = scriptRepository.getReferenceById(projectId);
-        List<Scene> scenes = sceneRepository.findAllById(Collections.singleton(script.getScriptId()));
 
-        List<ReadSceneResponse> readSceneResponses = scenes.stream()
-                .map(Scene::toReadSceneResponse)
-                .collect(Collectors.toList());
-
-        return ReadSceneResponseList.from(readSceneResponses, script);
+        return script.toReadSceneResponseList();
     }
 
     @Transactional

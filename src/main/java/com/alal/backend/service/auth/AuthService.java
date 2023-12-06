@@ -2,20 +2,22 @@ package com.alal.backend.service.auth;
 
 
 import com.alal.backend.advice.assertThat.DefaultAssert;
+import com.alal.backend.advice.error.DefaultException;
+import com.alal.backend.advice.payload.ErrorCode;
 import com.alal.backend.config.security.token.UserPrincipal;
 import com.alal.backend.domain.dto.response.JwtTokenResponse;
+import com.alal.backend.domain.dto.response.ProfileUpdateResponse;
 import com.alal.backend.domain.entity.user.Provider;
 import com.alal.backend.domain.entity.user.Role;
 import com.alal.backend.domain.entity.user.Token;
 import com.alal.backend.domain.entity.user.User;
 import com.alal.backend.domain.mapping.TokenMapping;
-import com.alal.backend.payload.request.user.ProfileUpdateRequest;
 import com.alal.backend.payload.request.auth.RefreshTokenRequest;
 import com.alal.backend.payload.request.auth.SignInRequest;
 import com.alal.backend.payload.request.auth.SignUpRequest;
+import com.alal.backend.payload.request.user.ProfileUpdateRequest;
 import com.alal.backend.payload.response.ApiResponse;
 import com.alal.backend.payload.response.AuthResponse;
-import com.alal.backend.domain.dto.response.ProfileUpdateResponse;
 import com.alal.backend.payload.response.Message;
 import com.alal.backend.repository.auth.TokenRepository;
 import com.alal.backend.repository.user.UserRepository;
@@ -185,7 +187,7 @@ public class AuthService {
 
     public JwtTokenResponse getAccessTokenAndRefreshTokenAfterOauthLogin(Cookie[] cookies) {
         if (cookies == null) {
-            throw new IllegalArgumentException();
+            throw new DefaultException(ErrorCode.INVALID_AUTHENTICATION);
         }
 
         String accessToken = findCookieValue(cookies, ACCESS_TOKEN_VALUE);

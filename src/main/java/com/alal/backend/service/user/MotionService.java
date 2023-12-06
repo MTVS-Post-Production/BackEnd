@@ -9,10 +9,8 @@ import com.alal.backend.payload.request.user.FlaskVoiceRequest;
 import com.alal.backend.repository.user.MotionRepository;
 import com.alal.backend.repository.user.UserRepository;
 import com.alal.backend.repository.user.VoiceRepository;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -79,10 +77,7 @@ public class MotionService {
 
     // Gif, Fbx Url을 찾는 공통 로직
     @Transactional(readOnly = true)
-    public Page<ViewResponse> createViewResponse(Long userId, Pageable pageable) {
-        User user = getUserById(userId);
-        List<String> userHistories = getUserUserHistory(user);
-
+    public Page<ViewResponse> createViewResponse(List<String> userHistories, Pageable pageable) {
         List<Motion> motions = findMotionsByUserHistories(userHistories);
         List<GifUrlResponse> allGifs = getGifsFromMotions(motions);
         List<FbxUrlResponse> allFbxs = getFbxsFromMotions(motions);
@@ -155,17 +150,15 @@ public class MotionService {
                 );
     }
 
-    private List<String> getUserUserHistory(User user) {
-        return Arrays.stream(user.getUserHistory().split(", "))
-                .map(String::valueOf)
-                .collect(Collectors.toList());
+    private Optional<List<String>> getUserUserHistory(User user) {
+        return Optional.ofNullable(user.getUserHistory())
+                .map(history -> Arrays.stream(history.split(", "))
+                        .map(String::valueOf)
+                        .collect(Collectors.toList()));
     }
 
     @Transactional(readOnly = true)
-    public Page<ViewResponse> createViewResponseByMotionName(String motionName, Pageable pageable, Long userId) {
-        User user = getUserById(userId);
-        List<String> userHistories = getUserUserHistory(user);
-
+    public Page<ViewResponse> createViewResponseByMotionName(String motionName, Pageable pageable, List<String> userHistories) {
         List<Motion> motions = findMotionsByUserHistory(motionName);
         List<GifUrlResponse> allGifs = getGifsFromMotions(motions);
         List<FbxUrlResponse> allFbxs = getFbxsFromMotions(motions);
@@ -175,5 +168,11 @@ public class MotionService {
 
     private List<Motion> findMotionsByUserHistory(String motionName) {
         return motionRepository.findByMotionContaining(motionName);
+    }
+
+    public List<String> getUserHistories(Long userId) {
+        User user = getUserById(userId);
+        Optional<List<String>> userHistoriesOptional = getUserUserHistory(user);
+        return userHistoriesOptional.orElse(Collections.emptyList());
     }
 }

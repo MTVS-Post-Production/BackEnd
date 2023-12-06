@@ -1,16 +1,13 @@
 package com.alal.backend.controller.user;
 
-import com.alal.backend.config.security.token.CurrentUser;
-import com.alal.backend.config.security.token.UserPrincipal;
-import com.alal.backend.payload.request.auth.FbxRequest;
-import com.alal.backend.payload.request.user.FlaskRequest;
-import com.alal.backend.payload.request.user.FlaskVoiceRequest;
 import com.alal.backend.domain.dto.response.FbxResponse;
 import com.alal.backend.domain.dto.response.UpdateUserHistoryResponse;
 import com.alal.backend.domain.dto.response.ViewResponse;
 import com.alal.backend.domain.dto.response.VoiceResponse;
+import com.alal.backend.payload.request.auth.FbxRequest;
+import com.alal.backend.payload.request.user.FlaskRequest;
+import com.alal.backend.payload.request.user.FlaskVoiceRequest;
 import com.alal.backend.service.user.MotionService;
-import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,15 +17,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpSession;
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/view")
@@ -44,9 +39,15 @@ public class ViewController {
                              @PageableDefault(size = 12) Pageable pageable) {
 //        Long userId = userPrincipal.getId();
         Long userId = 1L;
-        Page<ViewResponse> viewResponses = motionService.createViewResponse(userId, pageable);
+        List<String> userHistories = motionService.getUserHistories(userId);
 
-        model.addAttribute("motionUrls", viewResponses);
+        if (userHistories.isEmpty()) {
+            return "main/loadingPage";
+        }
+
+        Page<ViewResponse> optionalViewResponsePage = motionService.createViewResponse(userHistories, pageable);
+
+        model.addAttribute("motionUrls", optionalViewResponsePage);
 
         return "main/imagePage";
     }
@@ -120,7 +121,13 @@ public class ViewController {
                              ) {
         Long userId = 1L;
 //        Long userId = userPrincipal.getId();
-        Page<ViewResponse> viewResponses = motionService.createViewResponseByMotionName(motionName, pageable, userId);
+        List<String> userHistories = motionService.getUserHistories(userId);
+
+        if (userHistories.isEmpty()) {
+            return "main/loadingPage";
+        }
+
+        Page<ViewResponse> viewResponses = motionService.createViewResponseByMotionName(motionName, pageable, userHistories);
 
         model.addAttribute("motionUrls", viewResponses);
         model.addAttribute("motionName", motionName);

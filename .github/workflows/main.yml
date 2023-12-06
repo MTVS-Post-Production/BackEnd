@@ -73,3 +73,12 @@ jobs:
         if: always()
         with:
           junit_files: build/test-results/test/**/*.xml
+
+      - name: Copy build result to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "build/libs/*"
+          target: "/home/ubuntu/BackEnd/server/postproduction"

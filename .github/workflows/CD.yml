@@ -15,8 +15,9 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
+          env:
+            GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.RELEASE_GOOGLE_APPLICATION_CREDENTIALS }}
           script: |
             cd /home/ubuntu/BackEnd/build/libs
             ps aux | grep BackEnd-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}' | xargs kill -9
-            nohup java -jar BackEnd-0.0.1-SNAPSHOT.jar </dev/null &
-            exit
+            nohup java -jar BackEnd-0.0.1-SNAPSHOT.jar &

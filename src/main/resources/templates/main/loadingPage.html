@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Loading</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        .loader {
+            margin-top: 20px;
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #3498db;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #doneMessage {
+            font-size: 2em;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <h1>Loading...</h1>
+    <div class="loader"></div>
+    <div id="doneMessage" style="display: none;">Done</div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var motionUrls = [[${motionUrls}]].content;
+
+        if (motionUrls && motionUrls.length > 0) {
+            location.reload();
+        } else {
+            setInterval(async function() {
+                try {
+                    let response = await fetch('/view');
+                    if (!response.ok) {
+                        throw new Error(response.statusText);
+                    }
+                    let text = await response.text();
+                    let domParser = new DOMParser();
+                    let doc = domParser.parseFromString(text, 'text/html');
+                    let titleElement = doc.querySelector('title');
+                    let titleText = titleElement.textContent;
+                    if (titleText === 'Pose List') {
+                        document.querySelector('h1').style.display = 'none';
+                        document.querySelector('.loader').style.display = 'none';
+                        document.getElementById('doneMessage').style.display = 'block';
+                        setTimeout(function() {
+                            alert('Done!');
+                            location.reload();
+                        }, 100);
+                    }
+                } catch(error) {
+                    console.error('Error:', error);
+                }
+            }, 5000);
+
+        }
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

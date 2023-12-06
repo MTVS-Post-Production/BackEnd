@@ -1,6 +1,7 @@
 package com.alal.backend.service.group;
 
 import com.alal.backend.domain.dto.request.UploadSceneRequest;
+import com.alal.backend.domain.dto.response.ReadSceneResponse;
 import com.alal.backend.domain.dto.response.ReadSceneResponseList;
 import com.alal.backend.domain.dto.response.UploadSceneResponse;
 import com.alal.backend.domain.entity.project.Scene;
@@ -21,7 +22,6 @@ public class SceneService {
     @Transactional(readOnly = true)
     public ReadSceneResponseList readAllScene(Long projectId) {
         Script script = scriptRepository.getReferenceById(projectId);
-
         return script.toReadSceneResponseList();
     }
 
@@ -33,5 +33,13 @@ public class SceneService {
 
         sceneRepository.save(scene);
         return scene.toUploadResponse();
+    }
+
+    @Transactional(readOnly = true)
+    public ReadSceneResponse readDetailScene(Long projectId, Long sceneNo) {
+        Script script = scriptRepository.getReferenceById(projectId);
+        Scene scene = sceneRepository.findByScriptAndSceneNo(script, sceneNo);
+
+        return scene.toReadSceneResponse();
     }
 }

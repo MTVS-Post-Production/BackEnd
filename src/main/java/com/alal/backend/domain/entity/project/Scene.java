@@ -42,7 +42,7 @@ public class Scene {
 
     public ReadSceneResponse toReadSceneResponse() {
         return ReadSceneResponse.builder()
-                .sceneId(this.sceneId)
+                .sceneNo(this.sceneNo)
                 .story(this.levelPosition)
                 .levelPosition(this.levelPosition)
                 .thumbnail(this.thumbnail)
@@ -51,7 +51,7 @@ public class Scene {
 
     public UploadSceneResponse toUploadResponse() {
         return UploadSceneResponse.builder()
-                .sceneId(this.sceneId)
+                .sceneNo(this.sceneNo)
                 .build();
     }
 }

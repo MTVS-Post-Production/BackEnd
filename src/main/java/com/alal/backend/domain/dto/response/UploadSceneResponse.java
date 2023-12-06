@@ -6,5 +6,5 @@ import lombok.Getter;
 @Builder
 @Getter
 public class UploadSceneResponse {
-    private Long sceneId;
+    private Long sceneNo;
 }

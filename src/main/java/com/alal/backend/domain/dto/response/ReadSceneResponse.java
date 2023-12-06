@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Builder
 public class ReadSceneResponse {
-    private Long sceneId;
+    private Long sceneNo;
 
     private String story;
 

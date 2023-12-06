@@ -78,6 +78,11 @@ public class GroupController {
         return ResponseEntity.ok(sceneService.readAllScene(projectId));
     }
 
+    @GetMapping("/scene/{id}/{no}")
+    public ResponseEntity<ReadSceneResponse> readDetail(@PathVariable("id") Long projectId, @PathVariable("no") Long sceneNo) {
+        return ResponseEntity.ok(sceneService.readDetailScene(projectId, sceneNo));
+    }
+
     @PostMapping("/scene/upload")
     public ResponseEntity<UploadSceneResponse> upload(@RequestBody UploadSceneRequest uploadSceneRequest) {
         return ResponseEntity.ok(sceneService.uploadScene(uploadSceneRequest));

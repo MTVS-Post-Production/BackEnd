@@ -22,4 +22,4 @@ jobs:
             export GOOGLE_APPLICATION_CREDENTIALS="/home/ubuntu/BackEnd/src/main/resources/config/secret.json"
             cd /home/ubuntu/BackEnd/build/libs
             ps aux | grep BackEnd-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}' | xargs kill -9
-            nohup java -jar BackEnd-0.0.1-SNAPSHOT.jar > /dev/null 2>&1 &
+            nohup java -jar BackEnd-0.0.1-SNAPSHOT.jar >>/home/ubuntu/BackEnd/logs/logfile.log 2>&1 &

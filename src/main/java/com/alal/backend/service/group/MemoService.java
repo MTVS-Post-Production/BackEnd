@@ -1,12 +1,12 @@
 package com.alal.backend.service.group;
 
 import com.alal.backend.domain.dto.request.UploadMemoRequest;
-import com.alal.backend.domain.dto.response.*;
-import com.alal.backend.domain.entity.project.*;
+import com.alal.backend.domain.dto.response.ReadMemoResponse;
+import com.alal.backend.domain.dto.response.UploadMemoResponse;
+import com.alal.backend.domain.entity.project.Memo;
 import com.alal.backend.domain.entity.user.User;
 import com.alal.backend.domain.vo.Group;
 import com.alal.backend.repository.group.MemoRepository;
-import com.alal.backend.repository.group.ProjectRepository;
 import com.alal.backend.repository.user.UserRepository;
 import com.alal.backend.utils.Parser;
 import com.alal.backend.utils.event.UploadRollBackEvent;
@@ -16,24 +16,18 @@ import com.google.cloud.storage.StorageException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.Base64;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class MemoService {
     private final MemoRepository memoRepository;
     private final UserRepository userRepository;
-    private final ProjectRepository projectRepository;
 
     private final Parser parser;
     private final Storage storage;
@@ -101,48 +95,5 @@ public class MemoService {
             throw new NoSuchElementException("유저를 찾을 수 없습니다.");
         }
         return user.get();
-    }
-
-    @Transactional(readOnly = true)
-    public ReadProjectsResponseList readProjects(Long userId, Pageable pageable) {
-        User user = getUser(userId);
-        Group group = getUserGroup(user);
-
-        List<ReadProjectsResponse> readProjectsResponses = findAllProjects(group, pageable);
-
-        return ReadProjectsResponseList.from(readProjectsResponses);
-    }
-
-    private List<ReadProjectsResponse> findAllProjects(Group group, Pageable pageable) {
-        return projectRepository.findAllByGroupOrderByProjectIdDesc(group, pageable)
-                .map(project -> {
-                    try {
-                        return ReadProjectsResponse.fromEntity(project);
-                    } catch (IOException e) {
-                        throw new UncheckedIOException(e);
-                    }
-                })
-                .getContent();
-    }
-
-    @Transactional(readOnly = true)
-    public ReadProjectResponse readProject(Long projectId) throws IOException {
-        Project project = projectRepository.findByProjectId(projectId);
-        List<Avatar> avatars = findAvatars(project);
-        List<Staff> staffs = findStaffs(project);
-
-        return ReadProjectResponse.fromEntity(project, avatars, staffs);
-    }
-
-    private List<Staff> findStaffs(Project project) {
-        return project.getProjectStaffs().stream()
-                .map(ProjectStaff::getStaff)
-                .collect(Collectors.toList());
-    }
-
-    private List<Avatar> findAvatars(Project project) {
-        return project.getProjectAvatars().stream()
-                .map(ProjectAvatar::getAvatar)
-                .collect(Collectors.toList());
     }
 }

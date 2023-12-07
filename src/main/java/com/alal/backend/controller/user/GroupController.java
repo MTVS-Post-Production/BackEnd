@@ -5,10 +5,7 @@ import com.alal.backend.domain.dto.request.UploadMemoRequest;
 import com.alal.backend.domain.dto.request.UploadProjectRequest;
 import com.alal.backend.domain.dto.request.UploadSceneRequest;
 import com.alal.backend.domain.dto.response.*;
-import com.alal.backend.service.group.AvatarService;
-import com.alal.backend.service.group.MemoService;
-import com.alal.backend.service.group.ProjectService;
-import com.alal.backend.service.group.SceneService;
+import com.alal.backend.service.group.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -24,6 +21,7 @@ public class GroupController {
     private final MemoService memoService;
     private final AvatarService avatarService;
     private final ProjectService projectService;
+    private final ProjectReadService projectReadService;
     private final SceneService sceneService;
 
     @PostMapping("/memo/upload")
@@ -59,12 +57,12 @@ public class GroupController {
             ) {
 //        Long userId = userPrincipal.getId();
         Long userId = 1L;
-        return ResponseEntity.ok(memoService.readProjects(userId, pageable));
+        return ResponseEntity.ok(projectReadService.readProjects(userId, pageable));
     }
 
     @GetMapping("/project/{id}")
     public ResponseEntity<ReadProjectResponse> readProject(@PathVariable("id") Long projectId) throws IOException {
-        ReadProjectResponse readProjectResponse = memoService.readProject(projectId);
+        ReadProjectResponse readProjectResponse = projectReadService.readProject(projectId);
         return ResponseEntity.ok(readProjectResponse);
     }
 

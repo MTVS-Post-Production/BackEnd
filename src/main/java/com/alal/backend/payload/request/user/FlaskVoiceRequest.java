@@ -13,6 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class FlaskVoiceRequest {
     private String fileName;
-
     private String modelName;
+    private String gender;
 }

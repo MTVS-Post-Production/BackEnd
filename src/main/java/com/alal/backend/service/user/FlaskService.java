@@ -49,7 +49,8 @@ public class FlaskService {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(Map.of("voice", flaskRequest.getFileName(),
                         "model_name", flaskRequest.getModelName(),
-                        "user_id", userId)
+                        "user_id", userId,
+                        "gender", flaskRequest.getGender())
                 )
                 .retrieve()
                 .bodyToMono(FlaskResponse.class)

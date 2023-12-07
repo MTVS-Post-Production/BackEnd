@@ -17,6 +17,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
+          script_stop: true
           script: |
             echo '${{ secrets.SECRET_JSON }}' | tee /home/ubuntu/BackEnd/src/main/resources/config/secret.json > /dev/null
             export GOOGLE_APPLICATION_CREDENTIALS="/home/ubuntu/BackEnd/src/main/resources/config/secret.json"

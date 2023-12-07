@@ -7,19 +7,15 @@ import com.alal.backend.domain.entity.project.*;
 import com.alal.backend.domain.entity.user.User;
 import com.alal.backend.domain.vo.Group;
 import com.alal.backend.domain.vo.StaffVO;
-import com.alal.backend.repository.group.ProjectAvatarRepository;
-import com.alal.backend.repository.group.ProjectMemberRepository;
-import com.alal.backend.repository.group.ScriptRepository;
-import com.alal.backend.repository.group.AvatarRepository;
-import com.alal.backend.repository.group.ProjectRepository;
-import com.alal.backend.repository.group.StaffRepository;
+import com.alal.backend.repository.group.*;
 import com.alal.backend.repository.user.UserRepository;
 import com.alal.backend.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service

@@ -1,5 +1,7 @@
 package com.alal.backend.utils;
 
+import com.alal.backend.advice.error.DefaultException;
+import com.alal.backend.advice.payload.ErrorCode;
 import com.google.cloud.storage.BlobInfo;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +32,13 @@ public class Parser {
         return Base64.getEncoder().encodeToString(imageBytes);
     }
 
-    public static String downloadAndEncodeImage(String imageUrl) throws IOException {
-        byte[] imageBytes = downloadImage(imageUrl);
-        return encodeImageToBase64(imageBytes);
+    public static String downloadAndEncodeImage(String imageUrl) {
+        try {
+            byte[] imageBytes = downloadImage(imageUrl);
+            return encodeImageToBase64(imageBytes);
+        } catch (IOException e) {
+            throw new DefaultException(ErrorCode.INVALID_CHECK);
+        }
     }
 
     private static byte[] downloadImage(String imageUrl) throws IOException {

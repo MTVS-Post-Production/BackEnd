@@ -10,10 +10,7 @@ import java.util.List;
 @Builder
 public class ReadSceneResponse {
     private Long sceneNo;
-
     private String story;
-
     private String levelPosition;
-
     private String thumbnail;
 }

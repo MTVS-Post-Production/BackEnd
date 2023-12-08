@@ -2,6 +2,7 @@ package com.alal.backend.domain.entity.project;
 
 import com.alal.backend.domain.dto.response.ReadSceneResponse;
 import com.alal.backend.domain.dto.response.UploadSceneResponse;
+import com.alal.backend.utils.Parser;
 import lombok.*;
 import org.hibernate.annotations.Comment;
 
@@ -45,7 +46,7 @@ public class Scene {
                 .sceneNo(this.sceneNo)
                 .story(this.levelPosition)
                 .levelPosition(this.levelPosition)
-                .thumbnail(this.thumbnail)
+                .thumbnail(encodeThumbnail())
                 .build();
     }
 
@@ -53,5 +54,9 @@ public class Scene {
         return UploadSceneResponse.builder()
                 .sceneNo(this.sceneNo)
                 .build();
+    }
+
+    private String encodeThumbnail() {
+        return Parser.downloadAndEncodeImage(this.thumbnail);
     }
 }

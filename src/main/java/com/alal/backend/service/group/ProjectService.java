@@ -10,7 +10,10 @@ import com.alal.backend.domain.vo.StaffVO;
 import com.alal.backend.repository.group.*;
 import com.alal.backend.repository.user.UserRepository;
 import com.alal.backend.service.user.UserService;
+import com.alal.backend.utils.event.UploadRollBackEvent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +34,10 @@ public class ProjectService {
 
     private final GoogleService googleService;
     private final UserService userService;
+    private final ApplicationEventPublisher eventPublisher;
+
+    @Value("${spring.cloud.gcp.storage.bucket}")
+    private String bucketName;
 
     @Transactional
     public UploadProjectResponse uploadProject(UploadProjectRequest uploadProjectRequest, Long userId) {
@@ -47,6 +54,7 @@ public class ProjectService {
 
     private void saveScripts(UploadProjectRequest uploadProjectRequest, Project project) {
         String scriptUrl = googleService.uploadScripts(uploadProjectRequest);
+        eventPublisher.publishEvent(new UploadRollBackEvent(bucketName, scriptUrl));
         Script script = Script.from(scriptUrl, project);
 
         scriptRepository.save(script);
@@ -89,6 +97,7 @@ public class ProjectService {
         User user = userService.getUser(userId);
         Group group = userService.getUserGroup(user);
         String posterUrl = googleService.uploadPoster(uploadProjectRequest);
+        eventPublisher.publishEvent(new UploadRollBackEvent(bucketName, posterUrl));
         Project project = Project.fromDto(group, uploadProjectRequest, posterUrl);
 
         return projectRepository.save(project);

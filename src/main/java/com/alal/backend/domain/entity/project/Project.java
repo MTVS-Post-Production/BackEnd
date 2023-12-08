@@ -1,6 +1,7 @@
 package com.alal.backend.domain.entity.project;
 
 import com.alal.backend.domain.dto.request.UploadProjectRequest;
+import com.alal.backend.domain.dto.response.UploadProjectResponse;
 import com.alal.backend.domain.vo.Group;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,6 +54,14 @@ public class Project {
                 .projectName(uploadProjectRequest.getProjectName())
                 .description(uploadProjectRequest.getDescription())
                 .poster(posterUrl)
+                .build();
+    }
+
+    public UploadProjectResponse toUploadResponse() {
+        return UploadProjectResponse.builder()
+                .groupName(projectName)
+                .description(description)
+                .groupName(group.toString())
                 .build();
     }
 }

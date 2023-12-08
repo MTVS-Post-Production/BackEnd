@@ -49,7 +49,7 @@ public class ProjectService {
         addProjectMembers(staffs, project);
         addProjectAvatars(avatars, project);
 
-        return UploadProjectResponse.fromEntity(project);
+        return project.toUploadResponse();
     }
 
     private void saveScripts(UploadProjectRequest uploadProjectRequest, Project project) {

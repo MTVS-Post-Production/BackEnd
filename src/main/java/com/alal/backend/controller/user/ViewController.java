@@ -1,5 +1,7 @@
 package com.alal.backend.controller.user;
 
+import com.alal.backend.config.security.token.CurrentUser;
+import com.alal.backend.config.security.token.UserPrincipal;
 import com.alal.backend.domain.dto.response.FbxResponse;
 import com.alal.backend.domain.dto.response.UpdateUserHistoryResponse;
 import com.alal.backend.domain.dto.response.ViewResponse;
@@ -35,10 +37,9 @@ public class ViewController {
 
     @GetMapping
     public String motionPage(Model model,
-//                       @CurrentUser UserPrincipal userPrincipal,
+                       @CurrentUser UserPrincipal userPrincipal,
                              @PageableDefault(size = 12) Pageable pageable) throws IOException {
-//        Long userId = userPrincipal.getId();
-        Long userId = 1L;
+        Long userId = userPrincipal.getId();
         List<String> userHistories = motionService.getUserHistories(userId);
         Page<ViewResponse> optionalViewResponsePage = motionService.createViewResponse(userHistories, pageable);
         model.addAttribute("motionUrls", optionalViewResponsePage);
@@ -54,10 +55,9 @@ public class ViewController {
     @PostMapping("/video")
     @ResponseBody
     public ResponseEntity<UpdateUserHistoryResponse> videoPost(@RequestBody FlaskRequest flaskRequest
-//                            ,@CurrentUser UserPrincipal userPrincipal
+                            ,@CurrentUser UserPrincipal userPrincipal
     ) {
-//        Long userId = userPrincipal.getId();
-        Long userId = 1L;
+        Long userId = userPrincipal.getId();
         UpdateUserHistoryResponse updateUserHistoryResponse = motionService.findUrlByUploadMp4(flaskRequest, userId);
 
         return ResponseEntity.ok(updateUserHistoryResponse);
@@ -67,10 +67,9 @@ public class ViewController {
     @PostMapping("/voice")
     @ResponseBody
     public ResponseEntity<VoiceResponse> voicePost(@RequestBody FlaskVoiceRequest flaskRequest
-//                                                   ,@CurrentUser UserPrincipal userPrincipal
+                                                   ,@CurrentUser UserPrincipal userPrincipal
                                                    ) {
-        Long userId = 1L;
-//        Long userId = userPrincipal.getId();
+        Long userId = userPrincipal.getId();
         VoiceResponse voiceResponse = motionService.uploadAndRespondWithAudioFileSuccess(flaskRequest, userId);
 
         return ResponseEntity.ok(voiceResponse);
@@ -103,11 +102,10 @@ public class ViewController {
     @GetMapping("/voice/result")
     @ResponseBody
     public ResponseEntity<VoiceResponse> getVoiceByUserId(
-//            @CurrentUser UserPrincipal userPrincipal,
+            @CurrentUser UserPrincipal userPrincipal,
             @RequestParam("modelName") String modelName
             ) {
-//        Long userId = userPrincipal.getId();
-        Long userId = 1L;
+        Long userId = userPrincipal.getId();
         VoiceResponse voiceResponse = motionService.findByVoiceUrlWithUserId(userId, modelName);
 
         return ResponseEntity.ok(voiceResponse);
@@ -115,10 +113,9 @@ public class ViewController {
 
     @GetMapping("/filter")
     public String filterPage(@PageableDefault(size = 12) Pageable pageable, Model model, @RequestParam("motion") String motionName
-//                                         , @CurrentUser UserPrincipal userPrincipal
+                                         , @CurrentUser UserPrincipal userPrincipal
                              ) {
-        Long userId = 1L;
-//        Long userId = userPrincipal.getId();
+        Long userId = userPrincipal.getId();
         List<String> userHistories = motionService.getUserHistories(userId);
 
         if (userHistories.isEmpty()) {

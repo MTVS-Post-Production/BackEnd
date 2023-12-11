@@ -1,5 +1,7 @@
 package com.alal.backend.controller.user;
 
+import com.alal.backend.config.security.token.CurrentUser;
+import com.alal.backend.config.security.token.UserPrincipal;
 import com.alal.backend.domain.dto.request.UpdateAvatarRequest;
 import com.alal.backend.domain.dto.request.UploadMemoRequest;
 import com.alal.backend.domain.dto.request.UploadProjectRequest;
@@ -26,37 +28,33 @@ public class GroupController {
 
     @PostMapping("/memo/upload")
     public ResponseEntity<UploadMemoResponse> upload(@RequestBody UploadMemoRequest uploadMemoRequest
-//    ,@CurrentUser UserPrincipal userPrincipal
+    ,@CurrentUser UserPrincipal userPrincipal
     ) {
-        Long userId = 1L;
-//        Long userId = userPrincipal.getId();
+        Long userId = userPrincipal.getId();
         return ResponseEntity.ok(memoService.uploadMemo(uploadMemoRequest, userId));
     }
 
     @GetMapping("/memo")
     public ResponseEntity<ReadMemoResponse> readAll(
-//            @CurrentUser UserPrincipal userPrincipal
+            @CurrentUser UserPrincipal userPrincipal
     ) {
-        Long userId = 1L;
-//        Long userId = userPrincipal.getId();
+        Long userId = userPrincipal.getId();
         return ResponseEntity.ok(memoService.readMemos(userId));
     }
 
     @PostMapping("/project/upload")
     public ResponseEntity<UploadProjectResponse> uploadProject(@RequestBody UploadProjectRequest uploadProjectRequest
-//    , @CurrentUser UserPrincipal userPrincipal
+    , @CurrentUser UserPrincipal userPrincipal
                                                                ) {
-        Long userId = 1L;
-//        Long userId = userPrincipal.getId();
+        Long userId = userPrincipal.getId();
         return ResponseEntity.ok(projectService.uploadProject(uploadProjectRequest, userId));
     }
 
     @GetMapping("/project/all")
     public ResponseEntity<ReadProjectsResponseList> readProjects(@PageableDefault(value = 8) Pageable pageable
-//            , @CurrentUser UserPrincipal userPrincipal
+            , @CurrentUser UserPrincipal userPrincipal
             ) {
-//        Long userId = userPrincipal.getId();
-        Long userId = 1L;
+        Long userId = userPrincipal.getId();
         return ResponseEntity.ok(projectReadService.readProjects(userId, pageable));
     }
 

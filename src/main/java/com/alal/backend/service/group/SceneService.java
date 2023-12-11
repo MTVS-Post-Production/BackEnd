@@ -37,11 +37,20 @@ public class SceneService {
         Script script = scriptRepository.getReferenceById(uploadSceneRequest.getProjectId());
         String thumbnailUrl = googleService.uploadImage(uploadSceneRequest);
         eventPublisher.publishEvent(new UploadRollBackEvent(bucketName, thumbnailUrl));
-        Scene scene = uploadSceneRequest.from(script, thumbnailUrl);
 
-        sceneRepository.save(scene);
+        Scene scene = sceneRepository.findByScriptAndSceneNo(script, uploadSceneRequest.getSceneNo());
+
+        if (scene == null) {
+            scene = uploadSceneRequest.from(script, thumbnailUrl);
+            sceneRepository.save(scene);
+
+            return scene.toUploadResponse();
+        }
+
+        scene.update(uploadSceneRequest, thumbnailUrl);
         return scene.toUploadResponse();
     }
+
 
     @Transactional(readOnly = true)
     public ReadSceneResponse readDetailScene(Long projectId, Long sceneNo) {

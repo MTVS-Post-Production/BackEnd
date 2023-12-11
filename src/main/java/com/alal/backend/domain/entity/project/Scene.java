@@ -44,7 +44,7 @@ public class Scene {
     public ReadSceneResponse toReadSceneResponse() {
         return ReadSceneResponse.builder()
                 .sceneNo(this.sceneNo)
-                .story(this.levelPosition)
+                .story(this.story)
                 .levelPosition(this.levelPosition)
                 .thumbnail(encodeThumbnail())
                 .build();

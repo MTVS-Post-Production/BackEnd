@@ -1,5 +1,6 @@
 package com.alal.backend.domain.entity.project;
 
+import com.alal.backend.domain.dto.request.UploadSceneRequest;
 import com.alal.backend.domain.dto.response.ReadSceneResponse;
 import com.alal.backend.domain.dto.response.UploadSceneResponse;
 import com.alal.backend.utils.Parser;
@@ -58,5 +59,19 @@ public class Scene {
 
     private String encodeThumbnail() {
         return Parser.downloadAndEncodeImage(this.thumbnail);
+    }
+
+    public void update(UploadSceneRequest uploadSceneRequest, String thumbnailUrl) {
+        if (uploadSceneRequest.getStory() != null) {
+            this.story = uploadSceneRequest.getStory();
+        }
+
+        if (uploadSceneRequest.getLevelPosition() != null) {
+            this.levelPosition = uploadSceneRequest.getLevelPosition();
+        }
+
+        if (uploadSceneRequest.getThumbNail() != null) {
+            this.thumbnail = thumbnailUrl;
+        }
     }
 }

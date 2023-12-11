@@ -89,8 +89,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 //                            , "/view/**"
 //                            , "/view/voice"
 //                            ,"/view/voice/**"
-                            , "/group/**"
-                            , "/group/**/**"
+//                            , "/group/**"
+//                            , "/group/**/**"
 //                            , "/image/**"
                     )
                         .permitAll()

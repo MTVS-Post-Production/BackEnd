@@ -40,8 +40,8 @@ public class CustomSimpleUrlAuthenticationSuccessHandler extends SimpleUrlAuthen
         DefaultAssert.isAuthentication(!response.isCommitted());
 
         String targetUrl = determineTargetUrl(request, response, authentication);
-        clearAuthenticationAttributes(request, response);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
+        clearAuthenticationAttributes(request, response);
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
@@ -55,7 +55,12 @@ public class CustomSimpleUrlAuthenticationSuccessHandler extends SimpleUrlAuthen
         createAccessTokenAndRefreshToken(tokenMapping);
         createTokenCookie(tokenMapping, response);
 
+        String accessToken = tokenMapping.getAccessToken();
+        String refreshToken = tokenMapping.getRefreshToken();
+
         return UriComponentsBuilder.fromUriString(targetUrl)
+                .queryParam("accessToken", accessToken)
+                .queryParam("refreshToken", refreshToken)
                 .build().toUriString();
     }
 

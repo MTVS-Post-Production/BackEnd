@@ -12,4 +12,5 @@ public class ImageFlaskResponse {
     private String albedo;
     private String mesh_mtl;
     private String mesh_obj;
+    private String url_mesh_example;
 }

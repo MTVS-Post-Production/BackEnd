@@ -35,12 +35,17 @@ public class Image {
     @Comment("이미지 주소")
     private String meshObj;
 
+    @Column
+    @Comment("썸네일 영상")
+    private String thumbnailUrl;
+
     public static Image toEntity(ImageFlaskResponse flaskResponse, Long userId) {
         return Image.builder()
                 .userId(userId)
                 .albedoUrl(flaskResponse.getAlbedo())
                 .meshMtlUrl(flaskResponse.getMesh_mtl())
                 .meshObj(flaskResponse.getMesh_obj())
+                .thumbnailUrl(flaskResponse.getUrl_mesh_example())
                 .build();
     }
 
@@ -48,5 +53,6 @@ public class Image {
         this.albedoUrl = flaskResponse.getAlbedo();
         this.meshMtlUrl = flaskResponse.getMesh_mtl();
         this.meshObj = flaskResponse.getMesh_obj();
+        this.thumbnailUrl = flaskResponse.getUrl_mesh_example();
     }
 }
